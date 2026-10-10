@@ -22,6 +22,8 @@ body {
   min-height: 100vh;
   background: #050309;
   color: #f5eeec;
+  /* 2px over the browser's 16 default, like every explicit size on the page. */
+  font-size: 18px;
   font-family:
     var(--font-body), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
     Roboto, sans-serif;
@@ -53,17 +55,20 @@ button {
 @media (min-width: 2400px) {
   html {
     zoom: 1.25;
+    --wl-zoom: 1.25;
   }
 }
 
 @media (min-width: 3000px) {
   html {
     zoom: 1.5;
+    --wl-zoom: 1.5;
   }
 }
 
 @media (min-width: 3600px) {
   html {
     zoom: 2;
+    --wl-zoom: 2;
   }
 }

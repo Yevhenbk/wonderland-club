@@ -123,7 +123,7 @@
 
 .label {
   font-family: var(--wl-font-wide);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -133,7 +133,7 @@
 
 .h2 {
   font-family: var(--wl-font-wide);
-  font-size: clamp(24px, 3.4vw, 38px);
+  font-size: clamp(26px, calc(3.4vw + 2px), 40px);
   font-weight: 500;
   line-height: 1.14;
   letter-spacing: -0.02em;
@@ -141,7 +141,7 @@
 }
 
 .lead {
-  font-size: clamp(15.5px, 1.8vw, 18px);
+  font-size: clamp(17.5px, calc(1.8vw + 2px), 20px);
   line-height: 1.6;
   color: var(--wl-soft);
   max-width: 52ch;
@@ -161,7 +161,7 @@
 .btn {
   display: inline-block;
   margin-top: 26px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.01em;
   color: var(--wl-gold-ink);
@@ -181,14 +181,22 @@
 
 /* ------------------------------------------------------------------ hero */
 
+/* Exactly one screen tall. The headline and card centre in the room between
+   the navbar and the word strip (auto margins on .heroCenter), and the strip
+   sits near the foot of the screen. The height is divided by the page zoom
+   (globals.scss): on very wide screens viewport units are multiplied by it,
+   and an undivided 100svh would make the hero two screens tall. */
 .hero {
   position: relative;
   isolation: isolate;
-  min-height: min(96vh, 900px);
+  min-height: calc(100vh / var(--wl-zoom, 1));
+  min-height: calc(100svh / var(--wl-zoom, 1));
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 104px var(--wl-gut) 20px;
+  /* The navbar's 62px plus the same 40px the word strip keeps above itself,
+     so the auto margins centre the content exactly between the two. */
+  padding: 102px var(--wl-gut) 28px;
   /* Clipped sideways only. Clipping vertically cut the drifting glow off in
      a straight line at the hero's foot; unclipped, it fades out over the
      transparent section below, so the two read as one ground. */
@@ -230,6 +238,7 @@
 .heroCenter {
   position: relative;
   z-index: 1;
+  margin-block: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -239,7 +248,7 @@
 
 .h1 {
   font-family: var(--wl-font-wide);
-  font-size: clamp(34px, 5.6vw, 64px);
+  font-size: clamp(36px, calc(5.6vw + 2px), 66px);
   font-weight: 600;
   line-height: 1.04;
   letter-spacing: -0.03em;
@@ -249,7 +258,7 @@
 }
 
 .heroSub {
-  font-size: clamp(15px, 1.7vw, 17px);
+  font-size: clamp(17px, calc(1.7vw + 2px), 19px);
   line-height: 1.5;
   color: var(--wl-soft);
   max-width: 40ch;
@@ -282,7 +291,7 @@
 
 .ticketKicker {
   font-family: var(--wl-font-wide);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -311,7 +320,7 @@
 .ticketTheme {
   margin-top: 10px;
   font-family: var(--wl-font-wide);
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 500;
   letter-spacing: -0.01em;
   line-height: 1.3;
@@ -332,13 +341,13 @@
 }
 
 .ticketRows dt {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--wl-faint);
 }
 
 .ticketRows dd {
   margin: 0;
-  font-size: 14.5px;
+  font-size: 16.5px;
   font-weight: 600;
   text-align: right;
 }
@@ -350,7 +359,7 @@
   margin-top: 12px;
   padding: 14px 18px;
   text-align: center;
-  font-size: 14.5px;
+  font-size: 16.5px;
 }
 
 /* The address opens the map: underlined lightly, rose gold on hover. */
@@ -377,7 +386,7 @@
 .heroGet {
   width: min(100%, 440px);
   margin: 12px 0 0;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.45;
   color: var(--wl-soft);
   text-wrap: pretty;
@@ -388,12 +397,11 @@
 .tickerWrap {
   position: relative;
   z-index: 1;
-  flex: 1 1 0;
-  min-height: 96px;
-  /* A guaranteed gap under the card. The strip centres in whatever height
-     the hero has left, and on shorter screens that left it nearly touching
-     the line under the card. */
-  margin-top: clamp(32px, 5vh, 64px);
+  flex: none;
+  min-height: 64px;
+  /* A guaranteed gap under the card, for screens too short for the auto
+     margins above to leave any. */
+  margin-top: 40px;
   /* Edge to edge by cancelling the hero's side padding, not with 100vw:
      viewport units are multiplied by the page zoom on very wide screens
      (globals.scss), which made the strip wider than the screen and pushed
@@ -427,7 +435,7 @@
   gap: 28px;
   padding-right: 28px;
   font-family: var(--wl-font-wide);
-  font-size: clamp(13px, 1.5vw, 16px);
+  font-size: clamp(15px, calc(1.5vw + 2px), 18px);
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -470,13 +478,13 @@
 
 .listTitle {
   font-family: var(--wl-font-wide);
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
   line-height: 1.3;
 }
 
 .listNote {
-  font-size: 13.5px;
+  font-size: 15.5px;
   line-height: 1.45;
   color: var(--wl-soft);
   margin: 6px 0 18px;
@@ -497,7 +505,7 @@
   align-items: flex-start;
   gap: 10px;
   padding: 11px 0;
-  font-size: 15.5px;
+  font-size: 17.5px;
   line-height: 1.45;
   color: var(--wl-soft);
   text-decoration: line-through;
@@ -600,7 +608,7 @@
 
 .worldN {
   font-family: var(--wl-font-wide);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.14em;
   color: var(--wl-faint);
@@ -608,7 +616,7 @@
 
 .worldWord {
   font-family: var(--wl-font-wide);
-  font-size: clamp(15px, 1.5vw, 17px);
+  font-size: clamp(17px, calc(1.5vw + 2px), 19px);
   font-weight: 500;
   line-height: 1.3;
 }
@@ -616,7 +624,7 @@
 .worldsClose {
   max-width: 44ch;
   margin: clamp(28px, 4vw, 40px) auto 0;
-  font-size: clamp(16px, 1.9vw, 19px);
+  font-size: clamp(18px, calc(1.9vw + 2px), 21px);
   font-weight: 600;
   line-height: 1.5;
   text-wrap: balance;
@@ -638,7 +646,7 @@
 .quoteBefore {
   max-width: 46ch;
   margin: 0 auto;
-  font-size: clamp(15.5px, 1.8vw, 18px);
+  font-size: clamp(17.5px, calc(1.8vw + 2px), 20px);
   line-height: 1.6;
   color: var(--wl-soft);
   text-wrap: balance;
@@ -649,7 +657,7 @@
   max-width: 16ch;
   margin: 22px auto 0;
   font-family: var(--wl-font-wide);
-  font-size: clamp(30px, 6vw, 72px);
+  font-size: clamp(32px, calc(6vw + 2px), 74px);
   font-weight: 700;
   line-height: 1.02;
   letter-spacing: -0.03em;
@@ -665,7 +673,7 @@
 .quoteBy {
   margin: 26px 0 0;
   font-family: var(--wl-font-wide);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -739,7 +747,7 @@
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  font-size: 13.5px;
+  font-size: 15.5px;
   font-weight: 700;
   color: var(--wl-steel);
   text-decoration: none;
@@ -796,14 +804,14 @@
 
 .shotNight {
   font-family: var(--wl-font-wide);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.14em;
   color: var(--wl-faint);
 }
 
 .shotCaption {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--wl-soft);
 }
 
@@ -841,7 +849,7 @@
 .finalLine {
   max-width: 46ch;
   margin: 18px auto 0;
-  font-size: clamp(15.5px, 1.8vw, 17px);
+  font-size: clamp(17.5px, calc(1.8vw + 2px), 19px);
   line-height: 1.6;
   color: var(--wl-soft);
   text-wrap: pretty;
@@ -880,7 +888,7 @@
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--wl-soft);
   text-decoration: none;
 }
@@ -892,7 +900,7 @@
 }
 
 .footerNote {
-  font-size: 12.5px;
+  font-size: 14.5px;
   color: var(--wl-faint);
 }
 
@@ -946,13 +954,13 @@
 }
 
 .barMeta strong {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 700;
   letter-spacing: -0.01em;
 }
 
 .barMeta span {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--wl-soft);
 }
 
@@ -962,7 +970,7 @@
   margin-left: auto;
   flex: none;
   padding: 14px 22px;
-  font-size: 14.5px;
+  font-size: 16.5px;
   min-height: 48px;
 }
 
@@ -976,7 +984,7 @@
   }
 
   .h2 {
-    font-size: 24px;
+    font-size: 26px;
     line-height: 1.16;
   }
 
@@ -984,7 +992,7 @@
   .leadLeft,
   .finalLine,
   .quoteBefore {
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.62;
   }
 
@@ -994,7 +1002,7 @@
     width: 100%;
     margin-top: 24px;
     padding: 16px 14px;
-    font-size: 15.5px;
+    font-size: 17.5px;
     line-height: 1.25;
     text-align: center;
   }
@@ -1008,7 +1016,7 @@
     width: auto;
     margin-top: 0;
     padding: 14px 22px;
-    font-size: 14.5px;
+    font-size: 16.5px;
     line-height: normal;
   }
 
@@ -1018,7 +1026,7 @@
   }
 
   .h1 {
-    font-size: 36px;
+    font-size: 38px;
   }
 
   .heroSub {
