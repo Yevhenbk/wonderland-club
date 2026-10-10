@@ -9,10 +9,12 @@ import logo from "@/public/media/wonderland-wordmark.png";
 import styles from "./site-header.module.scss";
 
 /**
- * The mark, a few links, one call. Transparent over the hero so it owns the
- * first paint, solid once the page has moved.
+ * The mark and a few links. No ticket button up here: the menu has a
+ * "Квитки" link, and on a phone the bar at the bottom carries the call.
+ * Transparent over the hero so it owns the first paint, solid once the page
+ * has moved.
  */
-export default function SiteHeader({ onTickets }: { onTickets: () => void }) {
+export default function SiteHeader() {
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -50,9 +52,6 @@ export default function SiteHeader({ onTickets }: { onTickets: () => void }) {
         </nav>
 
         <div className={styles.right}>
-          <button type="button" className={styles.cta} onClick={onTickets}>
-            {header.cta}
-          </button>
           <button
             type="button"
             className={styles.burger}

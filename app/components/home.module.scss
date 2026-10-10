@@ -454,96 +454,11 @@
   }
 }
 
-/* ------------------------------------------------------------------ split */
-
-.splitTop {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  gap: clamp(28px, 5vw, 64px);
-  align-items: start;
-  text-align: left;
-}
-
-.splitTop .lead {
-  margin-left: 0;
-}
-
-.listCol {
-  margin-top: 4px;
-  padding: clamp(20px, 3vw, 28px);
-  border-radius: var(--wl-radius);
-  background: var(--wl-wash);
-  border: 1px solid var(--wl-line);
-}
-
-.listTitle {
-  font-family: var(--wl-font-wide);
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1.3;
-}
-
-.listNote {
-  font-size: 15.5px;
-  line-height: 1.45;
-  color: var(--wl-soft);
-  margin: 6px 0 18px;
-  max-width: 42ch;
-}
-
-.list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-}
-
-/* What was left behind: struck through, with a crossed disc where the
-   source page sets a check. */
-.list li {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 11px 0;
-  font-size: 17.5px;
-  line-height: 1.45;
-  color: var(--wl-soft);
-  text-decoration: line-through;
-  text-decoration-color: rgba(226, 165, 157, 0.7);
-  text-decoration-thickness: 1.5px;
-  border-top: 1px solid var(--wl-line);
-}
-
-.list li:first-child {
-  border-top: 0;
-  padding-top: 0;
-}
-
-.list li::before {
-  content: "";
-  flex: none;
-  width: 16px;
-  height: 16px;
-  margin-top: 2px;
-  background: var(--wl-rose);
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16ZM5.47 5.47a.75.75 0 0 1 1.06 0L8 6.94l1.47-1.47a.75.75 0 1 1 1.06 1.06L9.06 8l1.47 1.47a.75.75 0 1 1-1.06 1.06L8 9.06l-1.47 1.47a.75.75 0 0 1-1.06-1.06L6.94 8 5.47 6.53a.75.75 0 0 1 0-1.06Z'/%3E%3C/svg%3E")
-    center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16ZM5.47 5.47a.75.75 0 0 1 1.06 0L8 6.94l1.47-1.47a.75.75 0 1 1 1.06 1.06L9.06 8l1.47 1.47a.75.75 0 1 1-1.06 1.06L8 9.06l-1.47 1.47a.75.75 0 0 1-1.06-1.06L6.94 8 5.47 6.53a.75.75 0 0 1 0-1.06Z'/%3E%3C/svg%3E")
-    center / contain no-repeat;
-}
-
-@media (max-width: 820px) {
-  .splitTop {
-    grid-template-columns: 1fr;
-    gap: 44px;
-  }
-}
-
 /* ------------------------------------------------------------------ bands */
 
-/* Grounds alternate down the page: open field, wash, open field, wash,
-   paper. The aftermovie takes the wash after "Чому Wonderland?", and the
-   four worlds take paper after the nights, so no two neighbours share one. */
+/* Grounds alternate down the page: open field (hero), wash (aftermovie),
+   open field (quote), wash (nights), open field (tickets), paper (the four
+   worlds), so no two neighbours share one. */
 .videoBand,
 .nightsBand {
   background: var(--wl-wash);
@@ -727,9 +642,18 @@
   }
 
   /* A 9:16 frame across the full 460px column stood about 820px tall, more
-   than a whole tablet screen. Phone-width and no wider. */
+   than a whole tablet screen. Phone-width and no wider, centred. */
   .videoMedia {
     width: min(100%, 340px);
+    justify-self: center;
+  }
+}
+
+/* On a phone the column is phone-width already: the clip fills it, so its
+   edges line up with the text above instead of leaving a gap on one side. */
+@media (max-width: 767px) {
+  .videoMedia {
+    width: 100%;
   }
 }
 
@@ -959,6 +883,15 @@
   letter-spacing: -0.01em;
 }
 
+/* One line each, so the bar stays 72px tall (matching the navbar) even on
+   a 320 screen, where the address would otherwise wrap. */
+.barMeta strong,
+.barMeta span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .barMeta span {
   font-size: 14px;
   color: var(--wl-soft);
@@ -1020,9 +953,13 @@
     line-height: normal;
   }
 
+  /* Full screen height on phones too (the svh from the base rule: measured
+     with the address bar showing and steady while it slides away, so
+     nothing jumps and the strip is never under the bar). Top padding is the
+     72px phone navbar plus the strip's 28px gap, which keeps the content
+     centred between the two. */
   .hero {
-    padding-top: 88px;
-    min-height: auto;
+    padding-top: 100px;
   }
 
   .h1 {
@@ -1047,20 +984,42 @@
     margin-top: 28px;
   }
 
-  .faqSection {
-    text-align: left;
+  /* Every section header centres on a phone (eyebrow, heading, intro),
+     like the hero, the quote and the closing call already do. Content under
+     the headers keeps its own alignment: FAQ rows, ticket rows and card text
+     stay left, where they read best. */
+  .nightsHead,
+  .videoText {
+    text-align: center;
+    margin-inline: auto;
   }
 
-  .worldsBand .inner,
+  .nightsHead .leadLeft,
+  .videoText .leadLeft {
+    margin-inline: auto;
+  }
+
+  /* Heading over its link, both centred, instead of the two ends of a row. */
+  .galleryHead {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+  }
+
+  /* The quote is the page's peak, so on a phone it gets a stage of its own:
+     at least half the screen tall (svh, steady while the address bar moves,
+     divided by the page zoom like the hero), centred both ways. */
   .quoteBand {
-    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(50vh / var(--wl-zoom, 1));
+    min-height: calc(50svh / var(--wl-zoom, 1));
   }
 
-  .quoteBefore,
-  .quote,
-  .worldsClose {
-    margin-left: 0;
-    margin-right: 0;
+  .quoteBand .inner {
+    width: 100%;
   }
 
   .galleryGrid > li:nth-child(n + 4) {

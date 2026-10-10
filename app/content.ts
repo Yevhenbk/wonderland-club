@@ -40,7 +40,6 @@ export const site = {
 };
 
 export const nav = [
-  { href: "#why", label: "Чому ми" },
   { href: "#nights", label: "Ночі" },
   { href: "#tickets", label: "Квитки" },
   { href: "#gallery", label: "Медіа" },
@@ -48,7 +47,6 @@ export const nav = [
 ];
 
 export const header = {
-  cta: "Квитки",
   menuLabel: "Меню",
 };
 
@@ -114,16 +112,6 @@ export const tickets = {
   },
   cta: "Купити квиток",
   ctaPending: "Стежити за стартом продажу",
-};
-
-export const why = {
-  label: "Чому Wonderland?",
-  title: "Нам набридло приходити в різні клуби й отримувати одну й ту саму ніч.",
-  lead: "Тому ми вирішили зробити своє.",
-  leftBehindTitle: "Що ми залишили за дверима",
-  leftBehindNote: "Повторення залишимо тим, кому більше нічого придумати.",
-  leftBehind: ["Та сама музика.", "Та сама атмосфера.", "Ті самі сценарії."],
-  cta: "Наступна ніч",
 };
 
 export const worlds = {

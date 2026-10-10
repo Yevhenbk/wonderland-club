@@ -15,7 +15,6 @@ import {
   quote,
   site,
   tickets,
-  why,
   worlds,
 } from "@/app/content";
 
@@ -97,7 +96,7 @@ export default function Home() {
     <div className={styles.page} id="top">
       <NightField />
       <span className={styles.grain} aria-hidden="true" />
-      <SiteHeader onTickets={scrollToPrices} />
+      <SiteHeader />
 
       {/* --------------------------------------------------------- hero */}
       <section className={styles.hero}>
@@ -154,34 +153,6 @@ export default function Home() {
                 <span className={styles.tickerStar}>✦</span>
               </span>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------------------------------------------------- why */}
-      <section className={styles.section} id="why">
-        <div className={styles.splitTop}>
-          <div>
-            <p className={styles.label}>{why.label}</p>
-            <h2 className={styles.h2}>{why.title}</h2>
-            <p className={styles.lead}>{why.lead}</p>
-            <button
-              type="button"
-              className={styles.btn}
-              onClick={scrollToTicket}
-              data-cta
-            >
-              {why.cta}
-            </button>
-          </div>
-          <div className={styles.listCol}>
-            <h3 className={styles.listTitle}>{why.leftBehindTitle}</h3>
-            <p className={styles.listNote}>{why.leftBehindNote}</p>
-            <ul className={styles.list}>
-              {why.leftBehind.map((text) => (
-                <li key={text}>{text}</li>
-              ))}
-            </ul>
           </div>
         </div>
       </section>

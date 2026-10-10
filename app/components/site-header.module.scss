@@ -1,5 +1,3 @@
-@use "../styles/button";
-
 .header {
   position: fixed;
   inset: 0 0 auto;
@@ -80,26 +78,6 @@
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.cta {
-  display: inline-block;
-  font-size: 15px;
-  font-weight: 700;
-  line-height: normal;
-  color: var(--wl-gold-ink);
-  background: var(--wl-gold);
-  border: 0;
-  border-radius: 999px;
-  padding: 11px 20px;
-  cursor: pointer;
-  white-space: nowrap;
-  @include button.hover-lift;
-}
-
-.cta:focus-visible {
-  outline: 2px solid var(--wl-steel);
-  outline-offset: 3px;
 }
 
 /* ----------------------------------------------------------------- mobile */
@@ -221,7 +199,7 @@
 
   .sheet {
     display: flex;
-    max-height: calc(100dvh - 56px);
+    max-height: calc(100dvh - 62px);
     overflow-y: auto;
     overscroll-behavior: contain;
   }
@@ -229,82 +207,52 @@
   .scrim {
     display: block;
   }
-
-  .cta {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    padding: 0 16px;
-  }
 }
 
-/* On a phone the one gold action is the bar at the bottom; up here the same
-   call steps down to an outline so two golds never share a screen. */
+/* On a phone the bar matches the ticket bar at the bottom of the screen:
+   72px tall, 16px in from the edges, and a 51px tap target on the menu
+   button, the height of that bar's button. The logo gets the room the
+   ticket button used to take. */
 @media (max-width: 767px) {
   .inner {
-    height: 56px;
+    height: 72px;
+    padding: 0 16px;
+  }
+
+  .logo {
+    height: 44px;
+  }
+
+  .burger {
+    width: 51px;
+    height: 51px;
+    margin-right: -10px;
+  }
+
+  .sheet {
+    max-height: calc(100dvh - 72px);
+    padding-inline: 16px;
   }
 
   .scrim {
-    top: 56px;
-  }
-
-  .cta {
-    background: transparent;
-    color: var(--wl-ink);
-    border: 1px solid var(--wl-line-strong);
-    box-shadow: none;
-  }
-}
-
-/* At 390 the bar holds the logo, the call and the burger on one line. */
-@media (max-width: 440px) {
-  .logo {
-    height: 38px;
-  }
-}
-
-/* iPhone SE and smaller: at 38px the logo ran into the call. A tighter gap,
-   a smaller logo and a narrower pill fit all three on 320. */
-@media (max-width: 360px) {
-  .inner {
-    gap: 12px;
-  }
-
-  .logo {
-    height: 28px;
-  }
-
-  .cta {
-    padding: 0 12px;
+    top: 72px;
   }
 }
 
 /* Touch screens wide enough for the desktop links (tablets, landscape
-   phones): the links were 19px tall and the call 40. Same look, a 44px
-   target around each. */
+   phones): the links were 19px tall. Same look, a 44px target around
+   each. */
 @media (pointer: coarse) {
-  .link,
-  .cta {
+  .link {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-  }
-}
-
-/* Folded phones (about 280 wide) cannot hold the call at all. The phone
-   bar at the bottom carries the same action, so the header lets it go.
-   After the touch rule on purpose: a folded phone is a touch screen too. */
-@media (max-width: 300px) {
-  .cta {
-    display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .header,
   .link,
-  .cta,
   .burger span,
   .sheet,
   .scrim {
