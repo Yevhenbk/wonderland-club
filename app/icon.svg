@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- The four-point star from the centre of the logo, in its rose-gold
+       chrome, on the navbar's colour. Long vertical arms, shorter
+       horizontal ones, like the original. -->
+  <defs>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fdf3ed"/>
+      <stop offset="0.45" stop-color="#e2a59d"/>
+      <stop offset="1" stop-color="#a26c67"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#e2a59d" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#e2a59d" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#0f0b19"/>
+  <circle cx="32" cy="32" r="20" fill="url(#glow)"/>
+  <path fill="url(#metal)"
+        d="M32 5 Q34.2 29.8 54 32 Q34.2 34.2 32 59 Q29.8 34.2 10 32 Q29.8 29.8 32 5 Z"/>
+</svg>

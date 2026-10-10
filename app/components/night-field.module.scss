@@ -1,0 +1,70 @@
+@use "../styles/blob";
+
+/* Pinned to the viewport, behind the whole page. */
+.field {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  --px: 0;
+  --py: 0;
+  background: #050309;
+}
+
+@include blob.keyframes;
+
+/* Three blobs, each on its own orbit and a third of the colour cycle apart,
+   so the three metals are always all on screen, just never in the same
+   place twice. Depth comes from how far each one answers the pointer: the
+   nearest moves the most. */
+.bloom {
+  position: absolute;
+  filter: blur(80px);
+  will-change: transform, translate;
+  transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bloomA {
+  @include blob.blob(0s, blobOrbitA 34s ease-in-out infinite);
+  left: -14%;
+  top: -12%;
+  width: 60vw;
+  height: 60vw;
+  opacity: 0.26;
+  transform: translate(calc(var(--px) * -18px), calc(var(--py) * -18px));
+}
+
+.bloomB {
+  @include blob.blob(8s, blobOrbitB 41s ease-in-out infinite);
+  right: -18%;
+  top: 8%;
+  width: 54vw;
+  height: 54vw;
+  opacity: 0.36;
+  transform: translate(calc(var(--px) * 12px), calc(var(--py) * 12px));
+}
+
+.bloomC {
+  @include blob.blob(16s, blobOrbitC 47s ease-in-out infinite);
+  left: 16%;
+  bottom: -24%;
+  width: 60vw;
+  height: 60vw;
+  opacity: 0.3;
+  transform: translate(calc(var(--px) * -8px), calc(var(--py) * -8px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bloom {
+    animation: none;
+    transition: none;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .bloom {
+    filter: blur(56px);
+  }
+}

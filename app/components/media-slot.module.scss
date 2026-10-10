@@ -1,0 +1,72 @@
+@use "../styles/blob";
+
+@include blob.keyframes;
+
+.slot {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--wl-paper);
+}
+
+.slot img,
+.slot video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pending {
+  /* Some hosts zero the line height to keep a real <video> flush (the
+     aftermovie frame does); the placeholder's two lines need their own. */
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.035) 0 10px,
+      rgba(255, 255, 255, 0) 10px 20px
+    ),
+    var(--wl-paper);
+  border: 1px dashed var(--wl-line-strong);
+}
+
+/* The same moving blob as everywhere else, small, under the label. */
+.pending::before {
+  content: "";
+  position: absolute;
+  left: -10%;
+  top: -20%;
+  width: 80%;
+  aspect-ratio: 1;
+  @include blob.blob(0s, blobWander 20s ease-in-out infinite);
+  opacity: 0.16;
+  filter: blur(24px);
+}
+
+.tag,
+.note {
+  position: relative;
+}
+
+.tag {
+  font-family: var(--wl-font-wide);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--wl-soft);
+}
+
+.note {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--wl-faint);
+}

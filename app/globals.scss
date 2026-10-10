@@ -1,0 +1,69 @@
+/* The colour every moving blob animates; see styles/_blob.scss. Registered
+   so a gradient can interpolate it. */
+@property --blob-c {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: rgb(214, 142, 133);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #050309;
+  color: #f5eeec;
+  font-family:
+    var(--font-body), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, sans-serif;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Very wide screens at 100% OS scaling. The layout is built for up to about
+   2000 CSS pixels (a 1080px column), so a 3840 viewport showed it at half
+   the size it is meant to be read at. The whole page is zoomed in steps, the
+   way OS display scaling would do it: a 4K screen renders exactly the 1920
+   layout, twice as large. Screens that already scale (most 4K setups run at
+   150-200%) report a narrower viewport and never reach these steps. */
+@media (min-width: 2400px) {
+  html {
+    zoom: 1.25;
+  }
+}
+
+@media (min-width: 3000px) {
+  html {
+    zoom: 1.5;
+  }
+}
+
+@media (min-width: 3600px) {
+  html {
+    zoom: 2;
+  }
+}

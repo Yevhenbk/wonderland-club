@@ -1,0 +1,105 @@
+@use "../styles/button";
+
+.item {
+  border-bottom: 1px solid var(--wl-line);
+}
+
+.item summary {
+  padding: 22px 0;
+  font-size: 16.5px;
+  font-weight: 700;
+  letter-spacing: -0.008em;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  transition: color button.$duration button.$ease;
+}
+
+.item summary::-webkit-details-marker {
+  display: none;
+}
+
+.item summary:hover {
+  color: #fff;
+}
+
+.item summary:focus-visible {
+  outline: 2px solid var(--wl-steel);
+  outline-offset: 4px;
+}
+
+/* A plus drawn as two bars. Opening folds the vertical bar away and turns
+   the whole mark, so it becomes a minus in one motion instead of swapping
+   one character for another. */
+.icon {
+  position: relative;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: var(--wl-faint);
+  transition:
+    transform button.$duration button.$ease,
+    color button.$duration button.$ease;
+}
+
+.icon::before,
+.icon::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: currentColor;
+  translate: -50% -50%;
+  transition: transform button.$duration button.$ease;
+}
+
+.icon::after {
+  transform: rotate(90deg);
+}
+
+.icon[data-open="true"] {
+  color: var(--wl-rose);
+  transform: rotate(180deg);
+}
+
+.icon[data-open="true"]::after {
+  transform: rotate(90deg) scaleX(0);
+}
+
+/* Overflow is clipped so the answer can be animated from zero height. */
+.body {
+  overflow: hidden;
+  max-width: 68ch;
+  font-size: 15.5px;
+  line-height: 1.68;
+  color: var(--wl-soft);
+}
+
+.body p {
+  margin: 0;
+  padding: 0 0 24px;
+}
+
+@media (max-width: 767px) {
+  .item summary {
+    padding: 18px 0;
+    min-height: 44px;
+    font-size: 17px;
+    line-height: 1.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item summary,
+  .icon,
+  .icon::before,
+  .icon::after {
+    transition: none;
+  }
+}

@@ -1,0 +1,184 @@
+/**
+ * Moving blobs, shared by every soft glow on the page.
+ *
+ * Each blob does two things at once. It travels along its own slow orbit
+ * (on `translate`, so a pointer parallax on `transform` still composes with
+ * it), and its colour cycles through the logo's three metals: rose gold,
+ * steel blue, nebula violet. The colour is the registered property
+ * `--blob-c` (declared in globals.scss), which is what lets the browser
+ * interpolate a colour inside a gradient instead of snapping between stops.
+ * Without @property support the colour steps at each keyframe and the motion
+ * is unaffected.
+ *
+ * Keyframe names are scoped per CSS module, so a module that uses `blob`
+ * also includes `keyframes` once at its top level.
+ */
+
+@use "sass:list";
+
+$rose: rgb(214, 142, 133);
+$steel: rgb(88, 122, 176);
+$violet: rgb(92, 56, 160);
+
+/* One full trip through the three colours. */
+$tint-cycle: 24s;
+
+@mixin keyframes {
+  @keyframes blobTint {
+    0%,
+    100% {
+      --blob-c: #{$rose};
+    }
+    33% {
+      --blob-c: #{$steel};
+    }
+    66% {
+      --blob-c: #{$violet};
+    }
+  }
+
+  /* Viewport-scale orbits, for the field pinned behind the page. */
+  @keyframes blobOrbitA {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    25% {
+      translate: 16vw 10vh;
+    }
+    50% {
+      translate: 8vw 26vh;
+    }
+    75% {
+      translate: -6vw 12vh;
+    }
+  }
+
+  @keyframes blobOrbitB {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    25% {
+      translate: -14vw 14vh;
+    }
+    50% {
+      translate: -24vw -4vh;
+    }
+    75% {
+      translate: -6vw -12vh;
+    }
+  }
+
+  @keyframes blobOrbitC {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    30% {
+      translate: 12vw -16vh;
+    }
+    60% {
+      translate: -14vw -10vh;
+    }
+    80% {
+      translate: -4vw 6vh;
+    }
+  }
+
+  /* Element-scale wander, for glows that live inside a card or a section. */
+  @keyframes blobWander {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    33% {
+      translate: 28% 14%;
+    }
+    66% {
+      translate: -16% 26%;
+    }
+  }
+
+  /* The same idea on a different path, so blobs sharing a small box do
+     not move in step. */
+  @keyframes blobWanderAlt {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    30% {
+      translate: -30% 18%;
+    }
+    65% {
+      translate: 22% -20%;
+    }
+  }
+
+  /* A colour cycle through the element's own ramp (the --tint-* variables a
+     night card sets) instead of the page's three metals, so each card keeps
+     its identity while it moves. */
+  @keyframes blobRamp {
+    0%,
+    100% {
+      --blob-c: var(--tint-mid);
+    }
+    33% {
+      --blob-c: var(--tint-mid2);
+    }
+    66% {
+      --blob-c: var(--tint-to);
+    }
+  }
+}
+
+/* The disc itself. A bell-shaped falloff rather than a straight ramp to
+   transparent: a linear fade ends in a visible rim, and on a near-black
+   ground its few 8-bit steps read as rings. The stops approximate a
+   gaussian, and the page grain (home.module.scss) dithers whatever banding
+   is left. `closest-side` keeps the whole fade inside the disc: the default
+   size (farthest corner) ran the gradient past the 50% border radius, which
+   cut it off in a visible rim. */
+@mixin -disc {
+  border-radius: 50%;
+  background: radial-gradient(
+    circle closest-side,
+    var(--blob-c) 0%,
+    color-mix(in srgb, var(--blob-c) 82%, transparent) 16%,
+    color-mix(in srgb, var(--blob-c) 56%, transparent) 36%,
+    color-mix(in srgb, var(--blob-c) 30%, transparent) 55%,
+    color-mix(in srgb, var(--blob-c) 12%, transparent) 74%,
+    color-mix(in srgb, var(--blob-c) 3%, transparent) 88%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+@mixin -animate($tint, $phase, $motions) {
+  @if list.length($motions) > 0 {
+    animation:
+      $tint $tint-cycle linear (-$phase) infinite,
+      $motions;
+  } @else {
+    animation: $tint $tint-cycle linear (-$phase) infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+/// A soft disc whose colour cycles through the logo's metals.
+/// $phase: how far into the colour cycle this blob starts, so neighbours
+///         never share a colour at the same moment.
+/// $motions: the movement animations to run alongside the colour cycle.
+@mixin blob($phase: 0s, $motions...) {
+  @include -disc;
+  @include -animate(blobTint, $phase, $motions);
+}
+
+/// The same disc, cycling through the element's own --tint-* ramp instead.
+@mixin ramp-blob($phase: 0s, $motions...) {
+  @include -disc;
+  @include -animate(blobRamp, $phase, $motions);
+}

@@ -1,0 +1,64 @@
+@use "../styles/button";
+
+.wrap {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--wl-paper);
+}
+
+/* The two players sit on top of each other. The one in front is shown;
+   the one behind waits invisibly with its clip loaded. The handover is a
+   straight cut, made only once the next clip's first frame is on screen,
+   so there is never an empty frame between clips. */
+.video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+}
+
+.video[data-front="true"] {
+  z-index: 1;
+  opacity: 1;
+}
+
+/* A small round control in the corner, dark glass over the footage so it
+   reads on any frame, with the page's one shared button hover. */
+.sound {
+  position: absolute;
+  z-index: 2;
+  right: 14px;
+  bottom: 14px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--wl-line-strong);
+  border-radius: 50%;
+  background: rgba(15, 11, 25, 0.62);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--wl-ink);
+  cursor: pointer;
+  @include button.hover-lift;
+}
+
+.sound[aria-pressed="true"] {
+  color: var(--wl-rose);
+}
+
+.sound:focus-visible {
+  outline: 2px solid var(--wl-steel);
+  outline-offset: 3px;
+}
+
+.sound svg {
+  width: 20px;
+  height: 20px;
+}

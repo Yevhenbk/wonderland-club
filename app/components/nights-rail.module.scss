@@ -1,0 +1,416 @@
+@use "sass:list";
+@use "../styles/blob";
+@use "../styles/button";
+
+@include blob.keyframes;
+
+.rail {
+  display: grid;
+  gap: clamp(16px, 2vw, 20px);
+  margin: clamp(28px, 4vw, 42px) 0 0;
+  text-align: left;
+}
+
+/* ---------------------------------------------------------------- flagship */
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 300px);
+  border-radius: var(--wl-radius);
+  border: 1px solid var(--wl-line-strong);
+  background: var(--wl-paper);
+  overflow: hidden;
+  box-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.8);
+}
+
+/* The corner glow, as a blob that drifts under the copy and runs the colour
+   cycle. The ticket panel beside it is opaque, so it only ever lights the
+   side the words are on. */
+.hero::before {
+  content: "";
+  position: absolute;
+  left: -18%;
+  top: -60%;
+  width: 70%;
+  aspect-ratio: 1;
+  @include blob.blob(12s, blobWander 22s ease-in-out infinite);
+  opacity: 0.2;
+  filter: blur(30px);
+}
+
+.heroBody,
+.buy {
+  position: relative;
+  z-index: 1;
+}
+
+.heroBody {
+  padding: clamp(24px, 3vw, 34px);
+}
+
+.heroEyebrow {
+  margin: 0 0 12px;
+  font-family: var(--wl-font-wide);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tint-to);
+}
+
+.heroName {
+  font-family: var(--wl-font-wide);
+  font-size: clamp(19px, 2.2vw, 24px);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--wl-ink);
+  letter-spacing: -0.02em;
+}
+
+/* Date, place, sound: a quiet three-up of facts, hairline above each. */
+.facts {
+  margin: 24px 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px 22px;
+}
+
+.facts > div {
+  padding-top: 12px;
+  border-top: 1px solid var(--wl-line);
+}
+
+.facts dt {
+  font-family: var(--wl-font-wide);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wl-faint);
+}
+
+.facts dd {
+  margin: 6px 0 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--wl-ink);
+}
+
+/* The address opens the map: underlined lightly, rose gold on hover. */
+.facts dd a {
+  /* Grow the tap area to a full 44px without moving the text: padding
+     outward, cancelled by an equal negative margin. */
+  display: inline-block;
+  padding-block: 13px;
+  margin-block: -13px;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--wl-line-strong);
+  text-underline-offset: 3px;
+  transition: color 0.3s ease, text-decoration-color 0.3s ease;
+}
+
+.facts dd a:hover,
+.facts dd a:focus-visible {
+  color: var(--wl-rose);
+  text-decoration-color: var(--wl-rose);
+  outline: none;
+}
+
+/* The one deliberately loud surface in the section: the night's own ramp,
+   postcard sized, with the call on it. */
+.buy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  padding: clamp(22px, 3vw, 30px);
+  color: #fff;
+  background:
+    radial-gradient(
+      130% 110% at 100% 0%,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(255, 255, 255, 0) 62%
+    ),
+    linear-gradient(
+      150deg,
+      var(--tint-from) 0%,
+      var(--tint-mid) 45%,
+      var(--tint-mid2) 85%,
+      var(--tint-to) 120%
+    );
+}
+
+.buyKicker {
+  font-family: var(--wl-font-wide);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* The light stop of the gold, used flat as a figure: the gradient stays
+   reserved for surfaces that are actually pressable. */
+.buyBig {
+  margin-top: 4px;
+  font-family: var(--wl-font-wide);
+  font-size: clamp(26px, 3vw, 32px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #f6dcd5;
+}
+
+/* Not gold: a white pill on its own colour, unmistakably a button. */
+.buyCta {
+  margin-top: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--tint-from);
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  @include button.hover-lift;
+}
+
+.buyCta:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.buyNote {
+  margin-top: 14px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+@media (max-width: 820px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .facts {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .facts > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 12px 0;
+  }
+
+  .facts dd {
+    margin: 0;
+    text-align: right;
+  }
+}
+
+/* -------------------------------------------------------------------- grid */
+
+.pastLabel {
+  margin: clamp(18px, 3vw, 30px) 0 0;
+  font-family: var(--wl-font-wide);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--wl-faint);
+}
+
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 20px);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--wl-radius);
+  border: 1px solid var(--wl-line);
+  background: var(--wl-paper);
+  overflow: hidden;
+  box-shadow: 0 14px 30px -26px rgba(0, 0, 0, 0.8);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 40px -26px rgba(0, 0, 0, 0.9);
+}
+
+/* The night's colour, in a band across the head: three blobs drifting over
+   the ramp's darkest stop, each cycling through the night's own shades (not
+   the page's metals, so every card keeps its identity). A veil sits between
+   them and the type so white holds on their brightest moment. */
+.stage {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 112px;
+  padding: clamp(16px, 2vw, 22px) clamp(18px, 2.2vw, 24px);
+  background: var(--tint-from);
+  overflow: hidden;
+}
+
+.stageBlobs {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.stageBlobs > span {
+  position: absolute;
+  width: 78%;
+  aspect-ratio: 1;
+  filter: blur(18px);
+}
+
+/* Three starting points, three phases a third of the cycle apart, two
+   different paths: the band never holds still and never repeats itself. */
+.stageBlobs > span:nth-child(1) {
+  left: -22%;
+  top: -90%;
+  @include blob.ramp-blob(0s, blobWander 16s ease-in-out infinite);
+  opacity: 0.95;
+}
+
+.stageBlobs > span:nth-child(2) {
+  right: -26%;
+  top: -60%;
+  @include blob.ramp-blob(8s, blobWanderAlt 19s ease-in-out infinite);
+  opacity: 0.9;
+}
+
+.stageBlobs > span:nth-child(3) {
+  left: 18%;
+  top: -10%;
+  width: 64%;
+  @include blob.ramp-blob(16s, blobWander 23s ease-in-out -9s infinite);
+  opacity: 0.7;
+}
+
+/* The cards sit side by side, so each one is shifted along both cycles;
+   otherwise three bands would drift in visible lockstep. Each blob keeps
+   its own colour phase and path offset (the values set above), plus the
+   card's shift. */
+$blob-phase: (0s, 8s, 16s);
+$blob-path-delay: (0s, 0s, -9s);
+$card-shift: (
+  2: (6s, 5s),
+  3: (14s, 11s),
+);
+
+@each $card, $shift in $card-shift {
+  @for $i from 1 through 3 {
+    .card:nth-child(3n + #{$card})
+      .stageBlobs
+      > span:nth-child(#{$i}) {
+      animation-delay:
+        -(list.nth($blob-phase, $i) + list.nth($shift, 1)),
+        list.nth($blob-path-delay, $i) - list.nth($shift, 2);
+    }
+  }
+}
+
+.stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(0deg, rgba(5, 3, 9, 0.6), rgba(5, 3, 9, 0.12));
+}
+
+.stageText {
+  position: relative;
+  z-index: 2;
+}
+
+.cardNumber {
+  font-family: var(--wl-font-wide);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.cardName {
+  margin-top: 6px;
+  font-family: var(--wl-font-wide);
+  font-size: 16.5px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: clamp(14px, 1.6vw, 18px) clamp(18px, 2.2vw, 24px)
+    clamp(18px, 2.2vw, 24px);
+}
+
+.cardMedia {
+  aspect-ratio: 4 / 3;
+  height: auto;
+  border-radius: 10px;
+}
+
+.cardLine {
+  margin-top: 14px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--wl-soft);
+}
+
+.cardDate {
+  margin-top: auto;
+  padding-top: 14px;
+  font-family: var(--wl-font-wide);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--wl-faint);
+}
+
+/* Three across down to 700, then one. Two across left the third night on a
+   row of its own with a hole beside it on every tablet. */
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+}

@@ -1,0 +1,147 @@
+@use "../styles/blob";
+@use "../styles/button";
+
+@include blob.keyframes;
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 20px);
+  margin-top: clamp(28px, 4vw, 42px);
+  text-align: left;
+}
+
+/* The night cards' language: paper, a hairline border, and a soft glow
+   drifting in the top corner, rose on the standard entry and steel on the
+   group one, so the two are told apart at a glance. */
+.card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(24px, 3vw, 32px);
+  border-radius: var(--wl-radius);
+  border: 1px solid var(--wl-line-strong);
+  background: var(--wl-paper);
+  overflow: hidden;
+  box-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.8);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: -20%;
+  top: -55%;
+  width: 75%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle closest-side,
+    var(--card-glow) 0%,
+    color-mix(in srgb, var(--card-glow) 40%, transparent) 45%,
+    transparent 100%
+  );
+  opacity: 0.22;
+  filter: blur(30px);
+  pointer-events: none;
+  animation: blobWander 22s ease-in-out infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.eyebrow {
+  font-family: var(--wl-font-wide);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--card-glow);
+}
+
+.name {
+  margin-top: 10px;
+  font-family: var(--wl-font-wide);
+  font-size: clamp(19px, 2.2vw, 24px);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/* Who or how, then the price, on a hairline per row. */
+.tiers {
+  margin: 22px 0 0;
+  display: grid;
+}
+
+.tiers > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  border-top: 1px solid var(--wl-line);
+}
+
+.tiers dt {
+  font-size: 15px;
+  color: var(--wl-soft);
+}
+
+.tiers dd {
+  margin: 0;
+  font-family: var(--wl-font-wide);
+  font-size: clamp(20px, 2.2vw, 24px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+/* The cheapest way in: the one price in rose gold. */
+.best dt {
+  color: var(--wl-ink);
+  font-weight: 600;
+}
+
+.best dd {
+  background: var(--wl-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.note {
+  margin: 6px 0 22px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--wl-faint);
+}
+
+/* Pinned to the foot, so both cards' buttons sit on one line whatever the
+   number of rows above them. */
+.cta {
+  margin-top: auto;
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--wl-gold-ink);
+  background: var(--wl-gold);
+  border-radius: 999px;
+  padding: 15px 20px;
+  text-decoration: none;
+  @include button.hover-lift;
+}
+
+.cta:focus-visible {
+  outline: 2px solid var(--wl-steel);
+  outline-offset: 3px;
+}
+
+@media (max-width: 720px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

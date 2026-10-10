@@ -1,0 +1,314 @@
+@use "../styles/button";
+
+.header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 60;
+  background: transparent;
+  transition:
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+/* Opaque, not frosted: backdrop blur is not reliable on every phone, and
+   type running through the bar reads as a printing fault. */
+.header[data-solid="true"] {
+  background: var(--wl-paper);
+  box-shadow: 0 1px 0 var(--wl-line);
+}
+
+.inner {
+  max-width: var(--wl-max);
+  margin: 0 auto;
+  padding: 0 var(--wl-gut);
+  height: 62px;
+  /* Three columns with equal outer tracks, so the links sit at the true
+     centre of the bar however wide the logo and the call are. */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 20px;
+}
+
+.brand {
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  text-decoration: none;
+  color: var(--wl-ink);
+  min-width: 0;
+}
+
+/* The logo's wordmark band ("WONDERLAND / CLUB"), cut from
+   public/media/wonderland_logo.jpg with its sky turned into transparency,
+   so it sits on the moving field like the chrome is floating on it. The
+   full emblem would set the letters at about 7px here; this crop keeps
+   them readable. The letters are thin chrome, so they get the height the
+   bar can spare and a little extra light to hold on the dark ground. */
+.logo {
+  display: block;
+  width: auto;
+  height: 48px;
+  filter: brightness(1.18) contrast(1.05);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
+.link {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--wl-soft);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.18s ease;
+}
+
+.link:hover,
+.link:focus-visible {
+  color: var(--wl-ink);
+  outline: none;
+}
+
+.right {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cta {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: normal;
+  color: var(--wl-gold-ink);
+  background: var(--wl-gold);
+  border: 0;
+  border-radius: 999px;
+  padding: 11px 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  @include button.hover-lift;
+}
+
+.cta:focus-visible {
+  outline: 2px solid var(--wl-steel);
+  outline-offset: 3px;
+}
+
+/* ----------------------------------------------------------------- mobile */
+
+.burger {
+  display: none;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}
+
+.burger span {
+  position: relative;
+  width: 18px;
+  height: 2px;
+  background: var(--wl-ink);
+  border-radius: 2px;
+  transition: background 0.2s ease;
+}
+
+.burger span::before,
+.burger span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 18px;
+  height: 2px;
+  background: var(--wl-ink);
+  border-radius: 2px;
+  transition: transform 0.22s ease;
+}
+
+.burger span::before {
+  top: -6px;
+}
+
+.burger span::after {
+  top: 6px;
+}
+
+.burger span[data-open="true"] {
+  background: transparent;
+}
+
+.burger span[data-open="true"]::before {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.burger span[data-open="true"]::after {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+.sheet {
+  display: none;
+  flex-direction: column;
+  padding: 6px var(--wl-gut) 18px;
+  background: var(--wl-paper);
+  box-shadow: 0 1px 0 var(--wl-line);
+  animation: drop 0.2s ease both;
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+.sheetLink {
+  display: block;
+  padding: 15px 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--wl-ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--wl-line);
+}
+
+.sheetLink:last-child {
+  border-bottom: 0;
+}
+
+/* Inside the fixed header's stacking context, so -1 puts it behind the bar
+   and the sheet but in front of the page. */
+.scrim {
+  display: none;
+  position: fixed;
+  inset: 62px 0 0;
+  z-index: -1;
+  background: rgba(0, 0, 0, 0.55);
+  animation: fade 0.2s ease both;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 860px) {
+  /* No links in the middle any more: logo left, call and burger right. */
+  .inner {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .burger {
+    display: flex;
+  }
+
+  .sheet {
+    display: flex;
+    max-height: calc(100dvh - 56px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .scrim {
+    display: block;
+  }
+
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 16px;
+  }
+}
+
+/* On a phone the one gold action is the bar at the bottom; up here the same
+   call steps down to an outline so two golds never share a screen. */
+@media (max-width: 767px) {
+  .inner {
+    height: 56px;
+  }
+
+  .scrim {
+    top: 56px;
+  }
+
+  .cta {
+    background: transparent;
+    color: var(--wl-ink);
+    border: 1px solid var(--wl-line-strong);
+    box-shadow: none;
+  }
+}
+
+/* At 390 the bar holds the logo, the call and the burger on one line. */
+@media (max-width: 440px) {
+  .logo {
+    height: 38px;
+  }
+}
+
+/* iPhone SE and smaller: at 38px the logo ran into the call. A tighter gap,
+   a smaller logo and a narrower pill fit all three on 320. */
+@media (max-width: 360px) {
+  .inner {
+    gap: 12px;
+  }
+
+  .logo {
+    height: 28px;
+  }
+
+  .cta {
+    padding: 0 12px;
+  }
+}
+
+/* Touch screens wide enough for the desktop links (tablets, landscape
+   phones): the links were 19px tall and the call 40. Same look, a 44px
+   target around each. */
+@media (pointer: coarse) {
+  .link,
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+/* Folded phones (about 280 wide) cannot hold the call at all. The phone
+   bar at the bottom carries the same action, so the header lets it go.
+   After the touch rule on purpose: a folded phone is a touch screen too. */
+@media (max-width: 300px) {
+  .cta {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  .link,
+  .cta,
+  .burger span,
+  .sheet,
+  .scrim {
+    transition: none;
+    animation: none;
+  }
+}

@@ -1,0 +1,1099 @@
+@use "../styles/blob";
+@use "../styles/button";
+
+/**
+ * Wonderland landing, built on the Soul Guide 427 homepage system.
+ *
+ * Same discipline, different night: one accent moment (the gradient on the
+ * headline, repeated only on the quote and the closing line), everything
+ * else in ink and two greys. Gold means "press this" and nothing else. Cards
+ * carry a tint instead of a heavy border, grounds alternate between the open
+ * field, a wash and paper, and every section repeats the same three part
+ * header (eyebrow, heading, lead) so the page reads as one object.
+ *
+ * All colour lives in the tokens below; flipping the palette is this block.
+ *
+ * The palette is sampled from the logo (public/media/wonderland_logo.jpg):
+ * rose-gold chrome, steel-blue chrome and silver lettering on a violet-black
+ * night with a faint nebula. Rose gold takes the role gold had on the source
+ * page, so the one colour that means "press this" is the logo's own metal.
+ */
+@include blob.keyframes;
+
+.page {
+  position: relative;
+
+  /* ink scale: the logo's silver, warmed toward its highlight #fdf3ed */
+  --wl-ink: #f5eeec;
+  --wl-soft: #b4abb3;
+  --wl-faint: #857d8a;
+
+  /* Grounds: the logo's sky (#050309) and its nebula (#120d20). The washes
+     carry alpha so the field keeps showing through; paper stays opaque
+     wherever running text sits on it. */
+  --wl-night: #050309;
+  --wl-paper: #0f0b19;
+  --wl-wash: rgba(18, 13, 32, 0.68);
+  --wl-wash-strong: rgba(24, 19, 40, 0.86);
+  --wl-line: rgba(232, 222, 230, 0.08);
+  --wl-line-strong: rgba(232, 222, 230, 0.16);
+
+  /* brand: the two chromes */
+  --wl-rose: #e2a59d;
+  --wl-steel: #8aa5c8;
+  /* Rose gold to silver to steel, the order the logo's ring runs in. */
+  --wl-grad: linear-gradient(
+    100deg,
+    #f0cbc5 0%,
+    #d3958d 32%,
+    #ece4e6 58%,
+    #8aa5c8 100%
+  );
+  --wl-gold: linear-gradient(270deg, #f6dcd5 0%, #d99f96 100%);
+  --wl-gold-ink: #3a1e1b;
+  --wl-gold-glow: 217, 159, 150;
+
+  /* type: the logo's wide "CLUB" for every heading and label; running text
+     is the body face set in globals.scss */
+  --wl-font-wide: var(--font-wide), "Unbounded", ui-sans-serif, sans-serif;
+
+  /* one radius, one rhythm, one container */
+  --wl-radius: 20px;
+  --wl-gut: clamp(22px, 5vw, 48px);
+  --wl-max: 1080px;
+  --wl-section-y: clamp(54px, 10vw, 132px);
+
+  width: 100%;
+  min-width: 0;
+  color: var(--wl-ink);
+  /* clip, not hidden: hidden would turn the page into a scroll container. */
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The field is pinned behind the page; sections must be positioned to paint
+   above it. */
+.page > section,
+.page > footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* Film grain over the whole page, above every section and glow. Its real
+   job is dithering: the blobs fade across only a few 8-bit steps on this
+   dark a ground, and a faint grey noise breaks those steps up so no ring is
+   visible. Normal blend on purpose; overlay does next to nothing on black.
+   Sits under the header (60) so the bar stays clean. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.grad {
+  background: var(--wl-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-bottom: 2px;
+}
+
+/* ------------------------------------------------------------ primitives */
+
+.section {
+  max-width: var(--wl-max);
+  margin: 0 auto;
+  padding: var(--wl-section-y) var(--wl-gut);
+  text-align: center;
+}
+
+.sectionLeft {
+  composes: section;
+  text-align: left;
+}
+
+.inner {
+  max-width: var(--wl-max);
+  margin: 0 auto;
+  padding: var(--wl-section-y) var(--wl-gut);
+}
+
+.label {
+  font-family: var(--wl-font-wide);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--wl-faint);
+  margin: 0 0 14px;
+}
+
+.h2 {
+  font-family: var(--wl-font-wide);
+  font-size: clamp(24px, 3.4vw, 38px);
+  font-weight: 500;
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.lead {
+  font-size: clamp(15.5px, 1.8vw, 18px);
+  line-height: 1.6;
+  color: var(--wl-soft);
+  max-width: 52ch;
+  margin: 16px auto 0;
+  text-wrap: pretty;
+}
+
+.leadLeft {
+  composes: lead;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* -------------------------------------------------------------------- cta */
+
+/* Every action on this page is gold, and gold is used for nothing else. */
+.btn {
+  display: inline-block;
+  margin-top: 26px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--wl-gold-ink);
+  background: var(--wl-gold);
+  border: 0;
+  border-radius: 999px;
+  padding: 16px 34px;
+  cursor: pointer;
+  text-decoration: none;
+  @include button.hover-lift;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--wl-steel);
+  outline-offset: 3px;
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  min-height: min(96vh, 900px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 104px var(--wl-gut) 20px;
+  /* Clipped sideways only. Clipping vertically cut the drifting glow off in
+     a straight line at the hero's foot; unclipped, it fades out over the
+     transparent section below, so the two read as one ground. */
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+.heroAura {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: min(780px, 120vw);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  /* Breathes in place and wanders a little around the card, while its
+     colour runs through the cycle a third behind the field's first blob. */
+  @include blob.blob(
+    4s,
+    breathe 14s ease-in-out infinite,
+    blobWander 30s ease-in-out infinite
+  );
+  opacity: 0.24;
+  filter: blur(40px);
+  z-index: 0;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.09);
+    opacity: 0.3;
+  }
+}
+
+.heroCenter {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 560px;
+}
+
+.h1 {
+  font-family: var(--wl-font-wide);
+  font-size: clamp(34px, 5.6vw, 64px);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  margin: 0 0 14px;
+  max-width: 12ch;
+  text-wrap: balance;
+}
+
+.heroSub {
+  font-size: clamp(15px, 1.7vw, 17px);
+  line-height: 1.5;
+  color: var(--wl-soft);
+  max-width: 40ch;
+  margin: 0 0 26px;
+  text-wrap: pretty;
+}
+
+/* The calculator card's role: one object, a thin line framing it instead
+   of a heavy box, sized to hold the next night at a glance. */
+.ticketCard {
+  width: min(100%, 440px);
+  background: rgba(15, 11, 25, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--wl-line-strong);
+  border-radius: var(--wl-radius);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 30px 60px -28px rgba(0, 0, 0, 0.9);
+  padding: 20px 20px 18px;
+  text-align: left;
+}
+
+.ticketHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ticketKicker {
+  font-family: var(--wl-font-wide);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--wl-rose);
+}
+
+.ticketLive {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--wl-rose);
+  box-shadow: 0 0 0 0 rgba(226, 165, 157, 0.6);
+  animation: pulse 2.4s ease-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(226, 165, 157, 0.55);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 10px rgba(226, 165, 157, 0);
+  }
+}
+
+.ticketTheme {
+  margin-top: 10px;
+  font-family: var(--wl-font-wide);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.ticketRows {
+  margin: 14px 0 0;
+  display: grid;
+}
+
+.ticketRows > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 10px 0;
+  border-top: 1px solid var(--wl-line);
+}
+
+.ticketRows dt {
+  font-size: 13px;
+  color: var(--wl-faint);
+}
+
+.ticketRows dd {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 600;
+  text-align: right;
+}
+
+.ticketBtn {
+  composes: btn;
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px 18px;
+  text-align: center;
+  font-size: 14.5px;
+}
+
+/* The address opens the map: underlined lightly, rose gold on hover. */
+.ticketRows dd a {
+  /* Grow the tap area to a full 44px without moving the text: padding
+     outward, cancelled by an equal negative margin. */
+  display: inline-block;
+  padding-block: 13px;
+  margin-block: -13px;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--wl-line-strong);
+  text-underline-offset: 3px;
+  transition: color 0.3s ease, text-decoration-color 0.3s ease;
+}
+
+.ticketRows dd a:hover,
+.ticketRows dd a:focus-visible {
+  color: var(--wl-rose);
+  text-decoration-color: var(--wl-rose);
+  outline: none;
+}
+
+.heroGet {
+  width: min(100%, 440px);
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--wl-soft);
+  text-wrap: pretty;
+}
+
+/* The review rail's place: a thin moving strip in the room left under the
+   card. Content is doubled for a seamless loop, so the wrap has to clip. */
+.tickerWrap {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 0;
+  min-height: 96px;
+  /* A guaranteed gap under the card. The strip centres in whatever height
+     the hero has left, and on shorter screens that left it nearly touching
+     the line under the card. */
+  margin-top: clamp(32px, 5vh, 64px);
+  /* Edge to edge by cancelling the hero's side padding, not with 100vw:
+     viewport units are multiplied by the page zoom on very wide screens
+     (globals.scss), which made the strip wider than the screen and pushed
+     its fade-out edges out of view. */
+  align-self: stretch;
+  margin-inline: calc(-1 * var(--wl-gut));
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+}
+
+.ticker {
+  display: flex;
+  flex: none;
+  width: max-content;
+  /* Four runs per half: 4 x 32s keeps the old reading speed. */
+  animation: marquee 128s linear infinite;
+}
+
+.tickerItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 28px;
+  padding-right: 28px;
+  font-family: var(--wl-font-wide);
+  font-size: clamp(13px, 1.5vw, 16px);
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--wl-faint);
+}
+
+.tickerStar {
+  color: var(--wl-steel);
+  font-size: 0.8em;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ------------------------------------------------------------------ split */
+
+.splitTop {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: start;
+  text-align: left;
+}
+
+.splitTop .lead {
+  margin-left: 0;
+}
+
+.listCol {
+  margin-top: 4px;
+  padding: clamp(20px, 3vw, 28px);
+  border-radius: var(--wl-radius);
+  background: var(--wl-wash);
+  border: 1px solid var(--wl-line);
+}
+
+.listTitle {
+  font-family: var(--wl-font-wide);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.listNote {
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--wl-soft);
+  margin: 6px 0 18px;
+  max-width: 42ch;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+
+/* What was left behind: struck through, with a crossed disc where the
+   source page sets a check. */
+.list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 0;
+  font-size: 15.5px;
+  line-height: 1.45;
+  color: var(--wl-soft);
+  text-decoration: line-through;
+  text-decoration-color: rgba(226, 165, 157, 0.7);
+  text-decoration-thickness: 1.5px;
+  border-top: 1px solid var(--wl-line);
+}
+
+.list li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.list li::before {
+  content: "";
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  background: var(--wl-rose);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16ZM5.47 5.47a.75.75 0 0 1 1.06 0L8 6.94l1.47-1.47a.75.75 0 1 1 1.06 1.06L9.06 8l1.47 1.47a.75.75 0 1 1-1.06 1.06L8 9.06l-1.47 1.47a.75.75 0 0 1-1.06-1.06L6.94 8 5.47 6.53a.75.75 0 0 1 0-1.06Z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16ZM5.47 5.47a.75.75 0 0 1 1.06 0L8 6.94l1.47-1.47a.75.75 0 1 1 1.06 1.06L9.06 8l1.47 1.47a.75.75 0 1 1-1.06 1.06L8 9.06l-1.47 1.47a.75.75 0 0 1-1.06-1.06L6.94 8 5.47 6.53a.75.75 0 0 1 0-1.06Z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
+@media (max-width: 820px) {
+  .splitTop {
+    grid-template-columns: 1fr;
+    gap: 44px;
+  }
+}
+
+/* ------------------------------------------------------------------ bands */
+
+/* Grounds alternate down the page: open field, wash, open field, wash,
+   paper. The aftermovie takes the wash after "Чому Wonderland?", and the
+   four worlds take paper after the nights, so no two neighbours share one. */
+.videoBand,
+.nightsBand {
+  background: var(--wl-wash);
+}
+
+.quoteBand {
+  background: transparent;
+  text-align: center;
+}
+
+.worldsBand {
+  background: var(--wl-paper);
+}
+
+/* ----------------------------------------------------------------- worlds */
+
+.worldsBand .inner {
+  text-align: center;
+}
+
+.worlds {
+  list-style: none;
+  margin: clamp(30px, 4vw, 46px) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 1.6vw, 18px);
+  text-align: left;
+}
+
+.world {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+  min-height: 160px;
+  padding: 18px 20px 20px;
+  border-radius: var(--wl-radius);
+  background: var(--wl-paper);
+  border: 1px solid var(--wl-line);
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+/* A hairline of the brand gradient across the top edge. */
+.world::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: var(--wl-grad);
+  opacity: 0.8;
+}
+
+.world:hover {
+  transform: translateY(-2px);
+  border-color: var(--wl-line-strong);
+}
+
+.worldN {
+  font-family: var(--wl-font-wide);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--wl-faint);
+}
+
+.worldWord {
+  font-family: var(--wl-font-wide);
+  font-size: clamp(15px, 1.5vw, 17px);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.worldsClose {
+  max-width: 44ch;
+  margin: clamp(28px, 4vw, 40px) auto 0;
+  font-size: clamp(16px, 1.9vw, 19px);
+  font-weight: 600;
+  line-height: 1.5;
+  text-wrap: balance;
+}
+
+@media (max-width: 860px) {
+  .worlds {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .world {
+    min-height: 128px;
+    gap: 28px;
+  }
+}
+
+/* ------------------------------------------------------------------ quote */
+
+.quoteBefore {
+  max-width: 46ch;
+  margin: 0 auto;
+  font-size: clamp(15.5px, 1.8vw, 18px);
+  line-height: 1.6;
+  color: var(--wl-soft);
+  text-wrap: balance;
+}
+
+/* The emotional peak of the page: the second accent moment. */
+.quote {
+  max-width: 16ch;
+  margin: 22px auto 0;
+  font-family: var(--wl-font-wide);
+  font-size: clamp(30px, 6vw, 72px);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  background: var(--wl-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-bottom: 6px;
+}
+
+.quoteBy {
+  margin: 26px 0 0;
+  font-family: var(--wl-font-wide);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--wl-faint);
+}
+
+/* ----------------------------------------------------------------- nights */
+
+.nightsHead {
+  max-width: 50ch;
+  text-align: left;
+}
+
+.nightsHead .leadLeft {
+  margin-top: 14px;
+}
+
+/* ------------------------------------------------------------------ video */
+
+.videoInner {
+  max-width: var(--wl-max);
+  margin: 0 auto;
+  padding: var(--wl-section-y) var(--wl-gut);
+  display: grid;
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: center;
+  text-align: left;
+}
+
+.videoMedia {
+  border-radius: var(--wl-radius);
+  overflow: hidden;
+  line-height: 0;
+  aspect-ratio: 9 / 16;
+}
+
+.videoText .label {
+  margin-bottom: 12px;
+}
+
+@media (max-width: 860px) {
+  .videoInner {
+    grid-template-columns: 1fr;
+    max-width: 460px;
+  }
+
+  /* Stacked, the text leads and the clip follows as the proof. */
+  .videoText {
+    order: -1;
+  }
+
+  /* A 9:16 frame across the full 460px column stood about 820px tall, more
+   than a whole tablet screen. Phone-width and no wider. */
+  .videoMedia {
+    width: min(100%, 340px);
+  }
+}
+
+/* ---------------------------------------------------------------- gallery */
+
+.galleryHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.galleryAll {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--wl-steel);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.galleryAll:hover,
+.galleryAll:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  outline: none;
+}
+
+/* A lead shot running wide, then two whole rows of three. */
+.galleryGrid {
+  list-style: none;
+  margin: clamp(28px, 4vw, 42px) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 32px) clamp(16px, 2.4vw, 26px);
+}
+
+.galleryFeatured {
+  grid-column: 1 / -1;
+}
+
+.galleryFeatured .shotFrame {
+  aspect-ratio: 21 / 9;
+}
+
+.shot {
+  margin: 0;
+}
+
+.shotFrame {
+  display: block;
+  aspect-ratio: 4 / 5;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.shot:hover .shotFrame {
+  transform: translateY(-3px);
+}
+
+.shotMeta {
+  margin-top: 12px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.shotNight {
+  font-family: var(--wl-font-wide);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--wl-faint);
+}
+
+.shotCaption {
+  font-size: 14px;
+  color: var(--wl-soft);
+}
+
+@media (max-width: 920px) {
+  .galleryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .galleryFeatured .shotFrame {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+/* -------------------------------------------------------------------- faq */
+
+.faqSection {
+  composes: section;
+}
+
+.faq {
+  margin: clamp(26px, 4vw, 38px) auto 0;
+  max-width: 76ch;
+  text-align: left;
+  border-top: 1px solid var(--wl-line);
+}
+
+/* ------------------------------------------------------------------ final */
+
+.final {
+  padding: var(--wl-section-y) var(--wl-gut);
+  text-align: center;
+  background: var(--wl-wash-strong);
+}
+
+.finalLine {
+  max-width: 46ch;
+  margin: 18px auto 0;
+  font-size: clamp(15.5px, 1.8vw, 17px);
+  line-height: 1.6;
+  color: var(--wl-soft);
+  text-wrap: pretty;
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 28px;
+  max-width: var(--wl-max);
+  margin: 0 auto;
+  padding: 32px var(--wl-gut) 40px;
+  border-top: 1px solid var(--wl-line);
+}
+
+.footerLogo {
+  display: block;
+  width: auto;
+  height: 40px;
+  filter: brightness(1.18) contrast(1.05);
+}
+
+.footerLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 22px;
+}
+
+.footerLinks a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 14px;
+  color: var(--wl-soft);
+  text-decoration: none;
+}
+
+.footerLinks a:hover,
+.footerLinks a:focus-visible {
+  color: var(--wl-ink);
+  outline: none;
+}
+
+.footerNote {
+  font-size: 12.5px;
+  color: var(--wl-faint);
+}
+
+/* -------------------------------------------------------- the phone call */
+
+.bar {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: var(--wl-paper);
+    border-top: 1px solid var(--wl-line-strong);
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+    transform: translateY(120%);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      transform 0.24s ease-out,
+      opacity 0.24s ease-out,
+      visibility 0s linear 0.24s;
+  }
+
+  .barOn {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition:
+      transform 0.24s ease-out,
+      opacity 0.24s ease-out,
+      visibility 0s;
+  }
+}
+
+.barMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.barMeta strong {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.barMeta span {
+  font-size: 12px;
+  color: var(--wl-soft);
+}
+
+.barBtn {
+  composes: btn;
+  margin-top: 0;
+  margin-left: auto;
+  flex: none;
+  padding: 14px 22px;
+  font-size: 14.5px;
+  min-height: 48px;
+}
+
+/* ==================================================== handheld ============ */
+
+/* Most of the traffic will come from Instagram, so the phone is the real
+   layout: the same values the source page settled on at 390px. */
+@media (max-width: 767px) {
+  .page {
+    --wl-section-y: 64px;
+  }
+
+  .h2 {
+    font-size: 24px;
+    line-height: 1.16;
+  }
+
+  .lead,
+  .leadLeft,
+  .finalLine,
+  .quoteBefore {
+    font-size: 16px;
+    line-height: 1.62;
+  }
+
+  /* One button per section, full width. */
+  .btn {
+    display: block;
+    width: 100%;
+    margin-top: 24px;
+    padding: 16px 14px;
+    font-size: 15.5px;
+    line-height: 1.25;
+    text-align: center;
+  }
+
+  .ticketBtn {
+    margin-top: 12px;
+  }
+
+  .barBtn {
+    display: inline-block;
+    width: auto;
+    margin-top: 0;
+    padding: 14px 22px;
+    font-size: 14.5px;
+    line-height: normal;
+  }
+
+  .hero {
+    padding-top: 88px;
+    min-height: auto;
+  }
+
+  .h1 {
+    font-size: 36px;
+  }
+
+  .heroSub {
+    margin-bottom: 22px;
+  }
+
+  .ticketCard {
+    width: 100%;
+    padding: 18px 16px 16px;
+  }
+
+  .heroGet {
+    width: 100%;
+  }
+
+  .tickerWrap {
+    min-height: 84px;
+    margin-top: 28px;
+  }
+
+  .faqSection {
+    text-align: left;
+  }
+
+  .worldsBand .inner,
+  .quoteBand {
+    text-align: left;
+  }
+
+  .quoteBefore,
+  .quote,
+  .worldsClose {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .galleryGrid > li:nth-child(n + 4) {
+    display: none;
+  }
+
+  .final {
+    padding-bottom: 96px;
+  }
+
+  .footer {
+    padding-bottom: 96px;
+  }
+}
+
+@media (max-width: 620px) {
+  .galleryGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .galleryFeatured .shotFrame {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroAura,
+  .ticker,
+  .ticketLive {
+    animation: none;
+  }
+
+  .world,
+  .shotFrame,
+  .bar,
+  .barOn {
+    transition: none;
+  }
+
+  .world:hover,
+  .shot:hover .shotFrame {
+    transform: none;
+  }
+}

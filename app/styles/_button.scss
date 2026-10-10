@@ -1,0 +1,50 @@
+/**
+ * The one hover every button on the page shares: a slight brightening and
+ * a tight rose-gold halo brightening evenly around the edge, with the
+ * button itself staying put, then a small press on click. The halo has no
+ * offset, so it reads as the button giving off light rather than casting a
+ * shadow below it.
+ *
+ * The transition lives on the resting state, so leaving the button plays
+ * the same curve in reverse instead of snapping back. The curve is an
+ * ease-out-quint: it moves most of the way at once and settles slowly, which
+ * is what reads as smooth rather than merely slow.
+ *
+ * Expects `--wl-gold-glow` (an "r, g, b" triple) from the page tokens.
+ */
+
+$ease: cubic-bezier(0.22, 1, 0.36, 1);
+$duration: 0.42s;
+
+@mixin hover-lift {
+  box-shadow: 0 0 10px rgba(var(--wl-gold-glow), 0.22);
+  transition:
+    filter $duration $ease,
+    box-shadow $duration $ease,
+    transform $duration $ease,
+    background-color $duration $ease,
+    border-color $duration $ease,
+    color $duration $ease;
+
+  &:hover {
+    filter: brightness(1.05);
+    box-shadow: 0 0 16px 1px rgba(var(--wl-gold-glow), 0.45);
+  }
+
+  /* A press answers faster than a hover, so it never feels laggy. */
+  &:active {
+    filter: brightness(0.97);
+    transform: scale(0.985);
+    box-shadow: 0 0 8px rgba(var(--wl-gold-glow), 0.3);
+    transition-duration: 0.12s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    &:hover,
+    &:active {
+      transform: none;
+    }
+  }
+}
