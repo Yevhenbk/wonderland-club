@@ -79,11 +79,12 @@
   @include blob.blob(8s, blobWander 20s ease-in-out infinite);
 }
 
+/* Logo, night and ticket type centred on the stub. The pass counter sits
+   in the corner, out of the flow, so it never pulls the logo off centre. */
 .head {
+  position: relative;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  justify-content: center;
 }
 
 .logo {
@@ -94,6 +95,9 @@
 }
 
 .count {
+  position: absolute;
+  top: 0;
+  right: 0;
   font-family: var(--wl-font-wide);
   font-size: 13px;
   font-weight: 500;
@@ -103,6 +107,7 @@
 
 .eyebrow {
   margin-top: 18px;
+  text-align: center;
   font-family: var(--wl-font-wide);
   font-size: 13px;
   font-weight: 500;
@@ -113,6 +118,7 @@
 
 .type {
   margin-top: 8px;
+  text-align: center;
   font-family: var(--wl-font-wide);
   font-size: 24px;
   font-weight: 600;
@@ -185,13 +191,70 @@
   color: var(--wl-faint);
 }
 
+/* Print: the same ticket, rebuilt for the PDF renderer. Chrome prints CSS
+   masks semi-transparently, which turned the ticket grey with a darker
+   stripe where the two mask halves overlap. So on paper the notches are
+   drawn instead of cut: paper-white circles straddling the join, which is
+   exactly what a notch looks like on white paper. The
+   faint hairline border is dropped (it would cross the notches and barely
+   shows on paper), and the tear line is drawn between the notches. */
 @media print {
   .pass {
+    --print-width: 380px;
     filter: none;
-    margin-bottom: 24px;
+    width: var(--print-width);
+    max-width: none;
   }
 
   .top::before {
     display: none;
+  }
+
+  .top,
+  .bottom {
+    -webkit-mask: none;
+    mask: none;
+    border: 0;
+  }
+
+  .top {
+    background: var(--wl-paper);
+  }
+
+  /* Overlaps the stub by a pixel: the halves met on a sub-pixel seam that
+     let the paper show through as a hairline. */
+  .bottom {
+    margin-top: -1px;
+    overflow: visible;
+    background: var(--wl-paper);
+  }
+
+  /* The tear line as its own element, stopping short of the notches; a
+     border would run straight through them. */
+  .bottom::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: calc(var(--notch) + 6px);
+    right: calc(var(--notch) + 6px);
+    border-top: 2px dashed rgba(232, 222, 230, 0.22);
+  }
+
+  /* The two notches as solid paper-white circles straddling the join: a
+     plain rounded shape stays crisp vector in the PDF (gradients were
+     rasterised into blocks), and drawn whole it has no seam through its
+     middle. The right one is the left one's shadow, moved by exactly the
+     ticket's width, which is fixed at 380px on paper for that reason. */
+  .bottom::after {
+    content: "";
+    position: absolute;
+    top: calc(-1 * var(--notch));
+    left: calc(-1 * var(--notch));
+    width: calc(2 * var(--notch));
+    height: calc(2 * var(--notch));
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: var(--print-width) 0 0 #fff;
+    pointer-events: none;
   }
 }

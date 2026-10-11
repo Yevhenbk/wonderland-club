@@ -15,7 +15,14 @@ export default function NightField() {
   useEffect(() => {
     const node = fieldRef.current;
 
-    if (!node || window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+    /* Mouse only. On a phone there is no cursor to lean away from, and the
+       finger that scrolls fires pointermove too: every scroll movement was
+       restyling the field, which is what made scrolling jump. */
+    if (
+      !node ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      !window.matchMedia("(hover: hover) and (pointer: fine)").matches
+    )
       return;
 
     let frame: number | null = null;
@@ -23,6 +30,7 @@ export default function NightField() {
     let pointerY = 0;
 
     const onMove = (event: PointerEvent) => {
+      if (event.pointerType !== "mouse") return;
       pointerX = (event.clientX / window.innerWidth - 0.5) * 2;
       pointerY = (event.clientY / window.innerHeight - 0.5) * 2;
 

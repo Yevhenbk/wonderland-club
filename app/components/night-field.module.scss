@@ -3,7 +3,15 @@
 /* Pinned to the viewport, behind the whole page. */
 .field {
   position: fixed;
-  inset: 0;
+  /* Reaches well past the screen's top and bottom. On iPhone, Safari's
+     toolbar slides away on a fast scroll and the visible area grows, but
+     fixed layers are only resized once scrolling settles; with an exact
+     fit, the newly revealed strip had none of the field behind it and read
+     as a translucent bar along the bottom. */
+  top: -120px;
+  right: 0;
+  bottom: -240px;
+  left: 0;
   overflow: hidden;
   pointer-events: none;
   z-index: 0;

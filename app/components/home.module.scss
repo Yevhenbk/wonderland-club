@@ -47,7 +47,15 @@
    Sits under the header (60) so the bar stays clean. */
 .grain {
   position: fixed;
-  inset: 0;
+  /* Reaches well past the screen's top and bottom. On iPhone, Safari's
+     toolbar slides away on a fast scroll and the visible area grows, but
+     fixed layers are only resized once scrolling settles; with an exact
+     fit, the newly revealed strip had no grain over it and read as a
+     translucent bar along the bottom. */
+  top: -120px;
+  right: 0;
+  bottom: -240px;
+  left: 0;
   z-index: 55;
   pointer-events: none;
   opacity: 0.07;

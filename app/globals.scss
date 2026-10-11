@@ -64,6 +64,9 @@
 }
 
 html {
+  /* The page's own colour behind everything, so the overscroll bounce and
+     any area Safari shows past the page's edges match the field. */
+  background: #050309;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
@@ -121,5 +124,21 @@ button {
   html {
     zoom: 2;
     --wl-zoom: 2;
+  }
+}
+
+/* Printing (or saving as PDF): a clean sheet with only the ticket on it.
+   A zero page margin leaves the browser no room for its own header and
+   footer (date, title, address, page number), so they are not printed; the
+   spacing around the ticket comes from the page content instead. White
+   paper, whatever the screen theme. */
+@media print {
+  @page {
+    margin: 0;
+  }
+
+  html,
+  body {
+    background: #fff !important;
   }
 }

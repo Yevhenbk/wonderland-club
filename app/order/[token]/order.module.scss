@@ -110,4 +110,18 @@
     margin: 0;
     display: block;
   }
+
+  /* One ticket per sheet. */
+  .passes > li {
+    break-after: page;
+  }
+
+  .passes > li:last-child {
+    break-after: auto;
+  }
+
+  /* Each later sheet gets the same top margin the first one has. */
+  .passes > li + li {
+    padding-top: 14mm;
+  }
 }

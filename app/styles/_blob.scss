@@ -15,6 +15,7 @@
  */
 
 @use "sass:list";
+@use "sass:math";
 
 $rose: rgb(214, 142, 133);
 $steel: rgb(88, 122, 176);
@@ -154,6 +155,16 @@ $tint-cycle: 24s;
   pointer-events: none;
 }
 
+/* The colour a blob would hold if it did not cycle: where its phase puts it
+   in the three-step cycle, so neighbours still differ. */
+@function -still-colour($tint, $phase) {
+  $step: math.floor(math.div($phase, math.div($tint-cycle, 3))) % 3 + 1;
+  @if $tint == blobRamp {
+    @return list.nth((var(--tint-mid), var(--tint-mid2), var(--tint-to)), $step);
+  }
+  @return list.nth(($rose, $steel, $violet), $step);
+}
+
 @mixin -animate($tint, $phase, $motions) {
   @if list.length($motions) > 0 {
     animation:
@@ -161,6 +172,19 @@ $tint-cycle: 24s;
       $motions;
   } @else {
     animation: $tint $tint-cycle linear (-$phase) infinite;
+  }
+
+  /* Touch devices keep the drift and drop the colour cycle. Movement runs
+     on the GPU; a changing colour inside a gradient cannot, so it repainted
+     every blob on every frame, scrolling included, and on a phone that made
+     scrolling stutter. Each blob holds a still colour instead. */
+  @media (hover: none) and (pointer: coarse) {
+    --blob-c: #{-still-colour($tint, $phase)};
+    @if list.length($motions) > 0 {
+      animation: $motions;
+    } @else {
+      animation: none;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
