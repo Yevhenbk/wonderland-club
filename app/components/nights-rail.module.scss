@@ -98,24 +98,25 @@
   color: var(--wl-ink);
 }
 
-/* The address opens the map: underlined lightly, rose gold on hover. */
+/* The address opens the map: rose gold and underlined, so it reads as a
+   link at a glance; a lighter rose on hover. */
 .facts dd a {
   /* Grow the tap area to a full 44px without moving the text: padding
      outward, cancelled by an equal negative margin. */
   display: inline-block;
   padding-block: 13px;
   margin-block: -13px;
-  color: inherit;
+  color: var(--wl-rose);
   text-decoration: underline;
-  text-decoration-color: var(--wl-line-strong);
+  text-decoration-color: var(--wl-rose);
   text-underline-offset: 3px;
   transition: color 0.3s ease, text-decoration-color 0.3s ease;
 }
 
 .facts dd a:hover,
 .facts dd a:focus-visible {
-  color: var(--wl-rose);
-  text-decoration-color: var(--wl-rose);
+  color: #f0cbc5;
+  text-decoration-color: #f0cbc5;
   outline: none;
 }
 
