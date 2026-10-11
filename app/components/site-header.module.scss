@@ -1,9 +1,14 @@
+/* ------------------------------------------------------ phones, tablets */
+
 /* A row of its own at the top of the page, the logo centred in it. Its
    height is --wl-header-h (globals.scss), which the hero subtracts so the
    first screen still holds the headline, the card and the word strip. */
 .header {
   position: relative;
-  z-index: 2;
+  z-index: 60;
+}
+
+.inner {
   height: var(--wl-header-h);
   display: flex;
   align-items: center;
@@ -32,9 +37,94 @@
   filter: brightness(1.18) contrast(1.05);
 }
 
+.nav,
+.balance {
+  display: none;
+}
+
 @media (max-width: 767px) {
   .logo {
     height: 52px;
+  }
+}
+
+/* --------------------------------------------------------------- desktop */
+
+/* The bar as it always was on desktop: fixed, transparent over the hero and
+   solid once the page has moved (opaque, not frosted, so type never runs
+   through it), the logo on the left and the links at the true centre. */
+@media (min-width: 861px) {
+  .header {
+    position: fixed;
+    inset: 0 0 auto;
+    background: transparent;
+    transition:
+      background 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+
+  .header[data-solid="true"] {
+    background: var(--wl-paper);
+    box-shadow: 0 1px 0 var(--wl-line);
+  }
+
+  .inner {
+    max-width: var(--wl-max);
+    margin: 0 auto;
+    height: 62px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 20px;
+  }
+
+  .brand {
+    justify-self: start;
+  }
+
+  .logo {
+    height: 48px;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+  }
+
+  .balance {
+    display: block;
+  }
+
+  .link {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--wl-soft);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.18s ease;
+  }
+
+  .link:hover,
+  .link:focus-visible {
+    color: var(--wl-ink);
+    outline: none;
+  }
+}
+
+/* Touch screens wide enough for the desktop links (tablets in landscape):
+   a 44px target around each, same look. */
+@media (min-width: 861px) and (pointer: coarse) {
+  .link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  .link {
+    transition: none;
   }
 }
 

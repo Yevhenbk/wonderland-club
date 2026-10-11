@@ -167,7 +167,8 @@
   align-items: center;
   /* The same 40px the word strip keeps above itself, so the auto margins
      centre the content exactly between the header and the strip. */
-  padding: 40px var(--wl-gut) calc(28px + env(safe-area-inset-bottom, 0px));
+  padding: calc(var(--wl-header-overlay, 0px) + 40px) var(--wl-gut)
+    calc(28px + env(safe-area-inset-bottom, 0px));
   /* Clipped sideways only. Clipping vertically cut the drifting glow off in
      a straight line at the hero's foot; unclipped, it fades out over the
      transparent section below, so the two read as one ground. */
@@ -1078,7 +1079,7 @@
    line under the headline, which there is room for here. */
 @media (min-width: 768px) and (max-height: 820px) {
   .hero {
-    padding-top: 24px;
+    padding-top: calc(var(--wl-header-overlay, 0px) + 24px);
     padding-bottom: 18px;
   }
 

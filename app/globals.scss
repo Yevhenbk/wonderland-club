@@ -92,6 +92,15 @@ body {
   }
 }
 
+/* Desktop: the bar is fixed over the page, so it takes no row of its own
+   (--wl-header-h 0) and what sits under it is padded by its height. */
+@media (min-width: 861px) {
+  :root {
+    --wl-header-h: 0px;
+    --wl-header-overlay: 62px;
+  }
+}
+
 /* Shown on wider screens only (components/wide.tsx). */
 @media (max-width: 767px) {
   .wide-only {

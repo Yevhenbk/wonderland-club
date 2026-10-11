@@ -39,6 +39,15 @@ export const site = {
   ],
 };
 
+/* The desktop navbar's links. Absolute ("/#..."), so they also work from
+   the checkout and ticket pages. Phones show the logo alone. */
+export const nav = [
+  { href: "/#nights", label: "Ночі" },
+  { href: "/#tickets", label: "Квитки" },
+  { href: "/#gallery", label: "Медіа" },
+  { href: "/#faq", label: "Питання" },
+];
+
 export const hero = {
   eyebrow: "Краків. Одна ніч, один світ",
   title: "Вітаємо у Wonderland.",
