@@ -39,17 +39,6 @@ export const site = {
   ],
 };
 
-export const nav = [
-  { href: "#nights", label: "Ночі" },
-  { href: "#tickets", label: "Квитки" },
-  { href: "#gallery", label: "Медіа" },
-  { href: "#faq", label: "Питання" },
-];
-
-export const header = {
-  menuLabel: "Меню",
-};
-
 export const hero = {
   eyebrow: "Краків. Одна ніч, один світ",
   title: "Вітаємо у Wonderland.",
@@ -77,9 +66,10 @@ export const nextNight = {
   theme: "Тема поки що секрет",
   rows: [
     { k: "Дата", v: "14.11, субота" },
-    { k: "Локація", v: `${venue.address}, ${venue.city}`, href: venue.mapsHref },
+    /* The city is shown on wider screens only; on a phone the street says it. */
+    { k: "Локація", v: venue.address, wide: `, ${venue.city}`, href: venue.mapsHref },
     { k: "Саунд", v: "Залежить від ночі" },
-  ] as { k: string; v: string; href?: string }[],
+  ] as { k: string; v: string; wide?: string; href?: string }[],
   /* The calls about the night lead to the prices; buying starts there. */
   cta: "Купити квиток",
   ctaHref: "#tickets",
@@ -131,9 +121,6 @@ export const tickets = {
   cta: "Купити",
   checkoutPath: "/checkout",
 };
-
-/** Formats a price the way the page shows it. */
-export const zl = (price: number) => `${price} zł`;
 
 export const worlds = {
   label: "Наш формат",

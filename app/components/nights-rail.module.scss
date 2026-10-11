@@ -124,8 +124,9 @@
 .buy {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
+  text-align: center;
   gap: 2px;
   padding: clamp(22px, 3vw, 30px);
   color: #fff;
@@ -165,20 +166,18 @@
   color: #f6dcd5;
 }
 
-/* Not gold: a white pill on its own colour, unmistakably a button. */
+/* The same full-width gold button as the ticket cards below it. */
 .buyCta {
+  align-self: stretch;
   margin-top: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 12px 20px;
-  border: 0;
+  display: block;
+  padding: 15px 20px;
   border-radius: 999px;
-  background: #fff;
-  color: var(--tint-from);
-  font-size: 15.5px;
+  background: var(--wl-gold);
+  color: var(--wl-gold-ink);
+  font-size: 16px;
   font-weight: 700;
+  text-align: center;
   text-decoration: none;
   cursor: pointer;
   @include button.hover-lift;

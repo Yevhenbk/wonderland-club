@@ -66,5 +66,8 @@ export const EVENT = {
   date: nextNight.dateLong,
   venueName: venue.name,
   venue: `${venue.address}, ${venue.city}`,
+  /* The two parts on their own, for cards that drop the city on a phone. */
+  venueStreet: venue.address,
+  venueCity: venue.city,
   mapsHref: venue.mapsHref,
 };

@@ -47,7 +47,10 @@
   pointer-events: none;
   animation: blobWander 22s ease-in-out infinite;
 
-  @media (prefers-reduced-motion: reduce) {
+  /* Still on phones, like every glow (styles/_blob.scss). */
+  @media (prefers-reduced-motion: reduce),
+    (hover: none) and (pointer: coarse),
+    (max-width: 767px) {
     animation: none;
   }
 }

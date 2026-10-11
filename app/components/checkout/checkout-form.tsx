@@ -4,7 +4,9 @@ import { useState, type FormEvent } from "react";
 
 import type { CatalogItem, EVENT, ItemId } from "@/lib/catalog";
 
+import Wide from "../wide";
 import styles from "./checkout.module.scss";
+import Price from "../price";
 
 /**
  * Step one: which ticket, how many, and where to send it.
@@ -63,7 +65,8 @@ export default function CheckoutForm({
       <p className={styles.meta}>
         {event.date}
         <br />
-        {event.venue}
+        {event.venueStreet}
+        <Wide>, {event.venueCity}</Wide>
       </p>
 
       <fieldset className={styles.group}>
@@ -87,7 +90,9 @@ export default function CheckoutForm({
                 <span className={styles.optionName}>{option.name}</span>
                 <span className={styles.optionDetail}>{option.detail}</span>
               </span>
-              <span className={styles.optionPrice}>{option.price} zł</span>
+              <span className={styles.optionPrice}>
+                <Price value={option.price} />
+              </span>
             </label>
           ))}
         </div>
@@ -154,7 +159,9 @@ export default function CheckoutForm({
           {item.name}: {item.detail}
           {item.maxQty > 1 && ` × ${quantity}`}
         </span>
-        <strong>{total} zł</strong>
+        <strong>
+          <Price value={total} />
+        </strong>
       </div>
 
       {error && (

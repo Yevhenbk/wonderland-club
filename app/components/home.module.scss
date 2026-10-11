@@ -150,25 +150,24 @@
 
 /* ------------------------------------------------------------------ hero */
 
-/* Exactly one screen tall. The headline and card centre in the room between
-   the navbar and the word strip (auto margins on .heroCenter), and the strip
-   sits near the foot of the screen. The height is divided by the page zoom
+/* With the header above it, exactly one screen tall. The headline and card
+   centre in the room between the header and the word strip (auto margins on
+   .heroCenter), and the strip sits near the foot of the screen. The height is divided by the page zoom
    (globals.scss): on very wide screens viewport units are multiplied by it,
    and an undivided 100svh would make the hero two screens tall. */
 .hero {
   position: relative;
   isolation: isolate;
-  min-height: calc(100vh / var(--wl-zoom, 1));
-  min-height: calc(100svh / var(--wl-zoom, 1));
+  /* One screen minus the static header above it, so the first screen still
+     holds the headline, the card and the strip. */
+  min-height: calc(100vh / var(--wl-zoom, 1) - var(--wl-header-h));
+  min-height: calc(100svh / var(--wl-zoom, 1) - var(--wl-header-h));
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* The navbar's 62px plus the same 40px the word strip keeps above itself,
-     so the auto margins centre the content exactly between the two. */
-  /* Plus the iPhone's status bar and home indicator (0 elsewhere): the
-     header grows by the top one, and the strip stays clear of the bottom. */
-  padding: calc(102px + env(safe-area-inset-top, 0px)) var(--wl-gut)
-    calc(28px + env(safe-area-inset-bottom, 0px));
+  /* The same 40px the word strip keeps above itself, so the auto margins
+     centre the content exactly between the header and the strip. */
+  padding: 40px var(--wl-gut) calc(28px + env(safe-area-inset-bottom, 0px));
   /* Clipped sideways only. Clipping vertically cut the drifting glow off in
      a straight line at the hero's foot; unclipped, it fades out over the
      transparent section below, so the two read as one ground. */
@@ -270,22 +269,35 @@
   color: var(--wl-rose);
 }
 
+/* The live dot: a rose disc with a ring that grows and fades. The ring is
+   its own layer scaled with transform and opacity, which the GPU animates
+   on its own; animating box-shadow instead repainted it every frame. */
 .ticketLive {
+  position: relative;
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: var(--wl-rose);
-  box-shadow: 0 0 0 0 rgba(226, 165, 157, 0.6);
+}
+
+.ticketLive::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(226, 165, 157, 0.55);
   animation: pulse 2.4s ease-out infinite;
 }
 
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(226, 165, 157, 0.55);
+    transform: scale(1);
+    opacity: 1;
   }
   70%,
   100% {
-    box-shadow: 0 0 0 10px rgba(226, 165, 157, 0);
+    transform: scale(3.5);
+    opacity: 0;
   }
 }
 
@@ -841,10 +853,10 @@
   /* Full screen height on phones too (the svh from the base rule: measured
      with the address bar showing and steady while it slides away, so
      nothing jumps and the strip is never under the bar). Top padding is the
-     72px phone navbar plus the strip's 28px gap, which keeps the content
-     centred between the two. */
+     strip's 28px gap, which keeps the content centred between the header
+     and the strip. */
   .hero {
-    padding-top: calc(100px + env(safe-area-inset-top, 0px));
+    padding-top: 28px;
   }
 
   .h1 {
@@ -933,7 +945,7 @@
 @media (prefers-reduced-motion: reduce) {
   .heroAura,
   .ticker,
-  .ticketLive {
+  .ticketLive::after {
     animation: none;
   }
 
@@ -945,5 +957,171 @@
   .world:hover,
   .shot:hover .shotFrame {
     transform: none;
+  }
+}
+
+/* ============================================= short phones ============ */
+
+/* Phones whose visible height is short: a Galaxy S25 shows about 690px of
+   page once Chrome's bars have their share, an iPhone mini about 635 and an
+   SE about 550, while the hero needed 770 at its smallest, so the word
+   strip fell below the screen and the content sat squeezed against it.
+   Height, not width, is the constraint, so these steps key on height.
+   Each tier keeps the hero's top padding equal to the strip's gap, which is
+   what keeps the content centred between the header and the strip. */
+@media (max-width: 767px) and (max-height: 860px) {
+  .hero {
+    padding-top: 18px;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .heroCenter .label {
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+
+  .h1 {
+    font-size: 33px;
+    margin-bottom: 20px;
+  }
+
+  /* The line under the headline goes on short screens: the headline and the
+     card say what matters, and the room goes to them. */
+  .heroSub {
+    display: none;
+  }
+
+  .ticketCard {
+    padding: 14px;
+  }
+
+  .ticketTheme {
+    margin-top: 6px;
+    font-size: 17px;
+  }
+
+  .ticketRows {
+    margin-top: 10px;
+  }
+
+  .ticketRows > div {
+    padding: 7px 0;
+  }
+
+  .ticketBtn {
+    margin-top: 10px;
+    padding-block: 13px;
+  }
+
+  .heroGet {
+    margin-top: 8px;
+    font-size: 14px;
+  }
+
+  .tickerWrap {
+    min-height: 52px;
+    margin-top: 18px;
+  }
+
+  .tickerItem {
+    gap: 22px;
+    padding-right: 22px;
+    font-size: 14px;
+  }
+}
+
+/* Shorter still (iPhone mini in Safari, about 635): a smaller headline and
+   tighter rows. The S25's 690 stays on the step above, which fits it. */
+@media (max-width: 767px) and (max-height: 660px) {
+  .hero {
+    padding-top: 12px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .heroCenter .label {
+    margin-bottom: 6px;
+  }
+
+  .h1 {
+    font-size: 29px;
+    margin-bottom: 16px;
+  }
+
+  .ticketTheme {
+    font-size: 16px;
+  }
+
+  .ticketRows > div {
+    padding: 5px 0;
+  }
+
+  .ticketBtn {
+    padding-block: 11px;
+  }
+
+  .tickerWrap {
+    min-height: 44px;
+    margin-top: 12px;
+  }
+}
+
+/* iPhone SE and the like: a slightly smaller headline. */
+@media (max-width: 767px) and (max-height: 600px) {
+  .h1 {
+    font-size: 27px;
+  }
+}
+
+/* Short desktop screens (1366x768 laptops and the like): with the header
+   above the hero, the hero has about 680px, and the content needed 770 at
+   full size. The same kind of compaction the short phones get, keeping the
+   line under the headline, which there is room for here. */
+@media (min-width: 768px) and (max-height: 820px) {
+  .hero {
+    padding-top: 24px;
+    padding-bottom: 18px;
+  }
+
+  .heroCenter .label {
+    margin-bottom: 10px;
+  }
+
+  .h1 {
+    font-size: clamp(36px, 4.2vw, 50px);
+    margin-bottom: 10px;
+  }
+
+  .heroSub {
+    margin-bottom: 16px;
+  }
+
+  .ticketCard {
+    padding: 16px 18px;
+  }
+
+  .ticketTheme {
+    margin-top: 6px;
+  }
+
+  .ticketRows {
+    margin-top: 10px;
+  }
+
+  .ticketRows > div {
+    padding: 7px 0;
+  }
+
+  .ticketBtn {
+    margin-top: 10px;
+    padding-block: 12px;
+  }
+
+  .heroGet {
+    margin-top: 8px;
+  }
+
+  .tickerWrap {
+    min-height: 52px;
+    margin-top: 24px;
   }
 }

@@ -3,6 +3,7 @@ import Image from "next/image";
 import { CATALOG, EVENT, type ItemId } from "@/lib/catalog";
 import logo from "@/public/media/wonderland-wordmark.png";
 
+import Wide from "../wide";
 import styles from "./pass-card.module.scss";
 
 export interface PassView {
@@ -58,7 +59,10 @@ export default function PassCard({
           </div>
           <div>
             <dt>Локація</dt>
-            <dd>{EVENT.venue}</dd>
+            <dd>
+              {EVENT.venueStreet}
+              <Wide>, {EVENT.venueCity}</Wide>
+            </dd>
           </div>
           <div>
             <dt>Вхід</dt>

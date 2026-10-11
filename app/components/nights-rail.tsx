@@ -1,8 +1,10 @@
 import type { CSSProperties } from "react";
 
-import { nextNight, nights, tickets, zl, type Ramp } from "@/app/content";
+import { nextNight, nights, tickets, type Ramp } from "@/app/content";
 
 import MediaSlot from "./media-slot";
+import Price from "./price";
+import Wide from "./wide";
 import styles from "./nights-rail.module.scss";
 
 function rampVariables(ramp: Ramp): CSSProperties {
@@ -39,9 +41,13 @@ export default function NightsRail({ ticketHref }: { ticketHref: string }) {
                   {row.href ? (
                     <a href={row.href} target="_blank" rel="noopener noreferrer">
                       {row.v}
+                        <Wide>{row.wide}</Wide>
                     </a>
                   ) : (
-                    row.v
+                    <>
+                      {row.v}
+                      <Wide>{row.wide}</Wide>
+                    </>
                   )}
                 </dd>
               </div>
@@ -52,11 +58,10 @@ export default function NightsRail({ ticketHref }: { ticketHref: string }) {
         <div className={styles.buy}>
           <span className={styles.buyKicker}>Квитки від</span>
           <span className={styles.buyBig}>
-            {zl(tickets.standard.tiers[0].price)}
+            <Price value={tickets.standard.tiers[0].price} />
           </span>
           <a href={ticketHref} className={styles.buyCta}>
-            {nextNight.cta}{" "}
-            &rarr;
+            {nextNight.cta}
           </a>
           <span className={styles.buyNote}>{nextNight.note}</span>
         </div>

@@ -44,12 +44,55 @@ export default function AmbientVideo({
      waiting behind loads nothing, so visitors who never scroll this far do
      not download it. */
   const [seen, setSeen] = useState(false);
+  /* Set once the visitor starts scrolling (see below). Until then the
+     players have no file at all: browsers treat preload="metadata" as a
+     hint and Chrome downloaded the whole first clip (over 1 MB) with the
+     page, competing with what the first screen needs on a phone connection. */
+  const [near, setNear] = useState(false);
   const visible = useRef(false);
   const refill = useRef<ReturnType<typeof setTimeout> | null>(null);
   const failures = useRef(0);
   const single = sources.length === 1;
 
   const frontVideo = () => slots[front].current;
+
+  /* Give the players their files on the visitor's first scroll, or when the
+     section comes into view without one (a link straight to it). Not on
+     load: the section starts right where the full-screen hero ends, so any
+     "near the screen" margin was already met before anything was scrolled,
+     and the clip downloaded alongside the first screen. */
+  useEffect(() => {
+    const host = slots[0].current?.parentElement;
+    if (!host || typeof IntersectionObserver === "undefined") {
+      setNear(true);
+      return;
+    }
+
+    const attach = () => {
+      setNear(true);
+      window.removeEventListener("scroll", attach);
+      observer.disconnect();
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) attach();
+    });
+    observer.observe(host);
+    window.addEventListener("scroll", attach, { passive: true, once: true });
+
+    return () => {
+      window.removeEventListener("scroll", attach);
+      observer.disconnect();
+    };
+    // Runs once; the host element does not change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /* Arriving straight at the section (a link, a fast scroll) can make it
+     visible before its file is attached: start playing once it is. */
+  useEffect(() => {
+    if (near && visible.current && !reduced) frontVideo()?.play().catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [near]);
 
   /* Play while on screen, pause when off it. */
   useEffect(() => {
@@ -179,7 +222,7 @@ export default function AmbientVideo({
             ref={ref}
             className={styles.video}
             data-front={slot === front}
-            src={sources[clipIn[slot]]}
+            src={near ? sources[clipIn[slot]] : undefined}
             poster={slot === 0 ? poster : undefined}
             muted
             loop={single && !reduced}

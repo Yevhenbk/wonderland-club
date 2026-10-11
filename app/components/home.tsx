@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 
 import {
@@ -24,6 +22,7 @@ import NightField from "./night-field";
 import NightsRail from "./nights-rail";
 import SiteHeader from "./site-header";
 import Tickets from "./tickets";
+import Wide from "./wide";
 import styles from "./home.module.scss";
 
 /** Where the sales start is announced; the buy buttons lead here until the
@@ -83,9 +82,13 @@ export default function Home() {
                     {row.href ? (
                       <a href={row.href} {...external(row.href)}>
                         {row.v}
+                        <Wide>{row.wide}</Wide>
                       </a>
                     ) : (
-                      row.v
+                      <>
+                        {row.v}
+                        <Wide>{row.wide}</Wide>
+                      </>
                     )}
                   </dd>
                 </div>

@@ -76,3 +76,12 @@
     filter: blur(56px);
   }
 }
+
+/* Still on phones (see styles/_blob.scss): nothing moves, so the blobs need
+   no layers of their own kept ready for movement. */
+@media (hover: none) and (pointer: coarse), (max-width: 767px) {
+  .bloom {
+    will-change: auto;
+    transition: none;
+  }
+}

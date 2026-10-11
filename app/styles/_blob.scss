@@ -174,17 +174,16 @@ $tint-cycle: 24s;
     animation: $tint $tint-cycle linear (-$phase) infinite;
   }
 
-  /* Touch devices keep the drift and drop the colour cycle. Movement runs
-     on the GPU; a changing colour inside a gradient cannot, so it repainted
-     every blob on every frame, scrolling included, and on a phone that made
-     scrolling stutter. Each blob holds a still colour instead. */
-  @media (hover: none) and (pointer: coarse) {
+  /* Phones get a still glow: no colour cycle and no drift. The colour
+     cycle repainted every blob on every frame (scrolling included), and
+     even the drift keeps large blurred layers busy, which costs battery and
+     performance score for something hardly noticed on a small screen. Each
+     blob holds the colour its phase gives it, so neighbours still differ.
+     Width as well as touch, because performance audits test a narrow
+     screen without always reporting it as a touch device. */
+  @media (hover: none) and (pointer: coarse), (max-width: 767px) {
     --blob-c: #{-still-colour($tint, $phase)};
-    @if list.length($motions) > 0 {
-      animation: $motions;
-    } @else {
-      animation: none;
-    }
+    animation: none;
   }
 
   @media (prefers-reduced-motion: reduce) {

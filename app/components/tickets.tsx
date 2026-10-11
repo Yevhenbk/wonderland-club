@@ -1,8 +1,9 @@
 import type { CSSProperties } from "react";
 
-import { tickets, zl } from "@/app/content";
+import { tickets } from "@/app/content";
 
 import styles from "./tickets.module.scss";
+import Price from "./price";
 
 type Plan = (typeof tickets)["standard"] | (typeof tickets)["vip"];
 
@@ -39,7 +40,9 @@ export default function Tickets() {
                 className={"best" in tier && tier.best ? styles.best : undefined}
               >
                 <dt>{tier.k}</dt>
-                <dd>{zl(tier.price)}</dd>
+                <dd>
+                  <Price value={tier.price} />
+                </dd>
               </div>
             ))}
           </dl>

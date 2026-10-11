@@ -55,6 +55,9 @@
   );
   --wl-max: 1080px;
   --wl-section-y: clamp(54px, 10vw, 132px);
+
+  /* The static header's height: the logo plus its breathing room. */
+  --wl-header-h: 90px;
 }
 
 *,
@@ -81,6 +84,25 @@ body {
   font-family:
     var(--font-body), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
     Roboto, sans-serif;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --wl-header-h: 84px;
+  }
+}
+
+/* Shown on wider screens only (components/wide.tsx). */
+@media (max-width: 767px) {
+  .wide-only {
+    display: none;
+  }
+}
+
+/* "zł" in prices: the body face, whatever face the figure is in. See
+   components/price.tsx for why. */
+.zl {
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
 }
 
 h1,

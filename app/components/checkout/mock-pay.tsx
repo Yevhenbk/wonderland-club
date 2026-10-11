@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import styles from "./checkout.module.scss";
+import Price from "../price";
 
 interface Summary {
   event: string;
@@ -78,7 +79,9 @@ export default function MockPay({
       </div>
 
       <p className={styles.eyebrow}>Оплата</p>
-      <h1 className={styles.title}>{summary.total} zł</h1>
+      <h1 className={styles.title}>
+        <Price value={summary.total} />
+      </h1>
 
       <dl className={styles.lines}>
         <div>
