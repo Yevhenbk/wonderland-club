@@ -28,10 +28,6 @@ import Tickets from "./tickets";
 import Wide from "./wide";
 import styles from "./home.module.scss";
 
-/** Where the sales start is announced; the buy buttons lead here until the
-    ticket shop link is set. */
-const FOLLOW_HREF = site.socials[0].href;
-
 /* Opens outside links in a new tab, keeps in-page anchors in place. */
 const external = (href: string) =>
   href.startsWith("http")
@@ -257,9 +253,6 @@ export default function Home() {
             <p className={styles.label}>{gallery.label}</p>
             <h2 className={styles.h2}>{gallery.title}</h2>
           </div>
-          <a href={FOLLOW_HREF} className={styles.galleryAll}>
-            {gallery.all} &rarr;
-          </a>
         </div>
 
         <ul className={styles.galleryGrid}>
@@ -269,11 +262,30 @@ export default function Home() {
               className={index === 0 ? styles.galleryFeatured : undefined}
             >
               <figure className={styles.shot}>
-                <span className={styles.shotFrame}>
-                  <MediaSlot media={item.media} label={item.night} />
+                <span
+                  className={styles.shotFrame}
+                  style={
+                    item.frame
+                      ? ({ "--frame": item.frame } as React.CSSProperties)
+                      : undefined
+                  }
+                >
+                  <MediaSlot
+                    media={item.media}
+                    label={item.tag}
+                    /* Generous on purpose: the browser multiplies these by
+                       the screen's pixel density, and a hint that ran at
+                       the tile's exact width left scaled screens with a
+                       file smaller than the space it fills. */
+                    sizes={
+                      index === 0
+                        ? "(max-width: 1080px) 100vw, 1080px"
+                        : "(max-width: 620px) 50vw, (max-width: 920px) 50vw, 420px"
+                    }
+                  />
                 </span>
                 <figcaption className={styles.shotMeta}>
-                  <span className={styles.shotNight}>{item.night}</span>
+                  <span className={styles.shotNight}>{item.tag}</span>
                   <span className={styles.shotCaption}>{item.caption}</span>
                 </figcaption>
               </figure>

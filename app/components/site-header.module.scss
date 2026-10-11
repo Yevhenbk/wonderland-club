@@ -1,3 +1,5 @@
+@use "../styles/button";
+
 /* ------------------------------------------------------ phones, tablets */
 
 /* A row of its own at the top of the page, the logo centred in it. Its
@@ -38,7 +40,7 @@
 }
 
 .nav,
-.balance {
+.right {
   display: none;
 }
 
@@ -91,8 +93,31 @@
     gap: 26px;
   }
 
-  .balance {
-    display: block;
+  .right {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+  }
+
+  /* The one gold thing in the bar, like every call on the page. */
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 20px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 700;
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--wl-gold-ink);
+    background: var(--wl-gold);
+    @include button.hover-lift;
+  }
+
+  .cta:focus-visible {
+    outline: 2px solid var(--wl-steel);
+    outline-offset: 3px;
   }
 
   .link {
@@ -114,7 +139,8 @@
 /* Touch screens wide enough for the desktop links (tablets in landscape):
    a 44px target around each, same look. */
 @media (min-width: 861px) and (pointer: coarse) {
-  .link {
+  .link,
+  .cta {
     display: inline-flex;
     align-items: center;
     min-height: 44px;

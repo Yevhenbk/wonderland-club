@@ -11,9 +11,9 @@ import styles from "./site-header.module.scss";
 /**
  * The header on every page, in two forms.
  *
- * Desktop (wider than 860px): a fixed bar, the logo on the left and the
- * links centred, transparent over the hero and solid once the page has
- * moved.
+ * Desktop (wider than 860px): a fixed bar, the logo on the left, the
+ * links centred and the gold ticket call on the right, transparent over the
+ * hero and solid once the page has moved.
  *
  * Phones and tablets: the logo alone, centred and larger, in a static row
  * that scrolls away with the page. A fixed bar is what let the page show
@@ -64,8 +64,13 @@ export default function SiteHeader() {
           ))}
         </nav>
 
-        {/* Balances the logo's column, so the links sit at the true centre. */}
-        <span className={styles.balance} aria-hidden="true" />
+        {/* The right-hand column: the ticket call on desktop. The column
+            matches the logo's, so the links sit at the true centre. */}
+        <div className={styles.right}>
+          <a href="/#tickets" className={styles.cta}>
+            Квитки
+          </a>
+        </div>
       </div>
     </header>
   );

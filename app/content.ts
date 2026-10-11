@@ -12,7 +12,9 @@
  */
 
 export type MediaSource =
-  | { type: "image"; src: string; alt?: string }
+  /* `position` is the CSS object-position for the crop, e.g. "50% 30%"
+     to keep faces in a tall photo shown in a shorter frame. */
+  | { type: "image"; src: string; alt?: string; position?: string }
   /* `src` may list several clips: they play back to back as one video. */
   | { type: "video"; src: string | string[]; poster?: string };
 
@@ -245,12 +247,13 @@ export const rules = {
   close: "Одна ніч. Свій світ. Свої правила.",
 };
 
+/* The first night is still ahead, so this is a mood piece, not a recap:
+   the clips set the tone for what 14.11 will feel like. */
 export const aftermovie = {
-  label: "Відео з ночі",
+  label: "Атмосфера",
   title: "Одна ніч. Один світ. Без повторів.",
-  /* PENDING: replace with a few real lines about the last night. */
-  lead1: "Тут буде кілька рядків про останню ніч: що це був за світ і як він звучав.",
-  lead2: "Наступний Wonderland вже десь поруч.",
+  lead1: "Важкі баси, світло на межі реальності й люди, які прийшли не спостерігати, а бути частиною подій.",
+  lead2: "14 листопада Краків стане частиною Wonderland.",
   /* Reference clips for now (9:16, H.264), played back to back and looped
      as one video. Swap for the real aftermovie (one file or several); add
      `poster` for a still to show before it loads. */
@@ -262,24 +265,64 @@ export const aftermovie = {
 
 export interface GalleryItem {
   id: string;
+  /** What the photo shows, in a word: "Сцена", "Бар"... */
+  tag: string;
+  /** The lead photo's width / height, so its frame shows it whole. */
+  frame?: string;
   caption: string;
-  night: string;
   media?: MediaSource;
 }
 
+/* The mood of the night, space by space. The first item runs wide; on a
+   phone only the first three show. Swap in photos from the night itself
+   once there are some. */
 export const gallery = {
   label: "Медіа",
-  title: "Що там було.",
-  all: "Більше в Instagram",
-  /* PENDING: photos / clips. The first one runs wide. */
+  title: "Атмосфера, заради якої варто прийти.",
   items: [
-    { id: "g1", night: "№ 03", caption: "Фото з ночі" },
-    { id: "g2", night: "№ 03", caption: "Фото з ночі" },
-    { id: "g3", night: "№ 02", caption: "Фото з ночі" },
-    { id: "g4", night: "№ 02", caption: "Фото з ночі" },
-    { id: "g5", night: "№ 01", caption: "Фото з ночі" },
-    { id: "g6", night: "№ 01", caption: "Фото з ночі" },
-    { id: "g7", night: "№ 01", caption: "Фото з ночі" },
+    {
+      id: "stage",
+      tag: "Сцена",
+      frame: "1280 / 790",
+      caption: "Музика, що задає ритм до самого ранку",
+      media: { type: "image", src: "/media/pic_main.jpg", alt: "Діджей за пультом, натовп у світлі й диму", position: "50% 45%" },
+    },
+    {
+      id: "vip",
+      tag: "VIP-зона",
+      caption: "Твоя компанія, твій простір",
+      media: { type: "image", src: "/media/pic_3.jpg", alt: "Компанія піднімає келихи, пляшка з бенгальським вогнем", position: "50% 40%" },
+    },
+    {
+      id: "floor",
+      tag: "Танцпол",
+      caption: "Ніч, яка не дає стояти на місці",
+      media: { type: "image", src: "/media/pic_4.jpg", alt: "Натовп на танцполі під мильними бульбашками", position: "50% 45%" },
+    },
+    {
+      id: "bar",
+      tag: "Бар",
+      caption: "Напої до самого фіналу",
+      media: { type: "image", src: "/media/pic_bar.jpg", alt: "Бармен готує напій за барною стійкою", position: "65% 50%" },
+    },
+    {
+      id: "show",
+      tag: "Шоу",
+      caption: "Світло й атмосфера на межі реальності",
+      media: { type: "image", src: "/media/pic_2.jpg", alt: "Світлове шоу, гість знімає сцену на телефон", position: "52% 50%" },
+    },
+    {
+      id: "people",
+      tag: "Люди",
+      caption: "Ті, хто прийшов бути частиною подій",
+      media: { type: "image", src: "/media/pic_1.jpg", alt: "Гостя в темному образі серед натовпу", position: "55% 35%" },
+    },
+    {
+      id: "evening",
+      tag: "Знайомства",
+      caption: "Нові знайомства й спогади після фіналу",
+      media: { type: "image", src: "/media/pic_5.jpg", alt: "Дві гості позують на тлі неонового світла", position: "50% 28%" },
+    },
   ] as GalleryItem[],
 };
 

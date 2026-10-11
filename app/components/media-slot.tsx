@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import type { MediaSource } from "@/app/content";
 
 import AmbientVideo from "./ambient-video";
@@ -11,18 +13,30 @@ export default function MediaSlot({
   media,
   label,
   className,
+  sizes = "100vw",
 }: {
   media?: MediaSource;
   label: string;
   className?: string;
+  /** How wide the slot is drawn, so a phone gets a small file rather than
+      the full photo. */
+  sizes?: string;
 }) {
   const cls = className ? `${styles.slot} ${className}` : styles.slot;
 
+  /* Photos go through next/image: resized and recompressed to the width the
+     slot is drawn at, and loaded only as they approach the screen. */
   if (media?.type === "image")
     return (
       <span className={cls}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={media.src} alt={media.alt ?? ""} loading="lazy" />
+        <Image
+          src={media.src}
+          alt={media.alt ?? ""}
+          fill
+          sizes={sizes}
+          quality={90}
+          style={{ objectFit: "cover", objectPosition: media.position ?? "50% 50%" }}
+        />
       </span>
     );
 

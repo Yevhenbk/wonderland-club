@@ -652,24 +652,6 @@
   flex-wrap: wrap;
 }
 
-.galleryAll {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  font-size: 15.5px;
-  font-weight: 700;
-  color: var(--wl-steel);
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.galleryAll:hover,
-.galleryAll:focus-visible {
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  outline: none;
-}
-
 /* A lead shot running wide, then two whole rows of three. */
 .galleryGrid {
   list-style: none;
@@ -685,7 +667,15 @@
 }
 
 .galleryFeatured .shotFrame {
-  aspect-ratio: 21 / 9;
+  /* The lead photo's own proportions (set per photo, see `frame` in
+     content.ts), so it shows whole rather than cropped to a strip. */
+  aspect-ratio: var(--frame, 16 / 10);
+}
+
+/* Enlarged 2% inside its frame: the photo has thin dark bands along its
+   top and right edges, and this trims them off. */
+.galleryFeatured .shotFrame img {
+  transform: scale(1.02);
 }
 
 .shot {
@@ -693,11 +683,26 @@
 }
 
 .shotFrame {
+  position: relative;
   display: block;
   aspect-ratio: 4 / 5;
   border-radius: 10px;
   overflow: hidden;
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* A film grain over every photo: grey noise blended into the image
+   (overlay), so it reads as grain in the photo rather than a haze on top of
+   it. Coarse and fairly strong, for a visible analogue texture. */
+.shotFrame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.45;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 
 .shot:hover .shotFrame {
@@ -707,8 +712,8 @@
 .shotMeta {
   margin-top: 12px;
   display: flex;
-  align-items: baseline;
-  gap: 12px;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .shotNight {
@@ -729,9 +734,6 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .galleryFeatured .shotFrame {
-    aspect-ratio: 16 / 10;
-  }
 }
 
 /* -------------------------------------------------------------------- faq */
@@ -1159,8 +1161,8 @@
     grid-template-columns: 1fr 1fr;
   }
 
-  .galleryFeatured .shotFrame {
-    aspect-ratio: 4 / 3;
+  .shotCaption {
+    line-height: 1.4;
   }
 }
 
