@@ -46,7 +46,9 @@ export default function PassCard({
           )}
         </div>
 
-        <p className={styles.eyebrow}>{EVENT.title}</p>
+        <p className={styles.eyebrow}>
+          {EVENT.title}. {EVENT.theme}
+        </p>
         <h2 className={styles.type}>
           {item.name}
           <span className={styles.detail}>{item.detail}</span>
@@ -56,6 +58,10 @@ export default function PassCard({
           <div>
             <dt>Дата</dt>
             <dd>{EVENT.date}</dd>
+          </div>
+          <div>
+            <dt>Час</dt>
+            <dd>{EVENT.time}</dd>
           </div>
           <div>
             <dt>Локація</dt>

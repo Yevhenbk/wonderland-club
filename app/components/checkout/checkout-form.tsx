@@ -60,10 +60,12 @@ export default function CheckoutForm({
 
   return (
     <form className={styles.card} onSubmit={submit} noValidate>
-      <p className={styles.eyebrow}>{event.title}</p>
+      <p className={styles.eyebrow}>
+        {event.title}. {event.theme}
+      </p>
       <h1 className={styles.title}>Квитки на Wonderland</h1>
       <p className={styles.meta}>
-        {event.date}
+        {event.date}, {event.time}
         <br />
         {event.venueStreet}
         <Wide>, {event.venueCity}</Wide>

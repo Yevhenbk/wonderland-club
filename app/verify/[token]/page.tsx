@@ -72,7 +72,7 @@ export default async function VerifyPage({
           <div>
             <dt>Подія</dt>
             <dd>
-              {EVENT.title}, {EVENT.date}
+              {EVENT.title}. {EVENT.theme}, {EVENT.date}
             </dd>
           </div>
           <div>

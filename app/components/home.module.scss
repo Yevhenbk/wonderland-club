@@ -813,6 +813,227 @@
   color: var(--wl-faint);
 }
 
+/* ------------------------------------------------- the first night's story */
+
+.nightsHead .leadLeft + .leadLeft {
+  margin-top: 10px;
+}
+
+/* The two lines that close the night's story under its card. */
+.nightClose {
+  max-width: 46ch;
+  margin: clamp(30px, 4vw, 44px) auto 0;
+  text-align: center;
+}
+
+.nightClose p {
+  font-size: clamp(18px, 2vw, 21px);
+  font-weight: 600;
+  line-height: 1.5;
+  text-wrap: balance;
+}
+
+.nightClose p + p {
+  margin-top: 10px;
+  font-weight: 500;
+  color: var(--wl-soft);
+}
+
+/* ------------------------------------------------------- what awaits you */
+
+/* Numbered tiles, the same card as the four worlds further down. Fixed
+   column counts (four, two, one) rather than "as many as fit", so an even
+   number of tiles always fills its rows: four across on wide screens, two
+   by two on tablets, one per row on phones. */
+.expectList {
+  list-style: none;
+  margin: clamp(30px, 4vw, 46px) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 1.6vw, 18px);
+  text-align: left;
+}
+
+.expectItem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px 20px 20px;
+  border-radius: var(--wl-radius);
+  background: var(--wl-paper);
+  border: 1px solid var(--wl-line);
+  overflow: hidden;
+}
+
+/* A hairline of the brand gradient across the top edge. */
+.expectItem::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: var(--wl-grad);
+  opacity: 0.8;
+}
+
+.expectN {
+  font-family: var(--wl-font-wide);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--wl-rose);
+}
+
+.expectText {
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+@media (max-width: 1000px) {
+  .expectList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .expectList {
+    grid-template-columns: 1fr;
+  }
+}
+
+.expectClose {
+  max-width: 44ch;
+  margin: clamp(28px, 4vw, 40px) auto 0;
+  font-size: clamp(18px, 2vw, 21px);
+  font-weight: 600;
+  line-height: 1.5;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ VIP */
+
+.vipBand {
+  background: var(--wl-paper);
+}
+
+/* One card, centred, with a steel glow drifting in its corner: the group
+   option in the ticket cards wears the same steel. */
+.vipCard {
+  position: relative;
+  isolation: isolate;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(28px, 5vw, 52px);
+  border-radius: var(--wl-radius);
+  border: 1px solid var(--wl-line-strong);
+  background: rgba(255, 255, 255, 0.02);
+  text-align: center;
+  overflow: hidden;
+}
+
+.vipCard::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  right: -20%;
+  top: -40%;
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle closest-side,
+    rgba(88, 122, 176, 0.9) 0%,
+    rgba(88, 122, 176, 0.3) 45%,
+    transparent 100%
+  );
+  opacity: 0.25;
+  filter: blur(36px);
+  pointer-events: none;
+}
+
+/* "Твоя компанія. Твій простір. Твоя ніч." as three beats on one line. */
+.vipTrio {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 14px;
+  margin: 22px 0 6px;
+  font-family: var(--wl-font-wide);
+  font-size: clamp(16px, 2vw, 20px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.vipHighlight {
+  margin-top: 26px;
+  font-family: var(--wl-font-wide);
+  font-size: clamp(19px, 2.4vw, 26px);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.vipNote {
+  margin-top: 12px;
+  font-size: 15px;
+  color: var(--wl-faint);
+}
+
+/* ---------------------------------------------------------------- rules */
+
+.rulesBand {
+  background: var(--wl-wash);
+}
+
+.rulesBand .inner {
+  text-align: center;
+}
+
+/* A numbered list in large figures, one rule per row on a hairline. */
+.rulesList {
+  list-style: none;
+  max-width: 680px;
+  margin: clamp(30px, 4vw, 44px) auto 0;
+  padding: 0;
+  text-align: left;
+  border-top: 1px solid var(--wl-line);
+}
+
+.rulesList > li {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(16px, 3vw, 28px);
+  padding: 18px 0;
+  border-bottom: 1px solid var(--wl-line);
+}
+
+.ruleN {
+  flex: none;
+  width: 1.4em;
+  font-family: var(--wl-font-wide);
+  font-size: clamp(26px, 3.4vw, 36px);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--wl-rose);
+}
+
+.ruleText {
+  font-size: clamp(17px, 1.9vw, 19px);
+  line-height: 1.5;
+}
+
+.rulesClose {
+  margin-top: clamp(28px, 4vw, 40px);
+  font-family: var(--wl-font-wide);
+  font-size: clamp(20px, 2.6vw, 28px);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
 /* ==================================================== handheld ============ */
 
 /* Most of the traffic will come from Instagram, so the phone is the real
@@ -1053,7 +1274,7 @@
   }
 
   .ticketRows > div {
-    padding: 5px 0;
+    padding: 4px 0;
   }
 
   .ticketBtn {
@@ -1066,10 +1287,19 @@
   }
 }
 
-/* iPhone SE and the like: a slightly smaller headline. */
+/* iPhone SE and the like: a slightly smaller headline and card rows. */
 @media (max-width: 767px) and (max-height: 600px) {
   .h1 {
     font-size: 27px;
+  }
+
+  .ticketRows dt,
+  .ticketRows dd {
+    font-size: 14px;
+  }
+
+  .ticketTheme {
+    margin-top: 4px;
   }
 }
 
@@ -1109,7 +1339,7 @@
   }
 
   .ticketRows > div {
-    padding: 7px 0;
+    padding: 5px 0;
   }
 
   .ticketBtn {

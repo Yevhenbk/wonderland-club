@@ -68,11 +68,11 @@
   letter-spacing: -0.02em;
 }
 
-/* Date, place, sound: a quiet three-up of facts, hairline above each. */
+/* Date, time, place, sound: a quiet row of facts, hairline above each. */
 .facts {
   margin: 24px 0 0;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px 22px;
 }
 

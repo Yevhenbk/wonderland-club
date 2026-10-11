@@ -32,7 +32,7 @@ export default async function PayPage({
       <MockPay
         token={s}
         summary={{
-          event: `${EVENT.title}, ${EVENT.date}`,
+          event: `${EVENT.theme}, ${EVENT.date}, ${EVENT.time}`,
           ticket: `${item.name}: ${item.detail}`,
           qty: item.maxQty > 1 ? session.qty : null,
           email: session.email,

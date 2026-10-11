@@ -64,6 +64,8 @@ export const EVENT = {
   id: nextNight.eventId,
   title: `${nextNight.label} ${nextNight.number}`,
   date: nextNight.dateLong,
+  time: nextNight.time,
+  theme: nextNight.theme,
   venueName: venue.name,
   venue: `${venue.address}, ${venue.city}`,
   /* The two parts on their own, for cards that drop the city on a phone. */

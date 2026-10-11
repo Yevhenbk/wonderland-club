@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import {
   aftermovie,
+  expect,
   faq,
   final,
   gallery,
@@ -9,8 +10,10 @@ import {
   nextNight,
   nights,
   quote,
+  rules,
   site,
   tickets,
+  vip,
   worlds,
 } from "@/app/content";
 
@@ -149,8 +152,56 @@ export default function Home() {
             <p className={styles.label}>{nights.label}</p>
             <h2 className={styles.h2}>{nights.title}</h2>
             <p className={styles.leadLeft}>{nights.lead}</p>
+            <p className={styles.leadLeft}>{nights.lead2}</p>
           </div>
           <NightsRail ticketHref={ticketHref} />
+          <div className={styles.nightClose}>
+            {nights.close.map((line) => (
+              <p key={line}>{line}</p>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------- expect */}
+      <section className={styles.section} id="expect">
+        <p className={styles.label}>{expect.label}</p>
+        <h2 className={styles.h2}>{expect.title}</h2>
+        <p className={styles.lead}>{expect.lead}</p>
+        <ol className={styles.expectList}>
+          {expect.items.map((item, index) => (
+            <li key={item} className={styles.expectItem}>
+              <span className={styles.expectN}>
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <span className={styles.expectText}>{item}</span>
+            </li>
+          ))}
+        </ol>
+        <p className={styles.expectClose}>{expect.close}</p>
+      </section>
+
+      {/* ---------------------------------------------------------- vip */}
+      <section className={styles.vipBand} id="vip">
+        <div className={styles.inner}>
+          <div className={styles.vipCard}>
+            <p className={styles.label}>{vip.label}</p>
+            <h2 className={styles.h2}>{vip.title}</h2>
+            <p className={styles.lead}>{vip.lead}</p>
+            <p className={styles.vipTrio}>
+              {vip.trio.map((word) => (
+                <span key={word}>{word}</span>
+              ))}
+            </p>
+            <p className={styles.lead}>{vip.body}</p>
+            <p className={`${styles.vipHighlight} ${styles.grad}`}>
+              {vip.highlight}
+            </p>
+            <p className={styles.vipNote}>{vip.note}</p>
+            <a href={vip.ctaHref} className={styles.btn}>
+              {vip.cta}
+            </a>
+          </div>
         </div>
       </section>
 
@@ -162,6 +213,23 @@ export default function Home() {
           <p className={styles.leadLeft}>{tickets.lead}</p>
         </div>
         <Tickets />
+      </section>
+
+      {/* -------------------------------------------------------- rules */}
+      <section className={styles.rulesBand} id="rules">
+        <div className={styles.inner}>
+          <p className={styles.label}>{rules.label}</p>
+          <h2 className={styles.h2}>{rules.title}</h2>
+          <ol className={styles.rulesList}>
+            {rules.items.map((rule, index) => (
+              <li key={rule}>
+                <span className={styles.ruleN}>{index + 1}</span>
+                <span className={styles.ruleText}>{rule}</span>
+              </li>
+            ))}
+          </ol>
+          <p className={`${styles.rulesClose} ${styles.grad}`}>{rules.close}</p>
+        </div>
       </section>
 
       {/* ------------------------------------------------------- worlds */}

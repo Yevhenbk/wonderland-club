@@ -51,7 +51,7 @@ export function renderTicketEmail(
 ): RenderedEmail {
   const item = CATALOG[order.item];
   const count = passes.length;
-  const subject = `Твої квитки: Wonderland Club, ${EVENT.date}`;
+  const subject = `Твої квитки: Wonderland Club, ${EVENT.theme}, ${EVENT.date}`;
 
   const row = (k: string, v: string) => `
     <tr>
@@ -78,8 +78,9 @@ export function renderTicketEmail(
       </td></tr>
       <tr><td style="padding:0 22px 18px;">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-          ${row("Подія", EVENT.title)}
+          ${row("Подія", `${EVENT.title}. ${EVENT.theme}`)}
           ${row("Дата", EVENT.date)}
+          ${row("Час", EVENT.time)}
           ${row("Локація", EVENT.venue)}
           ${row("Вхід", item.passLabel)}
           ${order.name ? row("Ім'я", order.name) : ""}
@@ -123,7 +124,7 @@ export function renderTicketEmail(
   const text = [
     `${order.name ? `${order.name}, д` : "Д"}о зустрічі у Wonderland!`,
     "",
-    `Оплату отримано. ${EVENT.title}, ${EVENT.date}, ${EVENT.venue}.`,
+    `Оплату отримано. ${EVENT.title}. ${EVENT.theme}, ${EVENT.date}, ${EVENT.time}, ${EVENT.venue}.`,
     "",
     ...passes.map(
       ({ pass, url }, i) =>

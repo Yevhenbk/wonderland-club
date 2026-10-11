@@ -44,6 +44,7 @@ export const site = {
 export const nav = [
   { href: "/#nights", label: "Ночі" },
   { href: "/#tickets", label: "Квитки" },
+  { href: "/#rules", label: "Правила" },
   { href: "/#gallery", label: "Медіа" },
   { href: "/#faq", label: "Питання" },
 ];
@@ -65,19 +66,22 @@ export const venue = {
     "https://www.google.com/maps/search/?api=1&query=Stefana+Batorego+1%2C+Krak%C3%B3w",
 };
 
-/* The first night: 14.11.2026, a Saturday. The theme stays a secret. */
+/* The first night: 14.11.2026, a Saturday, 22:00 to 04:00. Its world is
+   "The End of the World", set here in Ukrainian as the rest of the page. */
 export const nextNight = {
   /** Used on the passes and in the ticket email. */
   eventId: "wl-2026-11-14",
   dateLong: "14.11.2026, субота",
+  time: "22:00-04:00",
   label: "Перша ніч",
   number: "№ 01",
-  theme: "Тема поки що секрет",
+  theme: "Кінець світу",
   rows: [
     { k: "Дата", v: "14.11, субота" },
+    { k: "Час", v: "22:00-04:00" },
     /* The city is shown on wider screens only; on a phone the street says it. */
     { k: "Локація", v: venue.address, wide: `, ${venue.city}`, href: venue.mapsHref },
-    { k: "Саунд", v: "Залежить від ночі" },
+    { k: "Саунд", v: "Реп, хіп-хоп, треп, рейдж" },
   ] as { k: string; v: string; wide?: string; href?: string }[],
   /* The calls about the night lead to the prices; buying starts there. */
   cta: "Купити квиток",
@@ -116,15 +120,15 @@ export const tickets = {
     buyItem: "standard" as SellableTier["id"],
   },
   vip: {
-    eyebrow: "VIP-група",
-    name: "Для твоєї компанії",
-    /* PENDING: what a VIP group gets (table, entry, drinks...). */
+    eyebrow: "VIP-зона",
+    name: "Твоя компанія. Твій простір.",
+    /* PENDING: booking details and access conditions ("незабаром"). */
     tiers: [
       { id: "vip-4-5", k: "4-5 людей", price: 290 },
       { id: "vip-6-8", k: "6-8 людей", price: 420 },
       { id: "vip-10", k: "10+ людей", price: 650 },
     ] as (SellableTier | DoorTier)[],
-    note: "Ціна за всю компанію.",
+    note: "Ціна за всю компанію. Деталі бронювання незабаром.",
     buyItem: "vip-4-5" as SellableTier["id"],
   },
   cta: "Купити",
@@ -162,10 +166,16 @@ export interface Night {
   media?: MediaSource;
 }
 
+/* The night's own story: the "Ночі" section tells it around the night card. */
 export const nights = {
-  label: "Ночі",
-  title: "Кожна ніч це окремий світ.",
-  lead: "Те, про що краще не розповідати до початку. Після можна.",
+  label: "14.11. Краків. 22:00-04:00",
+  title: "Світ не закінчиться сам. Ми влаштуємо йому фінал.",
+  lead: "14 листопада Краків зануриться в ніч, де не існує правил, завтра не гарантоване, а кожен трек звучить так, ніби це останній раз.",
+  lead2: "Темна атмосфера. Важкі баси. Дим, стробоскопи та музика, яка не дає стояти на місці.",
+  close: [
+    "Це не просто вечірка. Це ніч перед кінцем усього, що ти знаєш.",
+    "Забудь про завтра. Залиш усе за дверима. Проживи цю ніч так, ніби іншої вже не буде.",
+  ],
   pastLabel: "Минулі світи",
   /* One entry per night that has happened, newest first. Empty until the
      first one (14.11); the block shows up by itself once this has entries.
@@ -190,6 +200,49 @@ export const nights = {
     mid2: "#8a5d5f",
     to: "#e2a59d",
   } satisfies Ramp,
+};
+
+/* What the first night holds. Keep an even number of items: the tiles sit
+   four, two or one across, so an odd count leaves one alone on its row.
+   (The VIP point lives in its own section right after this one.) */
+export const expect = {
+  label: "Що на тебе чекає?",
+  title: "Твоя остання ніч за звичними правилами.",
+  lead: "Цієї ночі Краків стане частиною Wonderland.",
+  items: [
+    "Реп, хіп-хоп, треп і рейдж, що задають ритм до самого ранку.",
+    "Темна естетика, світло й атмосфера на межі реальності.",
+    "Люди, які прийшли не спостерігати, а бути частиною подій.",
+    "Нові знайомства, несподівані моменти та спогади, які залишаться після фіналу.",
+  ],
+  close: "Ти не просто приходиш на вечірку. Ти стаєш частиною історії Wonderland.",
+};
+
+/* The VIP pitch, just before the prices. */
+export const vip = {
+  label: "VIP-зона",
+  title: "Не всі зустрічають кінець світу однаково.",
+  lead: "Поки танцпол поглинає хаос, є місце для тих, хто хоче прожити цю ніч по-своєму.",
+  trio: ["Твоя компанія.", "Твій простір.", "Твоя ніч."],
+  body: "Без зайвих пояснень. Без випадкових людей за твоїм столом. Лише ти, твої люди та атмосфера, заради якої варто було прийти.",
+  highlight: "VIP Wonderland: ти ближче до епіцентру.",
+  note: "Деталі бронювання та умови доступу незабаром.",
+  cta: "Ціни на VIP",
+  ctaHref: "#tickets",
+};
+
+/* The house rules. */
+export const rules = {
+  label: "Правила",
+  title: "У кінця світу є свої правила.",
+  items: [
+    "Залиш буденність за дверима.",
+    "Не бійся бути собою. Тут не потрібно нікому нічого доводити.",
+    "Поважай тих, хто поруч. Свобода одного закінчується там, де починається дискомфорт іншого.",
+    "Жодної зайвої драми. Ми прийшли створювати спогади.",
+    "Не чекай слушного моменту. Створи його сам.",
+  ],
+  close: "Одна ніч. Свій світ. Свої правила.",
 };
 
 export const aftermovie = {
@@ -279,6 +332,6 @@ export const faq = {
 
 export const final = {
   title: "Вітаємо у Wonderland.",
-  line: "Перша ніч 14.11 на Stefana Batorego 1. Квитки онлайн від 40 zł.",
+  line: "Кінець це лише початок. Перша ніч 14.11 на Stefana Batorego 1, квитки онлайн від 40 zł.",
   button: "Обрати квиток",
 };
