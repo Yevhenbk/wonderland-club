@@ -11,7 +11,8 @@
  * field, a wash and paper, and every section repeats the same three part
  * header (eyebrow, heading, lead) so the page reads as one object.
  *
- * All colour lives in the tokens below; flipping the palette is this block.
+ * All colour lives in the design tokens in globals.scss (shared with the
+ * checkout and ticket pages); flipping the palette is that one block.
  *
  * The palette is sampled from the logo (public/media/wonderland_logo.jpg):
  * rose-gold chrome, steel-blue chrome and silver lettering on a violet-black
@@ -22,46 +23,6 @@
 
 .page {
   position: relative;
-
-  /* ink scale: the logo's silver, warmed toward its highlight #fdf3ed */
-  --wl-ink: #f5eeec;
-  --wl-soft: #b4abb3;
-  --wl-faint: #857d8a;
-
-  /* Grounds: the logo's sky (#050309) and its nebula (#120d20). The washes
-     carry alpha so the field keeps showing through; paper stays opaque
-     wherever running text sits on it. */
-  --wl-night: #050309;
-  --wl-paper: #0f0b19;
-  --wl-wash: rgba(18, 13, 32, 0.68);
-  --wl-wash-strong: rgba(24, 19, 40, 0.86);
-  --wl-line: rgba(232, 222, 230, 0.08);
-  --wl-line-strong: rgba(232, 222, 230, 0.16);
-
-  /* brand: the two chromes */
-  --wl-rose: #e2a59d;
-  --wl-steel: #8aa5c8;
-  /* Rose gold to silver to steel, the order the logo's ring runs in. */
-  --wl-grad: linear-gradient(
-    100deg,
-    #f0cbc5 0%,
-    #d3958d 32%,
-    #ece4e6 58%,
-    #8aa5c8 100%
-  );
-  --wl-gold: linear-gradient(270deg, #f6dcd5 0%, #d99f96 100%);
-  --wl-gold-ink: #3a1e1b;
-  --wl-gold-glow: 217, 159, 150;
-
-  /* type: the logo's wide "CLUB" for every heading and label; running text
-     is the body face set in globals.scss */
-  --wl-font-wide: var(--font-wide), "Unbounded", ui-sans-serif, sans-serif;
-
-  /* one radius, one rhythm, one container */
-  --wl-radius: 20px;
-  --wl-gut: clamp(22px, 5vw, 48px);
-  --wl-max: 1080px;
-  --wl-section-y: clamp(54px, 10vw, 132px);
 
   width: 100%;
   min-width: 0;
@@ -196,7 +157,10 @@
   align-items: center;
   /* The navbar's 62px plus the same 40px the word strip keeps above itself,
      so the auto margins centre the content exactly between the two. */
-  padding: 102px var(--wl-gut) 28px;
+  /* Plus the iPhone's status bar and home indicator (0 elsewhere): the
+     header grows by the top one, and the strip stays clear of the bottom. */
+  padding: calc(102px + env(safe-area-inset-top, 0px)) var(--wl-gut)
+    calc(28px + env(safe-area-inset-bottom, 0px));
   /* Clipped sideways only. Clipping vertically cut the drifting glow off in
      a straight line at the hero's foot; unclipped, it fades out over the
      transparent section below, so the two read as one ground. */
@@ -828,85 +792,6 @@
   color: var(--wl-faint);
 }
 
-/* -------------------------------------------------------- the phone call */
-
-.bar {
-  display: none;
-}
-
-@media (max-width: 767px) {
-  .bar {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 50;
-    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
-    background: var(--wl-paper);
-    border-top: 1px solid var(--wl-line-strong);
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
-    transform: translateY(120%);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition:
-      transform 0.24s ease-out,
-      opacity 0.24s ease-out,
-      visibility 0s linear 0.24s;
-  }
-
-  .barOn {
-    transform: translateY(0);
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transition:
-      transform 0.24s ease-out,
-      opacity 0.24s ease-out,
-      visibility 0s;
-  }
-}
-
-.barMeta {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 0;
-}
-
-.barMeta strong {
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-/* One line each, so the bar stays 72px tall (matching the navbar) even on
-   a 320 screen, where the address would otherwise wrap. */
-.barMeta strong,
-.barMeta span {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.barMeta span {
-  font-size: 14px;
-  color: var(--wl-soft);
-}
-
-.barBtn {
-  composes: btn;
-  margin-top: 0;
-  margin-left: auto;
-  flex: none;
-  padding: 14px 22px;
-  font-size: 16.5px;
-  min-height: 48px;
-}
-
 /* ==================================================== handheld ============ */
 
 /* Most of the traffic will come from Instagram, so the phone is the real
@@ -944,14 +829,6 @@
     margin-top: 12px;
   }
 
-  .barBtn {
-    display: inline-block;
-    width: auto;
-    margin-top: 0;
-    padding: 14px 22px;
-    font-size: 16.5px;
-    line-height: normal;
-  }
 
   /* Full screen height on phones too (the svh from the base rule: measured
      with the address bar showing and steady while it slides away, so
@@ -959,7 +836,7 @@
      72px phone navbar plus the strip's 28px gap, which keeps the content
      centred between the two. */
   .hero {
-    padding-top: 100px;
+    padding-top: calc(100px + env(safe-area-inset-top, 0px));
   }
 
   .h1 {
@@ -1029,8 +906,9 @@
     display: none;
   }
 
+  /* Clear of the iPhone's home indicator. */
   .footer {
-    padding-bottom: 96px;
+    padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -1052,9 +930,7 @@
   }
 
   .world,
-  .shotFrame,
-  .bar,
-  .barOn {
+  .shotFrame {
     transition: none;
   }
 

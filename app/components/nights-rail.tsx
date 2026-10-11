@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 
-import { nextNight, nights, tickets, type Ramp } from "@/app/content";
+import { nextNight, nights, tickets, zl, type Ramp } from "@/app/content";
 
 import MediaSlot from "./media-slot";
 import styles from "./nights-rail.module.scss";
@@ -51,9 +51,11 @@ export default function NightsRail({ ticketHref }: { ticketHref: string }) {
 
         <div className={styles.buy}>
           <span className={styles.buyKicker}>Квитки від</span>
-          <span className={styles.buyBig}>{tickets.standard.tiers[0].v}</span>
+          <span className={styles.buyBig}>
+            {zl(tickets.standard.tiers[0].price)}
+          </span>
           <a href={ticketHref} className={styles.buyCta}>
-            {nextNight.ticketsHref ? nextNight.cta : nextNight.ctaPending}{" "}
+            {nextNight.cta}{" "}
             &rarr;
           </a>
           <span className={styles.buyNote}>{nextNight.note}</span>

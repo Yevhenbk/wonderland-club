@@ -10,7 +10,7 @@ import styles from "./site-header.module.scss";
 
 /**
  * The mark and a few links. No ticket button up here: the menu has a
- * "Квитки" link, and on a phone the bar at the bottom carries the call.
+ * "Квитки" link, and the prices section carries the call.
  * Transparent over the hero so it owns the first paint, solid once the page
  * has moved.
  */

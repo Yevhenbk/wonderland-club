@@ -1,11 +1,31 @@
+/* The top inset is the iPhone's status bar and notch (0 elsewhere). With
+   viewport-fit=cover the page reaches under it, so the header grows by that
+   much and paints its background there too; its contents stay below it. */
 .header {
+  --top-inset: env(safe-area-inset-top, 0px);
   position: fixed;
   inset: 0 0 auto;
   z-index: 60;
+  padding-top: var(--top-inset);
   background: transparent;
   transition:
     background 0.25s ease,
     box-shadow 0.25s ease;
+}
+
+/* The same background carried on above the header, for what iPhone Safari
+   shows over the top of the page: the area behind its floating address bar
+   and the rubber-band overscroll. Without it the page scrolled past visibly
+   above the bar. Transparent until the header turns solid, like the header. */
+.header::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 120px;
+  background: inherit;
+  pointer-events: none;
 }
 
 /* Opaque, not frosted: backdrop blur is not reliable on every phone, and
@@ -170,7 +190,7 @@
 .scrim {
   display: none;
   position: fixed;
-  inset: 62px 0 0;
+  inset: calc(62px + var(--top-inset)) 0 0;
   z-index: -1;
   background: rgba(0, 0, 0, 0.55);
   animation: fade 0.2s ease both;
@@ -199,7 +219,7 @@
 
   .sheet {
     display: flex;
-    max-height: calc(100dvh - 62px);
+    max-height: calc(100dvh - 62px - var(--top-inset));
     overflow-y: auto;
     overscroll-behavior: contain;
   }
@@ -209,14 +229,14 @@
   }
 }
 
-/* On a phone the bar matches the ticket bar at the bottom of the screen:
-   72px tall, 16px in from the edges, and a 51px tap target on the menu
-   button, the height of that bar's button. The logo gets the room the
-   ticket button used to take. */
+/* On a phone: 72px tall, 16px in from the edges (more in landscape, where
+   the notch sits at a side), with a 51px tap target on the menu button and
+   the room the ticket button used to take given to the logo. */
 @media (max-width: 767px) {
   .inner {
     height: 72px;
-    padding: 0 16px;
+    padding: 0 max(16px, env(safe-area-inset-right, 0px)) 0
+      max(16px, env(safe-area-inset-left, 0px));
   }
 
   .logo {
@@ -230,12 +250,12 @@
   }
 
   .sheet {
-    max-height: calc(100dvh - 72px);
+    max-height: calc(100dvh - 72px - var(--top-inset));
     padding-inline: 16px;
   }
 
   .scrim {
-    top: 72px;
+    top: calc(72px + var(--top-inset));
   }
 }
 

@@ -69,6 +69,9 @@ export const venue = {
 
 /* The first night: 14.11.2026, a Saturday. The theme stays a secret. */
 export const nextNight = {
+  /** Used on the passes and in the ticket email. */
+  eventId: "wl-2026-11-14",
+  dateLong: "14.11.2026, субота",
   label: "Перша ніч",
   number: "№ 01",
   theme: "Тема поки що секрет",
@@ -77,13 +80,26 @@ export const nextNight = {
     { k: "Локація", v: `${venue.address}, ${venue.city}`, href: venue.mapsHref },
     { k: "Саунд", v: "Залежить від ночі" },
   ] as { k: string; v: string; href?: string }[],
-  /** PENDING: set to the ticket shop URL once online sales open. Until then
-      the ticket calls lead to the prices section and to Instagram. */
-  ticketsHref: null as string | null,
+  /* The calls about the night lead to the prices; buying starts there. */
   cta: "Купити квиток",
-  ctaPending: "Ціни на квитки",
+  ctaHref: "#tickets",
   note: "Квиток онлайн 40 zł, на вході 50 zł.",
 };
+
+/** A ticket that can be bought online. `id` is what checkout and the passes
+    refer to; `price` (zł) is what the server charges, never the browser. */
+export interface SellableTier {
+  id: "standard" | "vip-4-5" | "vip-6-8" | "vip-10";
+  k: string;
+  price: number;
+  best?: boolean;
+}
+
+/** A price that is shown but not sold online (paid at the door). */
+export interface DoorTier {
+  k: string;
+  price: number;
+}
 
 /* Prices exactly as announced. VIP prices are for the whole group. */
 export const tickets = {
@@ -94,25 +110,30 @@ export const tickets = {
     eyebrow: "Стандарт",
     name: "Вхідний квиток",
     tiers: [
-      { k: "Онлайн", v: "40 zł", best: true },
-      { k: "На вході", v: "50 zł" },
-    ],
+      { id: "standard", k: "Онлайн", price: 40, best: true },
+      { k: "На вході", price: 50 },
+    ] as (SellableTier | DoorTier)[],
     note: "Купуй онлайн і заощадь 10 zł.",
+    buyItem: "standard" as SellableTier["id"],
   },
   vip: {
     eyebrow: "VIP-група",
     name: "Для твоєї компанії",
     /* PENDING: what a VIP group gets (table, entry, drinks...). */
     tiers: [
-      { k: "4-5 людей", v: "290 zł" },
-      { k: "6-8 людей", v: "420 zł" },
-      { k: "10+ людей", v: "650 zł" },
-    ],
+      { id: "vip-4-5", k: "4-5 людей", price: 290 },
+      { id: "vip-6-8", k: "6-8 людей", price: 420 },
+      { id: "vip-10", k: "10+ людей", price: 650 },
+    ] as (SellableTier | DoorTier)[],
     note: "Ціна за всю компанію.",
+    buyItem: "vip-4-5" as SellableTier["id"],
   },
-  cta: "Купити квиток",
-  ctaPending: "Стежити за стартом продажу",
+  cta: "Купити",
+  checkoutPath: "/checkout",
 };
+
+/** Formats a price the way the page shows it. */
+export const zl = (price: number) => `${price} zł`;
 
 export const worlds = {
   label: "Наш формат",
@@ -264,10 +285,4 @@ export const final = {
   title: "Вітаємо у Wonderland.",
   line: "Перша ніч 14.11 на Stefana Batorego 1. Квитки онлайн від 40 zł.",
   button: "Обрати квиток",
-};
-
-export const bar = {
-  strong: "Перша ніч 14.11",
-  note: "Stefana Batorego 1, від 40 zł",
-  button: "Квитки",
 };

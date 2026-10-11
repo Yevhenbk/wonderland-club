@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 
-import { tickets } from "@/app/content";
+import { tickets, zl } from "@/app/content";
 
 import styles from "./tickets.module.scss";
 
@@ -10,18 +10,10 @@ type Plan = (typeof tickets)["standard"] | (typeof tickets)["vip"];
  * The prices, as two cards side by side: the standard entry and the group
  * option. Every price is a row on a hairline, so the two cards read as one
  * price list; the cheapest way in (online) is the one figure set in the
- * logo's rose gold.
+ * logo's rose gold. Each card's button opens checkout with its ticket
+ * already chosen.
  */
-export default function Tickets({
-  href,
-  pending,
-}: {
-  /** Where the buy buttons go: the shop once sales open, otherwise the
-      channel that announces them. */
-  href: string;
-  /** No shop link yet: the buttons say so instead of promising a purchase. */
-  pending: boolean;
-}) {
+export default function Tickets() {
   const plans: { plan: Plan; tint: CSSProperties }[] = [
     {
       plan: tickets.standard,
@@ -47,7 +39,7 @@ export default function Tickets({
                 className={"best" in tier && tier.best ? styles.best : undefined}
               >
                 <dt>{tier.k}</dt>
-                <dd>{tier.v}</dd>
+                <dd>{zl(tier.price)}</dd>
               </div>
             ))}
           </dl>
@@ -55,14 +47,10 @@ export default function Tickets({
           <p className={styles.note}>{plan.note}</p>
 
           <a
-            href={href}
+            href={`${tickets.checkoutPath}?item=${plan.buyItem}`}
             className={styles.cta}
-            {...(href.startsWith("http")
-              ? { target: "_blank", rel: "noopener noreferrer" }
-              : {})}
-            data-cta
           >
-            {pending ? tickets.ctaPending : tickets.cta}
+            {tickets.cta}
           </a>
         </article>
       ))}

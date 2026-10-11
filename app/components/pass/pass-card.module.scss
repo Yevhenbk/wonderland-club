@@ -1,0 +1,197 @@
+@use "../../styles/blob";
+
+@include blob.keyframes;
+
+/* A ticket stub in two halves: the event above, the code below. Both are
+   paper with a hairline; where they meet, each has two notches cut out of
+   its corners (a mask, so they are real holes onto the moving page) and the
+   lower half's top edge is the dashed tear line. The shadow is a
+   drop-shadow on the whole pass, so it follows the notches. */
+.pass {
+  --notch: 13px;
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  filter: drop-shadow(0 26px 40px rgba(0, 0, 0, 0.55));
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  break-inside: avoid;
+}
+
+.top,
+.bottom {
+  position: relative;
+  isolation: isolate;
+  background: var(--wl-paper);
+  border: 1px solid var(--wl-line-strong);
+  overflow: hidden;
+}
+
+.top {
+  padding: 22px 22px 18px;
+  border-bottom: 0;
+  border-radius: var(--wl-radius) var(--wl-radius) 0 0;
+  -webkit-mask:
+    radial-gradient(circle var(--notch) at 0 100%, transparent 98%, #000) left /
+      51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% 100%, transparent 98%, #000)
+      right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle var(--notch) at 0 100%, transparent 98%, #000) left /
+      51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% 100%, transparent 98%, #000)
+      right / 51% 100% no-repeat;
+}
+
+.bottom {
+  padding: 22px 22px 22px;
+  text-align: center;
+  border-top: 2px dashed var(--wl-line-strong);
+  border-radius: 0 0 var(--wl-radius) var(--wl-radius);
+  -webkit-mask:
+    radial-gradient(circle var(--notch) at 0 0, transparent 98%, #000) left /
+      51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% 0, transparent 98%, #000)
+      right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle var(--notch) at 0 0, transparent 98%, #000) left /
+      51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% 0, transparent 98%, #000)
+      right / 51% 100% no-repeat;
+}
+
+/* The glow drifting in the stub's corner: rose, or steel on a group pass. */
+.top::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: -25%;
+  top: -45%;
+  width: 90%;
+  aspect-ratio: 1;
+  @include blob.blob(0s, blobWander 20s ease-in-out infinite);
+  opacity: 0.22;
+  filter: blur(30px);
+}
+
+.pass[data-group] .top::before {
+  @include blob.blob(8s, blobWander 20s ease-in-out infinite);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.logo {
+  display: block;
+  width: auto;
+  height: 36px;
+  filter: brightness(1.18) contrast(1.05);
+}
+
+.count {
+  font-family: var(--wl-font-wide);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--wl-faint);
+}
+
+.eyebrow {
+  margin-top: 18px;
+  font-family: var(--wl-font-wide);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--wl-rose);
+}
+
+.type {
+  margin-top: 8px;
+  font-family: var(--wl-font-wide);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.detail {
+  display: block;
+  margin-top: 4px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--wl-soft);
+}
+
+.rows {
+  margin: 16px 0 0;
+  display: grid;
+}
+
+.rows > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 9px 0;
+  border-top: 1px solid var(--wl-line);
+}
+
+.rows dt {
+  font-size: 15px;
+  color: var(--wl-faint);
+}
+
+.rows dd {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: right;
+}
+
+.qr {
+  width: min(240px, 100%);
+  margin: 0 auto;
+  padding: 10px;
+  border-radius: 14px;
+  background: #fff;
+  line-height: 0;
+}
+
+.qr :global(svg) {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.code {
+  margin-top: 14px;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.hint {
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--wl-faint);
+}
+
+@media print {
+  .pass {
+    filter: none;
+    margin-bottom: 24px;
+  }
+
+  .top::before {
+    display: none;
+  }
+}

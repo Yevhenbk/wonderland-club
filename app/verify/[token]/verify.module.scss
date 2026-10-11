@@ -1,0 +1,86 @@
+/* Built to be read at arm's length in a dark doorway: one big state,
+   green or red, then the details. */
+.card {
+  padding: clamp(24px, 6vw, 36px);
+  border-radius: var(--wl-radius);
+  background: var(--wl-paper);
+  border: 2px solid var(--state);
+  text-align: center;
+  box-shadow: 0 0 60px -20px var(--state);
+}
+
+.card[data-state="valid"] {
+  --state: #5fd394;
+}
+
+.card[data-state="invalid"] {
+  --state: #ef6b6b;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: var(--state);
+  color: var(--wl-paper);
+  font-size: 44px;
+  font-weight: 700;
+}
+
+.title {
+  font-family: var(--wl-font-wide);
+  font-size: clamp(26px, 7vw, 34px);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--state);
+}
+
+.lead {
+  margin-top: 12px;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--wl-soft);
+}
+
+.code {
+  margin-top: 12px;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.rows {
+  margin: 20px 0 0;
+  display: grid;
+  text-align: left;
+}
+
+.rows > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 11px 0;
+  border-top: 1px solid var(--wl-line);
+  font-size: 16px;
+}
+
+.rows dt {
+  color: var(--wl-faint);
+}
+
+.rows dd {
+  margin: 0;
+  text-align: right;
+  font-weight: 600;
+}
+
+.note {
+  margin-top: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--wl-faint);
+}

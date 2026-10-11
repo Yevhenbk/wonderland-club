@@ -1,0 +1,44 @@
+.actions {
+  max-width: 400px;
+  margin: 28px auto 0;
+  text-align: center;
+}
+
+.note {
+  margin-top: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--wl-faint);
+}
+
+.missing {
+  text-align: center;
+}
+
+.title {
+  font-family: var(--wl-font-wide);
+  font-size: clamp(24px, 6vw, 32px);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.lead {
+  margin-top: 12px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--wl-soft);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 10px;
+  color: var(--wl-rose);
+}
+
+@media print {
+  .actions {
+    display: none;
+  }
+}

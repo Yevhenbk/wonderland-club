@@ -1,0 +1,437 @@
+@use "../../styles/blob";
+@use "../../styles/button";
+
+@include blob.keyframes;
+
+/* The checkout and payment steps share one card: paper, hairline, the rose
+   glow drifting in the corner, like the ticket cards on the landing page. */
+.card {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(22px, 5vw, 32px);
+  border-radius: var(--wl-radius);
+  background: var(--wl-paper);
+  border: 1px solid var(--wl-line-strong);
+  overflow: hidden;
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.9);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: -25%;
+  top: -30%;
+  width: 80%;
+  aspect-ratio: 1;
+  @include blob.blob(0s, blobWander 22s ease-in-out infinite);
+  opacity: 0.18;
+  filter: blur(34px);
+}
+
+.eyebrow {
+  font-family: var(--wl-font-wide);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--wl-rose);
+}
+
+.title {
+  margin-top: 10px;
+  font-family: var(--wl-font-wide);
+  font-size: clamp(24px, 6vw, 30px);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+.meta {
+  margin-top: 10px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--wl-soft);
+}
+
+.group {
+  margin: 26px 0 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.legend {
+  display: block;
+  margin-bottom: 10px;
+  padding: 0;
+  font-family: var(--wl-font-wide);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--wl-faint);
+}
+
+.optional {
+  font-family: inherit;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+/* Each ticket is a row you can tap anywhere on; the chosen one gets the
+   rose hairline. The radio itself is visually hidden but still the real
+   control, so keyboard and screen readers work as usual. */
+.options {
+  display: grid;
+  gap: 10px;
+}
+
+.option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 60px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--wl-line-strong);
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  transition:
+    border-color button.$duration button.$ease,
+    background-color button.$duration button.$ease;
+}
+
+.option:hover {
+  border-color: rgba(226, 165, 157, 0.45);
+}
+
+.option[data-selected] {
+  border-color: var(--wl-rose);
+  background: rgba(226, 165, 157, 0.07);
+}
+
+.option:has(:focus-visible) {
+  outline: 2px solid var(--wl-steel);
+  outline-offset: 2px;
+}
+
+.radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* A drawn radio dot, filling in rose when chosen. */
+.option::before {
+  content: "";
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--wl-line-strong);
+  box-shadow: inset 0 0 0 4px var(--wl-paper);
+  transition:
+    background-color button.$duration button.$ease,
+    border-color button.$duration button.$ease;
+}
+
+.option[data-selected]::before {
+  border-color: var(--wl-rose);
+  background: var(--wl-rose);
+}
+
+.optionText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.optionName {
+  font-family: var(--wl-font-wide);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.optionDetail {
+  margin-top: 2px;
+  font-size: 15px;
+  color: var(--wl-soft);
+}
+
+.optionPrice {
+  font-family: var(--wl-font-wide);
+  font-size: 18px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.qtyRow {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.qtyRow .legend {
+  margin: 0;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--wl-line-strong);
+  border-radius: 999px;
+}
+
+.stepper button {
+  width: 48px;
+  height: 48px;
+  border: 0;
+  background: none;
+  color: var(--wl-ink);
+  font-size: 22px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: color button.$duration button.$ease;
+}
+
+.stepper button:disabled {
+  color: var(--wl-faint);
+  cursor: default;
+}
+
+.stepper button:focus-visible {
+  outline: 2px solid var(--wl-steel);
+  outline-offset: -2px;
+}
+
+.stepper output {
+  min-width: 28px;
+  text-align: center;
+  font-family: var(--wl-font-wide);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.field {
+  display: block;
+  margin-top: 22px;
+}
+
+/* 16px or more, so iOS does not zoom the page when a field is tapped. */
+.field input {
+  width: 100%;
+  min-height: 52px;
+  padding: 0 16px;
+  border-radius: 14px;
+  border: 1px solid var(--wl-line-strong);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--wl-ink);
+  font: inherit;
+  font-size: 17px;
+  transition: border-color button.$duration button.$ease;
+}
+
+.field input::placeholder {
+  color: var(--wl-faint);
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--wl-rose);
+}
+
+.help {
+  display: block;
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--wl-faint);
+}
+
+.summary {
+  margin-top: 26px;
+  padding-top: 16px;
+  border-top: 1px solid var(--wl-line);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 16px;
+  color: var(--wl-soft);
+}
+
+.summary strong {
+  font-family: var(--wl-font-wide);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--wl-ink);
+  white-space: nowrap;
+}
+
+.error {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(230, 120, 120, 0.4);
+  background: rgba(230, 120, 120, 0.08);
+  color: #f0b4b4;
+  font-size: 15px;
+}
+
+.pay {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  min-height: 56px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--wl-gold-ink);
+  background: var(--wl-gold);
+  cursor: pointer;
+  @include button.hover-lift;
+}
+
+.payLink {
+  line-height: 56px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.pay:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.pay:focus-visible {
+  outline: 2px solid var(--wl-steel);
+  outline-offset: 3px;
+}
+
+.secondary {
+  display: block;
+  margin-top: 14px;
+  min-height: 44px;
+  line-height: 44px;
+  text-align: center;
+  font-size: 15px;
+  color: var(--wl-soft);
+  text-decoration: none;
+}
+
+.secondary:hover,
+.secondary:focus-visible {
+  color: var(--wl-ink);
+  outline: none;
+}
+
+/* ------------------------------------------------------- the payment step */
+
+/* The banner that says out loud nothing is charged. */
+.testBanner {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px dashed rgba(138, 165, 200, 0.55);
+  background: rgba(138, 165, 200, 0.08);
+  color: #c3d3e8;
+  font-size: 14.5px;
+  line-height: 1.45;
+}
+
+.testBadge {
+  flex: none;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(138, 165, 200, 0.2);
+  font-family: var(--wl-font-wide);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.lines {
+  margin: 20px 0 0;
+  display: grid;
+}
+
+.lines > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 11px 0;
+  border-top: 1px solid var(--wl-line);
+  font-size: 16px;
+}
+
+.lines dt {
+  color: var(--wl-faint);
+}
+
+.lines dd {
+  margin: 0;
+  text-align: right;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.processing {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(58, 30, 27, 0.25);
+  border-top-color: var(--wl-gold-ink);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2.4s;
+  }
+}
+
+/* Folded phones (about 280 wide): the ticket rows were 25px wider than the
+   card. Less padding around everything, a smaller price. */
+@media (max-width: 340px) {
+  .card {
+    padding: 18px 14px;
+  }
+
+  .option {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .optionPrice {
+    font-size: 16px;
+  }
+
+  .qtyRow {
+    flex-wrap: wrap;
+  }
+}

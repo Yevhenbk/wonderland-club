@@ -1,11 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
 
 import {
   aftermovie,
-  bar,
   faq,
   final,
   gallery,
@@ -39,49 +37,9 @@ const external = (href: string) =>
     : {};
 
 export default function Home() {
-  const ticketRef = useRef<HTMLDivElement>(null);
-
-  const scrollToTicket = () =>
-    ticketRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-  const scrollToPrices = () =>
-    document
-      .getElementById("tickets")
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
-
-  /* The phone bar: arms once the ticket card has left the screen and stands
-     down whenever the card or any other gold call is back in view, so the
-     page never shows two gold surfaces at once. */
-  const [showBar, setShowBar] = useState(false);
-
-  useEffect(() => {
-    if (typeof IntersectionObserver === "undefined") return;
-
-    const targets = [
-      ticketRef.current,
-      ...Array.from(document.querySelectorAll("[data-cta]")),
-    ].filter((node): node is Element => !!node);
-
-    const state = new Map<Element, boolean>();
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) =>
-          state.set(entry.target, entry.isIntersecting)
-        );
-        setShowBar(![...state.values()].some(Boolean));
-      },
-      { rootMargin: "-8% 0px -12% 0px" }
-    );
-    targets.forEach((node) => observer.observe(node));
-
-    return () => observer.disconnect();
-  }, []);
-
-  /* With a shop link, every ticket call buys. Without one, the calls about
-     the night lead to the prices, and the buy buttons under the prices lead
-     to where the sales start will be announced. */
-  const salesOpen = nextNight.ticketsHref !== null;
-  const ticketHref = nextNight.ticketsHref ?? "#tickets";
-  const buyHref = nextNight.ticketsHref ?? FOLLOW_HREF;
+  /* The calls about the night lead to the prices; each price card opens
+     checkout with its ticket already chosen. */
+  const ticketHref = nextNight.ctaHref;
   /* The marquee slides by exactly half its width and jumps back, so each
      half has to be wider than any screen or its end shows. One run of the
      four words is ~1000px; four runs per half clear a 4K-wide window. */
@@ -109,7 +67,7 @@ export default function Home() {
 
           {/* The calculator card's place: the one object on the first
               screen that does any work. */}
-          <div className={styles.ticketCard} ref={ticketRef}>
+          <div className={styles.ticketCard}>
             <div className={styles.ticketHead}>
               <span className={styles.ticketKicker}>
                 {nextNight.label} {nextNight.number}
@@ -138,7 +96,7 @@ export default function Home() {
               className={styles.ticketBtn}
               {...external(ticketHref)}
             >
-              {salesOpen ? nextNight.cta : nextNight.ctaPending}
+              {nextNight.cta}
             </a>
           </div>
 
@@ -200,7 +158,7 @@ export default function Home() {
           <h2 className={styles.h2}>{tickets.title}</h2>
           <p className={styles.leadLeft}>{tickets.lead}</p>
         </div>
-        <Tickets href={buyHref} pending={!salesOpen} />
+        <Tickets />
       </section>
 
       {/* ------------------------------------------------------- worlds */}
@@ -268,7 +226,7 @@ export default function Home() {
       <section className={styles.final}>
         <h2 className={`${styles.h2} ${styles.grad}`}>{final.title}</h2>
         <p className={styles.finalLine}>{final.line}</p>
-        <a href="#tickets" className={styles.btn} data-cta>
+        <a href="#tickets" className={styles.btn}>
           {final.button}
         </a>
       </section>
@@ -292,24 +250,6 @@ export default function Home() {
         </span>
       </footer>
 
-      {/* Phone only. Same action, under the thumb, one gold at a time. */}
-      <div
-        className={`${styles.bar} ${showBar ? styles.barOn : ""}`}
-        aria-hidden={!showBar}
-      >
-        <p className={styles.barMeta}>
-          <strong>{bar.strong}</strong>
-          <span>{bar.note}</span>
-        </p>
-        <button
-          type="button"
-          className={styles.barBtn}
-          onClick={scrollToPrices}
-          tabIndex={showBar ? 0 : -1}
-        >
-          {bar.button}
-        </button>
-      </div>
     </div>
   );
 }

@@ -33,6 +33,11 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   /* The navbar's colour, so a phone's browser bar runs straight into it. */
   themeColor: "#0f0b19",
+  /* iPhone Safari draws the page edge to edge, under its status bar and
+     address bar. "cover" makes that explicit and exposes the safe-area
+     insets, which the navbar uses to paint its background up to the very
+     top of the screen instead of leaving the page showing through there. */
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

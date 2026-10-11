@@ -1,0 +1,32 @@
+@use "../../styles/button";
+
+/* The page-level actions around the passes. Hidden when printing. */
+.primary {
+  display: block;
+  width: 100%;
+  min-height: 54px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 54px;
+  text-decoration: none;
+  color: var(--wl-gold-ink);
+  background: var(--wl-gold);
+  cursor: pointer;
+  @include button.hover-lift;
+}
+
+.primary:focus-visible {
+  outline: 2px solid var(--wl-steel);
+  outline-offset: 3px;
+}
+
+@media print {
+  .primary {
+    display: none;
+  }
+}
