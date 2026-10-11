@@ -1007,27 +1007,26 @@
     text-align: center;
   }
 
-  /* The quote is the page's peak, so on a phone it gets a stage of its own:
-     at least half the screen tall (svh, steady while the address bar moves,
-     divided by the page zoom like the hero), centred both ways. */
-  .quoteBand {
+  /* On a phone every section is a screen of its own, like the hero: at
+     least the full height (svh, steady while the address bar moves), with
+     its content centred in it. A section longer than a screen simply keeps
+     its natural height. The hero is left out; it has its own layout above.
+     Children are held at full width, since a centring column would
+     otherwise shrink wrapped content (.inner, the video grid) to fit. */
+  .page > section:not(.hero) {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
-    min-height: calc(50vh / var(--wl-zoom, 1));
-    min-height: calc(50svh / var(--wl-zoom, 1));
+    min-height: calc(100vh / var(--wl-zoom, 1));
+    min-height: calc(100svh / var(--wl-zoom, 1));
   }
 
-  .quoteBand .inner {
+  .page > section:not(.hero) > * {
     width: 100%;
   }
 
   .galleryGrid > li:nth-child(n + 4) {
     display: none;
-  }
-
-  .final {
-    padding-bottom: 96px;
   }
 
   .footer {
