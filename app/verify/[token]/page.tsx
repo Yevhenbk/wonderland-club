@@ -66,7 +66,6 @@ export default async function VerifyPage({
         usedAt={usedAt}
         staff={await isStaff()}
         storeDown={storeDown}
-        staffHref={`/staff?next=${encodeURIComponent(`/verify/${token}`)}`}
       >
         <p className={styles.code}>{claim.c}</p>
 

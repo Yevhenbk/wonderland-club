@@ -6,17 +6,16 @@ import type { Order, Pass } from "../orders";
  * email that works in mail clients. That means tables and inline styles,
  * no web fonts and no SVG.
  *
- * Images: the QR codes arrive as data URLs. That works for the preview and
- * in some clients, but Gmail blocks data: images, so the real integration
- * should attach each QR as an inline (CID) attachment or host it, and pass
- * that URL in `qrSrc` instead. Nothing else here changes.
+ * Images: each QR is an inline attachment, referenced as cid:qr-1 and so
+ * on (lib/email/deliver.ts); Gmail blocks data: images. The logo is loaded
+ * from the site.
  */
 
 export interface EmailPass {
   pass: Pass;
   /** Where the pass opens online. */
   url: string;
-  /** QR image source: a data URL now, a CID or hosted URL later. */
+  /** QR image source: cid:<id> of its inline attachment. */
   qrSrc: string;
 }
 

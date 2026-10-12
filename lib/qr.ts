@@ -17,7 +17,8 @@ export function qrSvg(text: string): Promise<string> {
   return QRCode.toString(text, { ...OPTIONS, type: "svg" });
 }
 
-/** For email, where SVG is not reliably shown. */
-export function qrPng(text: string): Promise<string> {
-  return QRCode.toDataURL(text, { ...OPTIONS, width: 360 });
+/** For email, where SVG is not reliably shown: a PNG, sent along as an
+    inline attachment. */
+export function qrPngBuffer(text: string): Promise<Buffer> {
+  return QRCode.toBuffer(text, { ...OPTIONS, type: "png", width: 360 });
 }

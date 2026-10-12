@@ -23,7 +23,8 @@ const time = (at: number) =>
     .replace(", ", " о ");
 
 /**
- * The verify card's state and, for staff, the «Впустити» button. Whatever
+ * The verify card's state and, for staff, the «Впустити» button. Guests
+ * see no hint of the staff side: staff sign in at /staff beforehand. Whatever
  * the page loads with comes from the server; after a tap this phone shows
  * its own result, so a later scan of the same code (on any phone) shows red.
  */
@@ -32,7 +33,6 @@ export default function DoorCheck({
   usedAt,
   staff,
   storeDown,
-  staffHref,
   children,
 }: {
   token: string;
@@ -40,7 +40,6 @@ export default function DoorCheck({
   staff: boolean;
   /** Check-ins cannot be read or saved; the door checks by hand. */
   storeDown: boolean;
-  staffHref: string;
   /** The pass's details, under the state. */
   children: ReactNode;
 }) {
@@ -131,11 +130,6 @@ export default function DoorCheck({
         </button>
       )}
 
-      {!staff && (
-        <a href={staffHref} className={styles.staffLink}>
-          Вхід для персоналу
-        </a>
-      )}
     </div>
   );
 }
