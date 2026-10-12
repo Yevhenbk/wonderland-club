@@ -6,6 +6,11 @@ const nextConfig: NextConfig = {
        club shots. 75 stays allowed for anything that does not ask. */
     qualities: [75, 90],
   },
+  /* The ticket email attaches the logo, read from disk; serverless
+     functions only carry the files they are told about. */
+  outputFileTracingIncludes: {
+    "/**": ["./public/media/email-logo.png"],
+  },
   experimental: {
     /* The page's CSS goes into the HTML itself instead of separate files the
        browser must fetch before it can draw anything. The styles are small
