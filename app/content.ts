@@ -159,6 +159,12 @@ export const quote = {
     "Ми не хочемо, щоб ти приходив просто «потусити». Ми хочемо, щоб після кожної ночі ти думав:",
   text: "«Що це, блять, було?»",
   after: "І вже чекав на наступну.",
+  /* On a phone the paragraph comes after the quote, so it cannot end on
+     "ти думав:"; this version follows the quote instead of leading to it.
+     Worded so its lines nearly fill the quote's width on their own, which
+     keeps the gaps small when they are spread to the edges. */
+  afterPhone:
+    "Саме це ти маєш думати вранці після Wonderland. Ми тут не для того, щоб просто потусити, а щоб ти прожив ніч, яку не забудеш.",
 };
 
 export interface Night {
@@ -178,6 +184,9 @@ export const nights = {
   title: "Світ не закінчиться сам. Ми влаштуємо йому фінал.",
   lead: "14 листопада Краків зануриться в ніч, де не існує правил, завтра не гарантоване, а кожен трек звучить так, ніби це останній раз.",
   lead2: "Темна атмосфера. Важкі баси. Дим, стробоскопи та музика, яка не дає стояти на місці.",
+  /* On a phone the two paragraphs above become this one: the same night in
+     two lines (the date is already in the label). */
+  leadPhone: "Ніч без правил, де кожен трек звучить як останній. Важкі баси, дим і стробоскопи до самого ранку.",
   close: [
     "Це не просто вечірка. Це ніч перед кінцем усього, що ти знаєш.",
     "Забудь про завтра. Залиш усе за дверима. Проживи цю ніч так, ніби іншої вже не буде.",

@@ -23,6 +23,7 @@ import FaqItem from "./faq-item";
 import MediaSlot from "./media-slot";
 import NightField from "./night-field";
 import NightsRail from "./nights-rail";
+import QuoteWidth from "./quote-width";
 import SiteHeader from "./site-header";
 import { organizer } from "@/app/legal/organizer";
 import Tickets from "./tickets";
@@ -136,9 +137,15 @@ export default function Home() {
       {/* -------------------------------------------------------- quote */}
       <section className={styles.quoteBand}>
         <div className={styles.inner}>
-          <p className={styles.quoteBefore}>{quote.before}</p>
+          <p className={`${styles.quoteBefore} ${styles.quoteDesktop}`}>
+            {quote.before}
+          </p>
+          <p className={`${styles.quoteBefore} ${styles.quotePhone}`}>
+            {quote.afterPhone}
+          </p>
           <blockquote className={styles.quote}>{quote.text}</blockquote>
           <p className={styles.quoteBy}>{quote.after}</p>
+          <QuoteWidth />
         </div>
       </section>
 
@@ -148,8 +155,9 @@ export default function Home() {
           <div className={styles.nightsHead}>
             <p className={styles.label}>{nights.label}</p>
             <h2 className={styles.h2}>{nights.title}</h2>
-            <p className={styles.leadLeft}>{nights.lead}</p>
-            <p className={styles.leadLeft}>{nights.lead2}</p>
+            <p className={`${styles.leadLeft} ${styles.wideOnly}`}>{nights.lead}</p>
+            <p className={`${styles.leadLeft} ${styles.wideOnly}`}>{nights.lead2}</p>
+            <p className={`${styles.leadLeft} ${styles.phoneOnly}`}>{nights.leadPhone}</p>
           </div>
           <NightsRail ticketHref={ticketHref} />
           <div className={styles.nightClose}>
@@ -161,7 +169,7 @@ export default function Home() {
       </section>
 
       {/* ------------------------------------------------------- expect */}
-      <section className={styles.section} id="expect">
+      <section className={`${styles.section} ${styles.hideOnPhone}`} id="expect">
         <p className={styles.label}>{expect.label}</p>
         <h2 className={styles.h2}>{expect.title}</h2>
         <p className={styles.lead}>{expect.lead}</p>
@@ -179,7 +187,7 @@ export default function Home() {
       </section>
 
       {/* ---------------------------------------------------------- vip */}
-      <section className={styles.vipBand} id="vip">
+      <section className={`${styles.vipBand} ${styles.hideOnPhone}`} id="vip">
         <div className={styles.inner}>
           <div className={styles.vipCard}>
             <p className={styles.label}>{vip.label}</p>
@@ -238,7 +246,7 @@ export default function Home() {
       </section>
 
       {/* ------------------------------------------------------- worlds */}
-      <section className={styles.worldsBand}>
+      <section className={`${styles.worldsBand} ${styles.hideOnPhone}`}>
         <div className={styles.inner}>
           <p className={styles.label}>{worlds.label}</p>
           <h2 className={styles.h2}>{worlds.title}</h2>
