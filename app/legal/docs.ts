@@ -58,7 +58,7 @@ export function termsUk(): LegalDoc {
         title: "Купівля та оплата",
         points: [
           "Квитки продаються через сайт. Ціни вказані в польських злотих (zł) і є кінцевими.",
-          "Оплату приймає платіжний оператор Stripe: картка, BLIK, Przelewy24, Apple Pay або Google Pay. Організатор не отримує і не зберігає даних платіжних карток.",
+          "Оплату приймає платіжний оператор Stripe: картка, BLIK, Apple Pay або Google Pay. Організатор не отримує і не зберігає даних платіжних карток.",
           "Договір укладається в момент підтвердження оплати. Після цього покупець бачить квитки на сторінці замовлення і отримує їх на вказаний email.",
           `Покупець відповідає за правильність вказаного email. Якщо лист з квитками не надійшов, напиши на ${org("email", "uk")}.`,
         ],
@@ -143,7 +143,7 @@ export function termsPl(): LegalDoc {
         title: "Zakup i płatność",
         points: [
           "Bilety są sprzedawane za pośrednictwem strony. Ceny podane są w złotych polskich (zł) i są cenami końcowymi.",
-          "Płatności obsługuje operator płatności Stripe: karta, BLIK, Przelewy24, Apple Pay lub Google Pay. Organizator nie otrzymuje ani nie przechowuje danych kart płatniczych.",
+          "Płatności obsługuje operator płatności Stripe: karta, BLIK, Apple Pay lub Google Pay. Organizator nie otrzymuje ani nie przechowuje danych kart płatniczych.",
           "Umowa zostaje zawarta z chwilą potwierdzenia płatności. Kupujący widzi wtedy bilety na stronie zamówienia i otrzymuje je na podany adres email.",
           `Kupujący odpowiada za poprawność podanego adresu email. Jeśli wiadomość z biletami nie dotarła, napisz na ${org("email", "pl")}.`,
         ],
