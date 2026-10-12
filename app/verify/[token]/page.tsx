@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 
+import DoorCheck from "@/app/components/pass/door-check";
 import Shell from "@/app/components/shell";
 import { CATALOG, EVENT } from "@/lib/catalog";
+import { checkedInAt } from "@/lib/checkins";
 import { readPass } from "@/lib/orders";
+import { isStaff } from "@/lib/staff";
 
 import styles from "./verify.module.scss";
 
@@ -13,11 +16,9 @@ export const metadata: Metadata = {
 
 /**
  * What the door sees after scanning a pass with any phone camera: whether
- * the pass is genuine (its signature checks out) and for which night.
- *
- * It cannot yet tell whether the pass was already used: that needs the
- * database that comes with the real payments. Until then, the door keeps
- * its own list of codes that have come in.
+ * the pass is genuine (its signature checks out), for which night, and
+ * whether it has already come in. Staff (signed in with the door PIN) get
+ * the «Впустити» button, which lets each pass in once.
  */
 export default async function VerifyPage({
   params,
@@ -25,7 +26,8 @@ export default async function VerifyPage({
   params: Promise<{ token: string }>;
 }) {
   const { token } = await params;
-  const claim = readPass(decodeURIComponent(token));
+  const raw = decodeURIComponent(token);
+  const claim = readPass(raw);
   const valid = claim !== null && claim.e === EVENT.id;
 
   if (!valid || !claim)
@@ -47,13 +49,25 @@ export default async function VerifyPage({
 
   const item = CATALOG[claim.i];
 
+  /* If the store cannot be read, the pass still shows as genuine; staff are
+     told to check by hand rather than shown a green they cannot trust. */
+  let usedAt: number | null = null;
+  let storeDown = false;
+  try {
+    usedAt = await checkedInAt(claim.p);
+  } catch {
+    storeDown = true;
+  }
+
   return (
     <Shell>
-      <div className={styles.card} data-state="valid">
-        <span className={styles.icon} aria-hidden="true">
-          ✓
-        </span>
-        <h1 className={styles.title}>Квиток дійсний</h1>
+      <DoorCheck
+        token={raw}
+        usedAt={usedAt}
+        staff={await isStaff()}
+        storeDown={storeDown}
+        staffHref={`/staff?next=${encodeURIComponent(`/verify/${token}`)}`}
+      >
         <p className={styles.code}>{claim.c}</p>
 
         <dl className={styles.rows}>
@@ -80,12 +94,7 @@ export default async function VerifyPage({
             <dd>{claim.o}</dd>
           </div>
         </dl>
-
-        <p className={styles.note}>
-          Справжність перевірено. Позначка «вже пройшов» з&apos;явиться разом
-          з базою даних; до того звіряй код зі списком на вході.
-        </p>
-      </div>
+      </DoorCheck>
     </Shell>
   );
 }

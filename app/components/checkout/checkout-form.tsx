@@ -3,10 +3,12 @@
 import { useState, type FormEvent } from "react";
 
 import type { CatalogItem, EVENT, ItemId } from "@/lib/catalog";
+import type { StockMap } from "@/lib/inventory";
 
 import Wide from "../wide";
 import styles from "./checkout.module.scss";
 import Price from "../price";
+import { stockLabel } from "../stock-label";
 
 /**
  * Step one: which ticket, how many, and where to send it.
@@ -18,10 +20,13 @@ export default function CheckoutForm({
   items,
   initialItem,
   event,
+  stock,
 }: {
   items: CatalogItem[];
   initialItem: ItemId;
   event: typeof EVENT;
+  /** VIP zones left; a size with none is shown but cannot be chosen. */
+  stock: StockMap;
 }) {
   const [itemId, setItemId] = useState<ItemId>(initialItem);
   const [qty, setQty] = useState(1);
@@ -74,29 +79,38 @@ export default function CheckoutForm({
       <fieldset className={styles.group}>
         <legend className={styles.legend}>Квиток</legend>
         <div className={styles.options}>
-          {items.map((option) => (
-            <label
-              key={option.id}
-              className={styles.option}
-              data-selected={option.id === itemId || undefined}
-            >
-              <input
-                type="radio"
-                name="item"
-                value={option.id}
-                checked={option.id === itemId}
-                onChange={() => choose(option.id)}
-                className={styles.radio}
-              />
-              <span className={styles.optionText}>
-                <span className={styles.optionName}>{option.name}</span>
-                <span className={styles.optionDetail}>{option.detail}</span>
-              </span>
-              <span className={styles.optionPrice}>
-                <Price value={option.price} />
-              </span>
-            </label>
-          ))}
+          {items.map((option) => {
+            const left = stockLabel(stock[option.id]);
+            const out = stock[option.id]?.left === 0;
+            return (
+              <label
+                key={option.id}
+                className={styles.option}
+                data-selected={option.id === itemId || undefined}
+                data-out={out || undefined}
+              >
+                <input
+                  type="radio"
+                  name="item"
+                  value={option.id}
+                  checked={option.id === itemId}
+                  onChange={() => choose(option.id)}
+                  disabled={out}
+                  className={styles.radio}
+                />
+                <span className={styles.optionText}>
+                  <span className={styles.optionName}>{option.name}</span>
+                  <span className={styles.optionDetail}>
+                    {option.detail}
+                    {left && <span className={styles.optionStock}>{left}</span>}
+                  </span>
+                </span>
+                <span className={styles.optionPrice}>
+                  <Price value={option.price} />
+                </span>
+              </label>
+            );
+          })}
         </div>
       </fieldset>
 

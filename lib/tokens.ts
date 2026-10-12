@@ -24,7 +24,7 @@ import {
  * with a known key could be forged by anyone.
  */
 
-export type Purpose = "session" | "order" | "pass";
+export type Purpose = "session" | "order" | "pass" | "staff";
 
 const DEV_SECRET = "wonderland-dev-secret-not-for-production";
 
@@ -100,9 +100,23 @@ export function verify<T>(token: string, purpose: Purpose): T | null {
 
 /** Short random ids from an alphabet with no look-alike characters. */
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-export function randomId(length: number): string {
-  const bytes = randomBytes(length);
+const toId = (bytes: Buffer, length: number) => {
   let out = "";
   for (let i = 0; i < length; i++) out += ALPHABET[bytes[i] % ALPHABET.length];
   return out;
+};
+
+export function randomId(length: number): string {
+  return toId(randomBytes(length), length);
+}
+
+/** Like randomId, but the same seed always gives the same id (up to 32
+    characters). For orders built from a Stripe payment: the return page and
+    the webhook may each build the order, and both must get the same passes.
+    Keyed with the secret, so the ids cannot be worked out from the seed. */
+export function derivedId(seed: string, length: number): string {
+  return toId(
+    createHmac("sha256", keyFor("order")).update(`id:${seed}`).digest(),
+    length
+  );
 }

@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
 
+import { availability, invalidateStock } from "@/lib/inventory";
 import { createSession, validateCart } from "@/lib/orders";
+import { SoldOut } from "@/lib/sold-out";
+import { createStripeCheckout, stripePriceFor } from "@/lib/stripe";
 
 /**
- * Starts a payment: checks the cart and opens a 30-minute session.
- *
- * Stand-in for creating a Stripe Checkout Session. With Stripe, this is
- * where `stripe.checkout.sessions.create` goes (prices from lib/catalog.ts,
- * the email as `customer_email`), and the URL returned is Stripe's.
+ * Starts a payment: checks the cart, then returns where to pay. Tickets
+ * with a Stripe price go to Stripe Checkout; the rest to the mock payment
+ * page, with a 30-minute session. A VIP zone that is already taken is
+ * refused here (and, for the mock, once more when the payment is confirmed).
  */
 export async function POST(request: Request) {
   let body: unknown;
@@ -22,11 +24,27 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: result.error }, { status: 400 });
 
   try {
+    const price = stripePriceFor(result.cart.item);
+    if (price) {
+      const origin = (
+        process.env.SITE_URL ?? new URL(request.url).origin
+      ).replace(/\/$/, "");
+      const url = await createStripeCheckout(result.cart, price, origin);
+      invalidateStock();
+      return NextResponse.json({ url });
+    }
+
+    invalidateStock();
+    if ((await availability())[result.cart.item]?.left === 0)
+      throw new SoldOut(result.cart.item);
+
     const session = createSession(result.cart);
     return NextResponse.json({
       url: `/checkout/pay?s=${encodeURIComponent(session)}`,
     });
   } catch (error) {
+    if (error instanceof SoldOut)
+      return NextResponse.json({ error: error.forBuyer }, { status: 409 });
     console.error("[checkout] could not open a session", error);
     return NextResponse.json(
       { error: "Оплата тимчасово недоступна. Спробуй трохи пізніше." },

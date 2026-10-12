@@ -193,6 +193,14 @@ export default function Home() {
             <p className={`${styles.vipHighlight} ${styles.grad}`}>
               {vip.highlight}
             </p>
+            <div className={styles.vipIncludes}>
+              <h3 className={styles.vipIncludesTitle}>{vip.includesTitle}</h3>
+              <ul>
+                {vip.includes.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+            </div>
             <p className={styles.vipNote}>{vip.note}</p>
             <a href={vip.ctaHref} className={styles.btn}>
               {vip.cta}
@@ -255,21 +263,34 @@ export default function Home() {
           </div>
         </div>
 
-        <ul className={styles.galleryGrid}>
-          {[leadShot, ...shots.slice(0, 6)].map((item, index) => (
-            <li
-              key={item.id}
-              className={index === 0 ? styles.galleryFeatured : undefined}
-            >
+        {/* The stage photo leads, whole; the rest follow as a grid, or on a
+            phone as a row you swipe through. */}
+        <figure className={`${styles.shot} ${styles.galleryFeatured}`}>
+          <span
+            className={styles.shotFrame}
+            style={
+              leadShot.frame
+                ? ({ "--frame": leadShot.frame } as React.CSSProperties)
+                : undefined
+            }
+          >
+            <MediaSlot
+              media={leadShot.media}
+              label={leadShot.tag}
+              sizes="(max-width: 1080px) 100vw, 1080px"
+            />
+          </span>
+          <figcaption className={styles.shotMeta}>
+            <span className={styles.shotNight}>{leadShot.tag}</span>
+            <span className={styles.shotCaption}>{leadShot.caption}</span>
+          </figcaption>
+        </figure>
+
+        <ul className={styles.galleryRail}>
+          {shots.map((item) => (
+            <li key={item.id}>
               <figure className={styles.shot}>
-                <span
-                  className={styles.shotFrame}
-                  style={
-                    item.frame
-                      ? ({ "--frame": item.frame } as React.CSSProperties)
-                      : undefined
-                  }
-                >
+                <span className={styles.shotFrame}>
                   <MediaSlot
                     media={item.media}
                     label={item.tag}
@@ -277,11 +298,7 @@ export default function Home() {
                        the screen's pixel density, and a hint that ran at
                        the tile's exact width left scaled screens with a
                        file smaller than the space it fills. */
-                    sizes={
-                      index === 0
-                        ? "(max-width: 1080px) 100vw, 1080px"
-                        : "(max-width: 620px) 50vw, (max-width: 920px) 50vw, 420px"
-                    }
+                    sizes="(max-width: 767px) 70vw, (max-width: 920px) 50vw, 420px"
                   />
                 </span>
                 <figcaption className={styles.shotMeta}>

@@ -161,6 +161,29 @@
   color: var(--wl-soft);
 }
 
+/* How many zones of a size are left, on its own line under the detail. */
+.optionStock {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--wl-steel);
+}
+
+/* A taken zone: listed, so the buyer sees it exists, but not choosable. */
+.option[data-out] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.option[data-out]:hover {
+  border-color: var(--wl-line-strong);
+}
+
+.option[data-out] .optionStock {
+  color: var(--wl-faint);
+}
+
 .optionPrice {
   font-family: var(--wl-font-wide);
   font-size: 18px;

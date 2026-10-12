@@ -94,10 +94,12 @@ export const nextNight = {
 /** A ticket that can be bought online. `id` is what checkout and the passes
     refer to; `price` (zł) is what the server charges, never the browser. */
 export interface SellableTier {
-  id: "standard" | "vip-4-5" | "vip-6-8" | "vip-10";
+  id: "standard" | "vip-4-5" | "vip-6-8" | "vip-8-10";
   k: string;
   price: number;
   best?: boolean;
+  /** How many exist, for tickets that run out (each VIP zone is one). */
+  stock?: number;
 }
 
 /** A price that is shown but not sold online (paid at the door). */
@@ -124,13 +126,15 @@ export const tickets = {
   vip: {
     eyebrow: "VIP-зона",
     name: "Твоя компанія. Твій простір.",
-    /* PENDING: booking details and access conditions ("незабаром"). */
+    /* One purchase is a whole zone, whatever the number of people in it.
+       `stock` is how many zones of each size there are; a sold zone is
+       locked for everyone else (lib/inventory.ts). */
     tiers: [
-      { id: "vip-4-5", k: "4-5 людей", price: 290 },
-      { id: "vip-6-8", k: "6-8 людей", price: 420 },
-      { id: "vip-10", k: "10+ людей", price: 650 },
+      { id: "vip-4-5", k: "4-5 людей", price: 290, stock: 2 },
+      { id: "vip-6-8", k: "6-8 людей", price: 420, stock: 1 },
+      { id: "vip-8-10", k: "8-10 людей", price: 650, stock: 2 },
     ] as (SellableTier | DoorTier)[],
-    note: "Ціна за всю компанію. Деталі бронювання незабаром.",
+    note: "Ціна за всю зону, а не за людину. Зон лише п’ять.",
     buyItem: "vip-4-5" as SellableTier["id"],
   },
   cta: "Купити",
@@ -228,7 +232,15 @@ export const vip = {
   trio: ["Твоя компанія.", "Твій простір.", "Твоя ніч."],
   body: "Без зайвих пояснень. Без випадкових людей за твоїм столом. Лише ти, твої люди та атмосфера, заради якої варто було прийти.",
   highlight: "VIP Wonderland: ти ближче до епіцентру.",
-  note: "Деталі бронювання та умови доступу незабаром.",
+  includesTitle: "Що входить у вартість?",
+  includes: [
+    "VIP-зона з комфортними місцями для твоєї компанії",
+    "Окремий простір для відпочинку та тусовки",
+    "VIP-браслети для всіх гостей компанії",
+    "Найкраще місце, щоб насолодитися музикою, димом і хаосом цієї ночі",
+    "Особлива атмосфера WONDERLAND.KRK",
+  ],
+  note: "Одна покупка, вся зона для твоєї компанії. Кількість зон обмежена.",
   cta: "Ціни на VIP",
   ctaHref: "#tickets",
 };

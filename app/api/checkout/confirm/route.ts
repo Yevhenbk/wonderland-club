@@ -1,25 +1,21 @@
 import { NextResponse } from "next/server";
 
-import { renderTicketEmail } from "@/lib/email/ticket-email";
-import { sendEmail } from "@/lib/email/send";
+import { emailOrder } from "@/lib/email/deliver";
+import { claimMock, releaseMock } from "@/lib/inventory";
+import { SoldOut } from "@/lib/sold-out";
 import {
   forgetPaid,
   fulfil,
   paidOrderUrl,
-  passToken,
   readSession,
   rememberPaid,
 } from "@/lib/orders";
-import { qrPng } from "@/lib/qr";
 
 /**
- * The payment went through: issue the passes and email them.
+ * The mock payment went through: issue the passes and email them.
  *
- * Stand-in for Stripe's `checkout.session.completed` webhook. With Stripe,
- * this logic moves into the webhook handler (after verifying Stripe's
- * signature), and the buyer is sent to the order page by Stripe's
- * success_url. Each pass's QR opens /verify/<token>, which the door can
- * check with any phone camera.
+ * Only for tickets not sold through Stripe (VIP for now). Stripe payments
+ * are fulfilled by /checkout/success and /api/stripe/webhook instead.
  */
 export async function POST(request: Request) {
   let body: { s?: unknown };
@@ -46,25 +42,23 @@ export async function POST(request: Request) {
     }
   }
 
+  /* A VIP zone is taken now, as the money would be: whoever pays first
+     gets it, and a second payment for the same last zone is refused. */
+  try {
+    claimMock(session.item, session.sid);
+  } catch (error) {
+    if (error instanceof SoldOut)
+      return NextResponse.json({ error: error.forBuyer }, { status: 409 });
+    throw error;
+  }
+
   const job = (async () => {
     const { order, orderToken } = fulfil(session);
     const origin = (
       process.env.SITE_URL ?? new URL(request.url).origin
     ).replace(/\/$/, "");
 
-    const passes = await Promise.all(
-      order.passes.map(async (pass) => {
-        const token = passToken(order, pass);
-        return {
-          pass,
-          url: `${origin}/pass/${token}`,
-          qrSrc: await qrPng(`${origin}/verify/${token}`),
-        };
-      })
-    );
-
-    const email = renderTicketEmail(order, passes, origin);
-    await sendEmail({ to: order.email, ...email, ref: order.id });
+    await emailOrder(order, origin);
 
     return `/order/${orderToken}`;
   })();
@@ -74,6 +68,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ url: await job });
   } catch (error) {
     forgetPaid(session);
+    releaseMock(session.item, session.sid);
     console.error("[checkout] could not fulfil the order", error);
     return NextResponse.json(
       { error: "Не вдалося оформити квитки. Спробуй ще раз." },

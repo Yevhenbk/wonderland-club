@@ -93,6 +93,20 @@
   color: var(--wl-soft);
 }
 
+/* How many zones of a size are left, under its name. */
+.stock {
+  display: block;
+  margin-top: 3px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--wl-steel);
+}
+
+.stock[data-out] {
+  color: var(--wl-faint);
+}
+
 .tiers dd {
   margin: 0;
   font-family: var(--wl-font-wide);
@@ -136,6 +150,13 @@
   padding: 15px 20px;
   text-decoration: none;
   @include button.hover-lift;
+}
+
+.cta[data-out] {
+  color: var(--wl-faint);
+  background: rgba(255, 255, 255, 0.06);
+  cursor: default;
+  pointer-events: none;
 }
 
 .cta:focus-visible {

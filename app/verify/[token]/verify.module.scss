@@ -84,3 +84,53 @@
   line-height: 1.5;
   color: var(--wl-faint);
 }
+
+/* When it came in, under the state. */
+.when {
+  margin-top: 8px;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--wl-ink);
+}
+
+.error {
+  margin-top: 16px;
+  font-size: 15px;
+  line-height: 1.45;
+  color: #ef6b6b;
+}
+
+/* Big enough to hit without looking, in a crowd, with one thumb. */
+.letIn {
+  display: block;
+  width: 100%;
+  min-height: 64px;
+  margin-top: 22px;
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--wl-font-wide);
+  font-size: 20px;
+  font-weight: 600;
+  color: #0c2a1a;
+  background: #5fd394;
+  cursor: pointer;
+}
+
+.letIn:disabled {
+  opacity: 0.6;
+}
+
+.undo,
+.staffLink {
+  display: inline-block;
+  margin-top: 18px;
+  padding: 6px 4px;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--wl-faint);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}

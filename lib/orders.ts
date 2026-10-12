@@ -1,5 +1,5 @@
 import { CATALOG, EVENT, isItemId, type ItemId } from "./catalog";
-import { randomId, seal, sign, unseal, verify } from "./tokens";
+import { derivedId, randomId, seal, sign, unseal, verify } from "./tokens";
 
 /**
  * Checkout without a database: every step's state travels in a token.
@@ -7,10 +7,11 @@ import { randomId, seal, sign, unseal, verify } from "./tokens";
  *   cart  --createSession-->  session token (sealed, 30 min)
  *         --fulfil-->         order token (sealed) + one pass token per pass
  *
- * Swapping in Stripe and a database later changes where these live, not
- * their shape: the session becomes a Stripe Checkout Session, `fulfil` runs
- * from the Stripe webhook, and orders and passes get rows (which is also
- * what marking a pass as used at the door needs).
+ * Tickets sold through Stripe skip the session token: the Stripe Checkout
+ * Session plays that part, and `fulfil` builds the order from it with the
+ * Stripe session id as the seed (lib/stripe.ts). A database later changes
+ * where orders live, not their shape: orders and passes get rows, which is
+ * also what marking a pass as used at the door needs.
  */
 
 const SESSION_MINUTES = 30;
@@ -133,28 +134,38 @@ export function forgetPaid(session: Session) {
   paid.delete(session.sid);
 }
 
-/** A paid session becomes an order: one pass per person (standard) or one
-    per group (VIP). */
-export function fulfil(session: Session): { order: Order; orderToken: string } {
-  const passCount = session.qty;
-  const passes: Pass[] = Array.from({ length: passCount }, () => {
-    const code = randomId(8);
+/** What a payment covered, from a mock session or a Stripe one. */
+export interface Paid extends Cart {
+  total: number;
+  paidAt?: number;
+  /** Makes the order's ids repeatable: the same seed, the same passes. */
+  seed?: string;
+}
+
+/** A payment becomes an order: one pass per person (standard) or one per
+    group (VIP). */
+export function fulfil(paid: Paid): { order: Order; orderToken: string } {
+  const id = (label: string, length: number) =>
+    paid.seed ? derivedId(`${paid.seed}:${label}`, length) : randomId(length);
+
+  const passes: Pass[] = Array.from({ length: paid.qty }, (_, index) => {
+    const code = id(`code${index}`, 8);
     return {
-      id: randomId(12),
+      id: id(`pass${index}`, 12),
       code: `WL-${code.slice(0, 4)}-${code.slice(4)}`,
-      item: session.item,
+      item: paid.item,
     };
   });
 
   const order: Order = {
     v: 1,
-    id: randomId(10),
-    email: session.email,
-    name: session.name,
-    item: session.item,
-    qty: session.qty,
-    total: session.total,
-    paidAt: Date.now(),
+    id: id("order", 10),
+    email: paid.email,
+    name: paid.name,
+    item: paid.item,
+    qty: paid.qty,
+    total: paid.total,
+    paidAt: paid.paidAt ?? Date.now(),
     passes,
   };
 

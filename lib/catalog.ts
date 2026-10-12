@@ -26,6 +26,8 @@ export interface CatalogItem {
   maxQty: number;
   /** One pass per unit: a person for standard, a whole group for VIP. */
   passLabel: string;
+  /** How many exist, when they can run out (VIP zones). */
+  stock?: number;
 }
 
 const sellable = (tiers: readonly { price: number }[]) =>
@@ -52,6 +54,7 @@ export const CATALOG: Record<ItemId, CatalogItem> = Object.fromEntries([
       price: tier.price,
       maxQty: 1,
       passLabel: `Група, ${tier.k}`,
+      stock: tier.stock,
     },
   ]),
 ]) as Record<ItemId, CatalogItem>;

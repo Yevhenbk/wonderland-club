@@ -1,9 +1,10 @@
 import type { CSSProperties } from "react";
 
-import { tickets } from "@/app/content";
+import { tickets, type SellableTier } from "@/app/content";
 
 import styles from "./tickets.module.scss";
 import Price from "./price";
+import { StockBadge, VipBuy } from "./vip-stock";
 
 type Plan = (typeof tickets)["standard"] | (typeof tickets)["vip"];
 
@@ -12,7 +13,8 @@ type Plan = (typeof tickets)["standard"] | (typeof tickets)["vip"];
  * option. Every price is a row on a hairline, so the two cards read as one
  * price list; the cheapest way in (online) is the one figure set in the
  * logo's rose gold. Each card's button opens checkout with its ticket
- * already chosen.
+ * already chosen. VIP zones are limited, so each size shows how many are
+ * left, and the button skips sizes that are gone.
  */
 export default function Tickets() {
   const plans: { plan: Plan; tint: CSSProperties }[] = [
@@ -39,7 +41,12 @@ export default function Tickets() {
                 key={tier.k}
                 className={"best" in tier && tier.best ? styles.best : undefined}
               >
-                <dt>{tier.k}</dt>
+                <dt>
+                  {tier.k}
+                  {"stock" in tier && tier.stock !== undefined && (
+                    <StockBadge item={tier.id} />
+                  )}
+                </dt>
                 <dd>
                   <Price value={tier.price} />
                 </dd>
@@ -49,12 +56,24 @@ export default function Tickets() {
 
           <p className={styles.note}>{plan.note}</p>
 
-          <a
-            href={`${tickets.checkoutPath}?item=${plan.buyItem}`}
-            className={styles.cta}
-          >
-            {tickets.cta}
-          </a>
+          {plan === tickets.vip ? (
+            <VipBuy
+              items={plan.tiers
+                .filter((tier): tier is SellableTier => "id" in tier)
+                .map((tier) => tier.id)}
+              checkoutPath={tickets.checkoutPath}
+              className={styles.cta}
+            >
+              {tickets.cta}
+            </VipBuy>
+          ) : (
+            <a
+              href={`${tickets.checkoutPath}?item=${plan.buyItem}`}
+              className={styles.cta}
+            >
+              {tickets.cta}
+            </a>
+          )}
         </article>
       ))}
     </div>
