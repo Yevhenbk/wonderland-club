@@ -1264,7 +1264,7 @@
 
   .ticketCard {
     width: 100%;
-    padding: 18px 16px 16px;
+    padding: 24px;
   }
 
   .heroGet {
@@ -1428,8 +1428,9 @@
     display: none;
   }
 
+  /* The same inner padding as the night card further down (24px). */
   .ticketCard {
-    padding: 14px;
+    padding: 24px;
   }
 
   .ticketTheme {
