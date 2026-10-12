@@ -1317,9 +1317,24 @@
     width: 100%;
   }
 
-  /* Clear of the iPhone's home indicator. */
+  /* One centred column on a phone: logo, socials, year, then the legal
+     row, each centred, instead of a row pushed to both edges. Clear of the
+     iPhone's home indicator. */
   .footer {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
     padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .footerLinks,
+  .footerLegal {
+    justify-content: center;
+  }
+
+  .footerLegal {
+    flex-basis: auto;
   }
 }
 
