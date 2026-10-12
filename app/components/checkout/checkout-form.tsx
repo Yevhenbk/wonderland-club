@@ -186,6 +186,12 @@ export default function CheckoutForm({
         </p>
       )}
 
+      <p className={styles.consent}>
+        Купуючи, ти приймаєш <a href="/terms">Регламент</a> і{" "}
+        <a href="/privacy">Політику конфіденційності</a>. Квитки не
+        повертаються, крім скасування події. Вхід лише 18+, з документом.
+      </p>
+
       <button type="submit" className={styles.pay} disabled={busy}>
         {busy ? "Зачекай…" : `Перейти до оплати, ${total} zł`}
       </button>

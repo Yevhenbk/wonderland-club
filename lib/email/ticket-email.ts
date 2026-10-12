@@ -1,5 +1,6 @@
 import { CATALOG, EVENT } from "../catalog";
 import type { Order, Pass } from "../orders";
+import { organizer } from "@/app/legal/organizer";
 
 /**
  * The ticket email: the same passes the confirmation page shows, as an
@@ -131,7 +132,9 @@ export function renderTicketEmail(
         <tr><td align="center" style="padding:4px 8px 0;font:13px/1.7 ${font};color:${C.faint};">
           Кожен код проходить один раз, тож не пересилай його.<br />
           Замовлення ${esc(order.id)}, сума ${order.total} zł<br />
-          ${esc(EVENT.venueName)}, ${esc(EVENT.venue)}
+          ${esc(EVENT.venueName)}, ${esc(EVENT.venue)}<br />
+          ${organizer.name ? `Організатор: ${esc(organizer.name)}. ` : ""}<a href="${origin}/terms" style="color:${C.soft};">Регламент</a>
+          і <a href="${origin}/privacy" style="color:${C.soft};">Політика конфіденційності</a>
         </td></tr>
       </table>
     </td></tr>
@@ -151,6 +154,7 @@ export function renderTicketEmail(
     "",
     "Кожен код проходить один раз, тож не пересилай його.",
     `Замовлення ${order.id}, сума ${order.total} zł.`,
+    `Регламент: ${origin}/terms`,
   ].join("\n");
 
   return { subject, html, text };

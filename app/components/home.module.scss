@@ -819,6 +819,35 @@
   color: var(--wl-faint);
 }
 
+/* The terms, the privacy policy and who sells: a quiet row of its own. */
+.footerLegal {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 22px;
+  font-size: 14px;
+  color: var(--wl-faint);
+}
+
+.footerLegal a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  color: var(--wl-faint);
+  text-underline-offset: 3px;
+}
+
+.footerLegal a:hover,
+.footerLegal a:focus-visible {
+  color: var(--wl-ink);
+}
+
+.footerLegal span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+}
+
 /* ------------------------------------------------- the first night's story */
 
 .nightsHead .leadLeft + .leadLeft {

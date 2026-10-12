@@ -1,6 +1,8 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+import { organizer } from "@/app/legal/organizer";
+
 /**
  * Sends an email.
  *
@@ -66,7 +68,8 @@ async function sendWithResend(email: OutgoingEmail, key: string): Promise<SendRe
     body: JSON.stringify({
       from: FROM,
       to: [email.to],
-      reply_to: process.env.EMAIL_REPLY_TO || undefined,
+      /* A buyer who answers the ticket email writes to the organizer. */
+      reply_to: process.env.EMAIL_REPLY_TO || organizer.email || undefined,
       subject: email.subject,
       html: email.html,
       text: email.text,

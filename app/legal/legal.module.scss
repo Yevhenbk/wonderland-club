@@ -1,0 +1,105 @@
+/* Long text to read, not a poster: one comfortable column, the site's
+   colours, numbered points with the number hung in the margin. */
+.doc {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: clamp(8px, 2vw, 24px) 0 64px;
+  text-align: left;
+}
+
+.head {
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--wl-line);
+}
+
+.lang {
+  display: inline-block;
+  margin-bottom: 18px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--wl-steel);
+  text-decoration: none;
+}
+
+.lang:hover {
+  color: var(--wl-ink);
+}
+
+.title {
+  font-family: var(--wl-font-wide);
+  font-size: clamp(26px, 4.4vw, 38px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.updated {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--wl-faint);
+}
+
+.intro {
+  margin-top: 18px;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--wl-soft);
+}
+
+.section {
+  padding-top: 30px;
+}
+
+.h2 {
+  font-family: var(--wl-font-wide);
+  font-size: clamp(18px, 2.4vw, 21px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.points {
+  margin-top: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.point {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--wl-soft);
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+  color: var(--wl-faint);
+}
+
+.bullets {
+  margin: -4px 0 0 44px;
+  padding-left: 18px;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--wl-soft);
+}
+
+.bullets li + li {
+  margin-top: 4px;
+}
+
+.link {
+  color: var(--wl-rose);
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 560px) {
+  .point {
+    grid-template-columns: 36px minmax(0, 1fr);
+  }
+
+  .bullets {
+    margin-left: 36px;
+  }
+}

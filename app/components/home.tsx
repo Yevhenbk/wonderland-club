@@ -24,6 +24,7 @@ import MediaSlot from "./media-slot";
 import NightField from "./night-field";
 import NightsRail from "./nights-rail";
 import SiteHeader from "./site-header";
+import { organizer } from "@/app/legal/organizer";
 import Tickets from "./tickets";
 import Wide from "./wide";
 import styles from "./home.module.scss";
@@ -348,6 +349,11 @@ export default function Home() {
         <span className={styles.footerNote}>
           © {new Date().getFullYear()} {site.city}
         </span>
+        <nav className={styles.footerLegal} aria-label="Правова інформація">
+          <a href="/terms">Регламент</a>
+          <a href="/privacy">Політика конфіденційності</a>
+          {organizer.name && <span>Організатор: {organizer.name}</span>}
+        </nav>
       </footer>
 
     </div>

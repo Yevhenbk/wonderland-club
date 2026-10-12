@@ -268,6 +268,23 @@
   border-color: var(--wl-rose);
 }
 
+/* What buying means, right above the button: the terms, no refunds, 18+. */
+.consent {
+  margin-top: 18px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--wl-faint);
+}
+
+.consent a {
+  color: var(--wl-soft);
+  text-underline-offset: 3px;
+}
+
+.consent a:hover {
+  color: var(--wl-ink);
+}
+
 .help {
   display: block;
   margin-top: 6px;
