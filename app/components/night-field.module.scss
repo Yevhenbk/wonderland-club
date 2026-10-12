@@ -77,53 +77,39 @@
   }
 }
 
-/* Phones: the three fields drift again, in the cheapest way there is.
-   - Movement only, on `translate`, which the GPU moves on its own without
-     the page being repainted. The colour cycle stays off (styles/_blob.scss):
-     it repainted every blob on every frame. Each keeps its own still colour.
-   - No blur filter. Moving a blurred layer means blurring it again on every
-     frame; the disc's own gradient already fades to nothing, so it reads
-     just as soft without it.
-   - Faster orbits than on a desktop (20-28s a loop), so the drift is
-     clearly alive on a small screen.
-   The smaller glows in cards and sections stay still on phones, so only
-   these three ever move. Reduced motion still stops them (below). */
+/* Phones: the three fields hold still (no orbit, no colour cycle; see
+   styles/_blob.scss), so they cost nothing once drawn. They stay large,
+   wider than the screen, and the field stays pinned behind the page, so
+   the sections still scroll over the glow. No blur filter: the disc's own
+   gradient fades to nothing, and big faint discs give the same soft haze. */
 @media (hover: none) and (pointer: coarse), (max-width: 767px) {
   .bloom {
     filter: none;
-    will-change: translate;
+    will-change: auto;
     transition: none;
+    animation: none;
   }
 
-  /* Much larger than on a desktop, wider than the screen itself: without
-     the blur to spread the light, big faint discs give the soft haze, and
-     at this size they wash across the whole screen as they move. */
   .bloomA {
-    animation: blobOrbitA 20s ease-in-out infinite;
     width: 165vw;
     height: 165vw;
     opacity: 0.16;
   }
 
   .bloomB {
-    animation: blobOrbitB 24s ease-in-out infinite;
     width: 150vw;
     height: 150vw;
     opacity: 0.22;
   }
 
+  /* Raised into the lower half: at rest its desktop spot sits mostly
+     below a phone screen, which left the bottom of the screen bare. */
   .bloomC {
-    animation: blobOrbitC 28s ease-in-out infinite;
+    left: -20%;
+    bottom: 0;
     width: 165vw;
     height: 165vw;
     opacity: 0.18;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .bloomA,
-  .bloomB,
-  .bloomC {
-    animation: none;
-  }
-}
