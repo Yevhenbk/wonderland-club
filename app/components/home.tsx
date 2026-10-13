@@ -104,7 +104,9 @@ export default function Home() {
             </a>
           </div>
 
-          <p className={styles.heroGet}>{nextNight.note}</p>
+          <p className={styles.heroGet}>
+            <strong className={styles.heroSold}>{nextNight.sold}.</strong> {nextNight.note}
+          </p>
         </div>
 
         <div className={styles.tickerWrap} aria-hidden="true">
@@ -325,8 +327,8 @@ export default function Home() {
         <p className={styles.label}>{faq.label}</p>
         <h2 className={styles.h2}>{faq.title}</h2>
         <div className={styles.faq}>
-          {faq.items.map((item) => (
-            <FaqItem key={item.q} q={item.q} a={item.a} />
+          {faq.items.map((item, index) => (
+            <FaqItem key={item.q} q={item.q} a={item.a} track={`faq_${index + 1}`} />
           ))}
         </div>
       </section>

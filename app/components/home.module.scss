@@ -1598,3 +1598,10 @@
     display: block;
   }
 }
+
+/* "Вже продано 20+ квитків": the one bit of proof on the first screen, in
+   the rose that marks the cheapest way in. */
+.heroSold {
+  font-weight: 700;
+  color: var(--wl-rose);
+}

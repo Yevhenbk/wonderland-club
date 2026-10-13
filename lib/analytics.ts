@@ -49,6 +49,12 @@ const BOT =
 const salt = () =>
   process.env.ANALYTICS_SALT ?? process.env.TICKET_SECRET ?? "wonderland-dev-analytics";
 
+/** Whether a request comes from a crawler or a script, not a person. */
+export function isBot(request: Request): boolean {
+  const ua = request.headers.get("user-agent") ?? "";
+  return !ua || BOT.test(ua);
+}
+
 /** The anonymous visitor for a request, or null for bots and for staff
     phones (signed in with the door PIN), who should not count. */
 export function visitorOf(request: Request, day: string): string | null {

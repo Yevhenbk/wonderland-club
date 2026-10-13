@@ -27,6 +27,7 @@ const SECTIONS = new Set([
 const CLICKS = new Set([
   "buy_standard", "buy_vip", "to_tickets", "header_tickets", "map",
   "instagram", "tiktok", "telegram", "sound", "faq", "terms", "privacy",
+  ...Array.from({ length: 12 }, (_, i) => `faq_${i + 1}`),
 ]);
 
 /* Where a visit came from: the ad tag (?utm_source=) if there is one,

@@ -68,7 +68,7 @@ export default function Tickets() {
             </VipBuy>
           ) : (
             <a
-              href={`${tickets.checkoutPath}?item=${plan.buyItem}`}
+              href={`/buy?item=${plan.buyItem}`}
               className={styles.cta}
             >
               {tickets.cta}

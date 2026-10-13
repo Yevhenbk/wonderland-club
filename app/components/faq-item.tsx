@@ -19,7 +19,16 @@ const DURATION = 420;
  * and the element is closed when it lands. Clicking again mid-animation
  * reverses from wherever the answer currently is instead of jumping.
  */
-export default function FaqItem({ q, a }: { q: string; a: string }) {
+export default function FaqItem({
+  q,
+  a,
+  track,
+}: {
+  q: string;
+  a: string;
+  /** Statistics name for this question (faq_3); counted on opening only. */
+  track?: string;
+}) {
   const detailsRef = useRef<HTMLDetailsElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const animation = useRef<Animation | null>(null);
@@ -72,7 +81,7 @@ export default function FaqItem({ q, a }: { q: string; a: string }) {
 
   return (
     <details ref={detailsRef} className={styles.item}>
-      <summary onClick={toggle} data-track="faq">
+      <summary onClick={toggle} data-track={open ? undefined : (track ?? "faq")}>
         <span>{q}</span>
         <span className={styles.icon} data-open={open} aria-hidden="true" />
       </summary>

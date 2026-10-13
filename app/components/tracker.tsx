@@ -39,8 +39,8 @@ function clickName(element: Element): string | null {
   const link = element.closest("a");
   if (!link) return null;
   const href = link.getAttribute("href") ?? "";
-  if (/\/checkout\?item=vip/.test(href)) return "buy_vip";
-  if (/\/checkout(\?|$)/.test(href)) return "buy_standard";
+  if (/\/(checkout|buy)\?item=vip/.test(href)) return "buy_vip";
+  if (/\/(checkout|buy)(\?|$)/.test(href)) return "buy_standard";
   if (/#tickets$/.test(href)) return link.closest("header") ? "header_tickets" : "to_tickets";
   if (/google\.[a-z.]+\/maps/.test(href)) return "map";
   if (/instagram\.com/.test(href)) return "instagram";

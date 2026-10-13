@@ -85,10 +85,13 @@ export const nextNight = {
     { k: "Локація", v: venue.address, wide: `, ${venue.city}`, href: venue.mapsHref },
     { k: "Саунд", v: "Реп, хіп-хоп, треп, рейдж" },
   ] as { k: string; v: string; wide?: string; href?: string }[],
-  /* The calls about the night lead to the prices; buying starts there. */
-  cta: "Купити квиток",
-  ctaHref: "#tickets",
-  note: "Квиток онлайн 40 zł, на вході 50 zł.",
+  /* One tap to Stripe's payment page for a standard ticket (app/buy). */
+  cta: "Купити квиток, 40 zł",
+  ctaHref: "/buy?item=standard",
+  /* Proof and the deadline, under the card. Sold offline to friends before
+     the site took payments, so the figure is set here, not counted. */
+  sold: "Вже продано 20+ квитків",
+  note: "Онлайн 40 zł до 31.10, потім дорожче. На вході 50 zł.",
 };
 
 /** A ticket that can be bought online. `id` is what checkout and the passes
@@ -117,10 +120,14 @@ export const tickets = {
     eyebrow: "Стандарт",
     name: "Вхідний квиток",
     tiers: [
-      { id: "standard", k: "Онлайн", price: 40, best: true },
+      /* EARLY BIRD: 40 zł until 31.10. On 1.11 the online price must
+         really rise (a new Stripe price of 45 zł in STRIPE_PRICE_STANDARD,
+         and this tier's price), or the deadline is not true. */
+      { id: "standard", k: "Онлайн до 31.10", price: 40, best: true },
+      { k: "Онлайн з 1.11", price: 45 },
       { k: "На вході", price: 50 },
     ] as (SellableTier | DoorTier)[],
-    note: "Купуй онлайн і заощадь 10 zł.",
+    note: "Вже продано 20+ квитків. З 1 листопада онлайн-квиток дорожчає.",
     buyItem: "standard" as SellableTier["id"],
   },
   vip: {

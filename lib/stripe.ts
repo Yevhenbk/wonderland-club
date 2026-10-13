@@ -108,8 +108,11 @@ export async function stripeSales(sinceMs?: number): Promise<Sales | null> {
   for await (const session of stripe().checkout.sessions.list({ status: "complete", limit: 100, created })) {
     const item = session.metadata?.item;
     if (session.metadata?.event !== EVENT.id || !isItemId(item) || session.payment_status !== "paid") continue;
-    const tickets = Number(session.metadata?.qty) || 1;
+    /* The amount says how many: a quick checkout's quantity is chosen on
+       Stripe's page and is not in our metadata. */
+    const unit = CATALOG[item].price;
     const revenue = (session.amount_total ?? 0) / 100;
+    const tickets = unit > 0 ? Math.max(1, Math.round(revenue / unit)) : Number(session.metadata?.qty) || 1;
     const row = (sales.byItem[item] ??= { orders: 0, tickets: 0, revenue: 0 });
     row.orders++;
     row.tickets += tickets;
@@ -119,6 +122,43 @@ export async function stripeSales(sinceMs?: number): Promise<Sales | null> {
     sales.revenue += revenue;
   }
   return sales;
+}
+
+/**
+ * One tap from the page to Stripe: no form of ours in between. Stripe asks
+ * for the email itself, and the number of tickets can be changed on its
+ * page (1 to 10). For tickets that never run out (the standard entry);
+ * VIP zones still go through our form, where a zone is held first.
+ */
+export async function createQuickCheckout(
+  item: ItemId,
+  priceId: string,
+  origin: string
+): Promise<string> {
+  if (CATALOG[item].stock !== undefined) throw new Error(`${item} is limited`);
+  await assertPriceMatches(priceId, item);
+
+  const metadata = { item, qty: "1", name: "", event: EVENT.id, origin };
+  const session = await stripe().checkout.sessions.create({
+    mode: "payment",
+    line_items: [
+      {
+        price: priceId,
+        quantity: 1,
+        adjustable_quantity: { enabled: true, minimum: 1, maximum: CATALOG[item].maxQty },
+      },
+    ],
+    metadata,
+    payment_intent_data: {
+      metadata,
+      description: `${EVENT.title}. ${EVENT.theme}, ${EVENT.date}`,
+    },
+    success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${origin}/#tickets`,
+    expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
+  });
+  if (!session.url) throw new Error("Stripe returned no checkout URL");
+  return session.url;
 }
 
 /** Opens a Stripe Checkout Session and returns the URL of Stripe's page. */
@@ -211,7 +251,7 @@ export async function orderFromStripe(sessionId: string): Promise<StripeOrder> {
   let session: Stripe.Checkout.Session;
   try {
     session = await stripe().checkout.sessions.retrieve(sessionId, {
-      expand: ["payment_intent"],
+      expand: ["payment_intent", "line_items"],
     });
   } catch {
     return { status: "unknown" };
@@ -227,7 +267,9 @@ export async function orderFromStripe(sessionId: string): Promise<StripeOrder> {
 
   const { order, orderToken } = fulfil({
     item,
-    qty: Number(qty) || 1,
+    /* The quick checkout lets the buyer change the number on Stripe's page,
+       so the paid quantity is read from the line, not from our metadata. */
+    qty: session.line_items?.data[0]?.quantity ?? (Number(qty) || 1),
     email: email.toLowerCase(),
     name,
     total: session.amount_total / 100,

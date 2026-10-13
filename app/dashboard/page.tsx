@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import Shell from "@/app/components/shell";
+import { faq } from "@/app/content";
 import StaffForm from "@/app/staff/staff-form";
 import { lastDays, report, type Report } from "@/lib/analytics";
 import { CATALOG, type ItemId } from "@/lib/catalog";
@@ -45,7 +46,9 @@ const CLICKS: Record<string, string> = {
   header_tickets: "«Квитки» в меню",
   map: "Карта (локація)",
   sound: "Звук на відео",
-  faq: "Відкрили питання",
+  faq: "Відкрили питання (до 13.10)",
+  /* Each FAQ question by its own text: what visitors were looking for. */
+  ...Object.fromEntries(faq.items.map((item, i) => [`faq_${i + 1}`, `Питання: ${item.q}`])),
   instagram: "Instagram",
   tiktok: "TikTok",
   telegram: "Telegram",
