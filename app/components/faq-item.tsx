@@ -72,7 +72,7 @@ export default function FaqItem({ q, a }: { q: string; a: string }) {
 
   return (
     <details ref={detailsRef} className={styles.item}>
-      <summary onClick={toggle}>
+      <summary onClick={toggle} data-track="faq">
         <span>{q}</span>
         <span className={styles.icon} data-open={open} aria-hidden="true" />
       </summary>

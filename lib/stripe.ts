@@ -91,6 +91,36 @@ export async function stripeTaken(): Promise<
   return taken;
 }
 
+export interface Sales {
+  /** Per ticket: orders, tickets (people or zones) and zł. */
+  byItem: Partial<Record<ItemId, { orders: number; tickets: number; revenue: number }>>;
+  orders: number;
+  tickets: number;
+  revenue: number;
+}
+
+/** What this night has sold through Stripe since a moment (all time if
+    omitted): paid Checkout Sessions only, so the dashboard matches Stripe. */
+export async function stripeSales(sinceMs?: number): Promise<Sales | null> {
+  if (!process.env.STRIPE_SECRET_KEY) return null;
+  const sales: Sales = { byItem: {}, orders: 0, tickets: 0, revenue: 0 };
+  const created = sinceMs ? { gte: Math.floor(sinceMs / 1000) } : undefined;
+  for await (const session of stripe().checkout.sessions.list({ status: "complete", limit: 100, created })) {
+    const item = session.metadata?.item;
+    if (session.metadata?.event !== EVENT.id || !isItemId(item) || session.payment_status !== "paid") continue;
+    const tickets = Number(session.metadata?.qty) || 1;
+    const revenue = (session.amount_total ?? 0) / 100;
+    const row = (sales.byItem[item] ??= { orders: 0, tickets: 0, revenue: 0 });
+    row.orders++;
+    row.tickets += tickets;
+    row.revenue += revenue;
+    sales.orders++;
+    sales.tickets += tickets;
+    sales.revenue += revenue;
+  }
+  return sales;
+}
+
 /** Opens a Stripe Checkout Session and returns the URL of Stripe's page. */
 export async function createStripeCheckout(
   cart: Cart,

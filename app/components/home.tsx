@@ -57,7 +57,7 @@ export default function Home() {
       <SiteHeader />
 
       {/* --------------------------------------------------------- hero */}
-      <section className={styles.hero}>
+      <section className={styles.hero} data-section="hero">
         <span className={styles.heroAura} aria-hidden="true" />
 
         <div className={styles.heroCenter}>
@@ -120,7 +120,7 @@ export default function Home() {
       </section>
 
       {/* ---------------------------------------------------- aftermovie */}
-      <section className={styles.videoBand}>
+      <section className={styles.videoBand} data-section="atmosphere">
         <div className={styles.videoInner}>
           <div className={styles.videoMedia}>
             <MediaSlot media={aftermovie.media} label={aftermovie.label} />
@@ -135,7 +135,7 @@ export default function Home() {
       </section>
 
       {/* -------------------------------------------------------- quote */}
-      <section className={styles.quoteBand}>
+      <section className={styles.quoteBand} data-section="quote">
         <div className={styles.inner}>
           <p className={`${styles.quoteBefore} ${styles.quoteDesktop}`}>
             {quote.before}
@@ -150,7 +150,7 @@ export default function Home() {
       </section>
 
       {/* ------------------------------------------------------- nights */}
-      <section className={styles.nightsBand} id="nights">
+      <section className={styles.nightsBand} id="nights" data-section="nights">
         <div className={styles.inner}>
           <div className={styles.nightsHead}>
             <p className={styles.label}>{nights.label}</p>
@@ -169,7 +169,7 @@ export default function Home() {
       </section>
 
       {/* ------------------------------------------------------- expect */}
-      <section className={`${styles.section} ${styles.hideOnPhone}`} id="expect">
+      <section className={`${styles.section} ${styles.hideOnPhone}`} id="expect" data-section="expect">
         <p className={styles.label}>{expect.label}</p>
         <h2 className={styles.h2}>{expect.title}</h2>
         <p className={styles.lead}>{expect.lead}</p>
@@ -187,7 +187,7 @@ export default function Home() {
       </section>
 
       {/* ---------------------------------------------------------- vip */}
-      <section className={`${styles.vipBand} ${styles.hideOnPhone}`} id="vip">
+      <section className={`${styles.vipBand} ${styles.hideOnPhone}`} id="vip" data-section="vip">
         <div className={styles.inner}>
           <div className={styles.vipCard}>
             <p className={styles.label}>{vip.label}</p>
@@ -219,7 +219,7 @@ export default function Home() {
       </section>
 
       {/* ------------------------------------------------------ tickets */}
-      <section className={styles.sectionLeft} id="tickets">
+      <section className={styles.sectionLeft} id="tickets" data-section="tickets">
         <div className={styles.nightsHead}>
           <p className={styles.label}>{tickets.label}</p>
           <h2 className={styles.h2}>{tickets.title}</h2>
@@ -229,7 +229,7 @@ export default function Home() {
       </section>
 
       {/* -------------------------------------------------------- rules */}
-      <section className={styles.rulesBand} id="rules">
+      <section className={styles.rulesBand} id="rules" data-section="rules">
         <div className={styles.inner}>
           <p className={styles.label}>{rules.label}</p>
           <h2 className={styles.h2}>{rules.title}</h2>
@@ -246,7 +246,7 @@ export default function Home() {
       </section>
 
       {/* ------------------------------------------------------- worlds */}
-      <section className={`${styles.worldsBand} ${styles.hideOnPhone}`}>
+      <section className={`${styles.worldsBand} ${styles.hideOnPhone}`} data-section="worlds">
         <div className={styles.inner}>
           <p className={styles.label}>{worlds.label}</p>
           <h2 className={styles.h2}>{worlds.title}</h2>
@@ -264,7 +264,7 @@ export default function Home() {
       </section>
 
       {/* ------------------------------------------------------ gallery */}
-      <section className={styles.sectionLeft} id="gallery">
+      <section className={styles.sectionLeft} id="gallery" data-section="gallery">
         <div className={styles.galleryHead}>
           <div>
             <p className={styles.label}>{gallery.label}</p>
@@ -321,7 +321,7 @@ export default function Home() {
       </section>
 
       {/* ---------------------------------------------------------- faq */}
-      <section className={styles.faqSection} id="faq">
+      <section className={styles.faqSection} id="faq" data-section="faq">
         <p className={styles.label}>{faq.label}</p>
         <h2 className={styles.h2}>{faq.title}</h2>
         <div className={styles.faq}>
@@ -332,7 +332,7 @@ export default function Home() {
       </section>
 
       {/* -------------------------------------------------------- final */}
-      <section className={styles.final}>
+      <section className={styles.final} data-section="final">
         <h2 className={`${styles.h2} ${styles.grad}`}>{final.title}</h2>
         <p className={styles.finalLine}>{final.line}</p>
         <a href="#tickets" className={styles.btn}>

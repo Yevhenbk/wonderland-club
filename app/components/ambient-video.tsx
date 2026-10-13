@@ -243,6 +243,7 @@ export default function AmbientVideo({
         <button
           type="button"
           className={styles.sound}
+          data-track="sound"
           onClick={toggleSound}
           aria-label={muted ? "Увімкнути звук" : "Вимкнути звук"}
           aria-pressed={!muted}

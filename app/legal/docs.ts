@@ -223,7 +223,8 @@ export function privacyUk(): LegalDoc {
             "ім'я: друкується на квитку (необов'язково),",
             "дані замовлення: квиток, кількість, сума, дата оплати, номер замовлення,",
             "час проходу за квитком на вході,",
-            "технічні дані (IP-адреса, тип браузера) у журналах сервера.",
+            "технічні дані (IP-адреса, тип браузера) у журналах сервера,",
+            "анонімна статистика відвідувань: які сторінки й розділи переглянуто, які кнопки натиснуто, скільки часу сторінка була відкрита, з якого сайту прийшов відвідувач і з телефона чи комп'ютера.",
           ],
           "Дані платіжної картки або банківського рахунку обробляє лише Stripe. Ми їх не отримуємо.",
         ],
@@ -234,6 +235,7 @@ export function privacyUk(): LegalDoc {
           "Продаж і надсилання квитків, вхід на подію: виконання договору (ст. 6 ч. 1 літ. b RODO).",
           "Бухгалтерський облік і податки: юридичний обов'язок (ст. 6 ч. 1 літ. c RODO).",
           "Запобігання шахрайству і повторному використанню квитків, розгляд скарг, захист від претензій: законний інтерес адміністратора (ст. 6 ч. 1 літ. f RODO).",
+          "Анонімна статистика відвідувань, щоб розуміти, як працює сайт і реклама: законний інтерес адміністратора (ст. 6 ч. 1 літ. f RODO). Вона не використовує cookies і нічого не зберігає у браузері. Відвідувача рахує добовий анонімний ідентифікатор (хеш IP-адреси і браузера з секретним ключем), який змінюється щодня; IP-адреса не зберігається, а зв'язати візити різних днів неможливо. Статистика зберігається до 13 місяців.",
           "Ми не надсилаємо реклами і не продаємо даних. Автоматизованих рішень і профілювання немає.",
         ],
       },
@@ -271,7 +273,7 @@ export function privacyUk(): LegalDoc {
       {
         title: "Cookies",
         points: [
-          "Сайт не використовує аналітичних чи рекламних cookies. Технічний cookie ставиться лише на телефонах персоналу на вході. Сторінка оплати Stripe використовує власні cookies згідно з політикою Stripe.",
+          "Сайт не використовує аналітичних чи рекламних cookies: статистика відвідувань анонімна і працює без них. Технічний cookie ставиться лише на телефонах персоналу на вході. Сторінка оплати Stripe використовує власні cookies згідно з політикою Stripe.",
         ],
       },
       {
@@ -305,7 +307,8 @@ export function privacyPl(): LegalDoc {
             "imię: drukowane na bilecie (opcjonalne),",
             "dane zamówienia: bilet, liczba, kwota, data płatności, numer zamówienia,",
             "godzina wejścia na podstawie biletu,",
-            "dane techniczne (adres IP, typ przeglądarki) w logach serwera.",
+            "dane techniczne (adres IP, typ przeglądarki) w logach serwera,",
+            "anonimowe statystyki odwiedzin: które strony i sekcje zostały obejrzane, które przyciski kliknięto, jak długo strona była otwarta, z jakiej strony przyszedł odwiedzający oraz czy z telefonu, czy z komputera.",
           ],
           "Dane karty płatniczej lub rachunku bankowego przetwarza wyłącznie Stripe. Nie otrzymujemy ich.",
         ],
@@ -316,6 +319,7 @@ export function privacyPl(): LegalDoc {
           "Sprzedaż i wysyłka biletów, wstęp na wydarzenie: wykonanie umowy (art. 6 ust. 1 lit. b RODO).",
           "Rachunkowość i podatki: obowiązek prawny (art. 6 ust. 1 lit. c RODO).",
           "Zapobieganie oszustwom i ponownemu użyciu biletów, rozpatrywanie reklamacji, obrona przed roszczeniami: prawnie uzasadniony interes administratora (art. 6 ust. 1 lit. f RODO).",
+          "Anonimowe statystyki odwiedzin, aby rozumieć, jak działa strona i reklama: prawnie uzasadniony interes administratora (art. 6 ust. 1 lit. f RODO). Nie używają plików cookies i niczego nie zapisują w przeglądarce. Odwiedzającego liczy dobowy anonimowy identyfikator (skrót adresu IP i przeglądarki z tajnym kluczem), zmieniany codziennie; adres IP nie jest zapisywany, a wizyt z różnych dni nie da się powiązać. Statystyki są przechowywane do 13 miesięcy.",
           "Nie wysyłamy reklam i nie sprzedajemy danych. Nie podejmujemy zautomatyzowanych decyzji ani nie profilujemy.",
         ],
       },
@@ -353,7 +357,7 @@ export function privacyPl(): LegalDoc {
       {
         title: "Pliki cookies",
         points: [
-          "Strona nie używa analitycznych ani reklamowych plików cookies. Techniczny plik cookie jest zapisywany wyłącznie na telefonach obsługi przy wejściu. Strona płatności Stripe używa własnych plików cookies zgodnie z polityką Stripe.",
+          "Strona nie używa analitycznych ani reklamowych plików cookies: statystyki odwiedzin są anonimowe i działają bez nich. Techniczny plik cookie jest zapisywany wyłącznie na telefonach obsługi przy wejściu. Strona płatności Stripe używa własnych plików cookies zgodnie z polityką Stripe.",
         ],
       },
       {

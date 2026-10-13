@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope, Unbounded } from "next/font/google";
 
+import Tracker from "./components/tracker";
 import "./globals.scss";
 
 /* Two faces, both with Cyrillic.
@@ -43,7 +44,10 @@ export default function RootLayout({
       lang="uk"
       className={`${wide.variable} ${body.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <Tracker />
+      </body>
     </html>
   );
 }

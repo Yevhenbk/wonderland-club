@@ -5,7 +5,8 @@ import { Redis } from "@upstash/redis";
 
 /**
  * The little the site has to remember between requests: which passes came
- * in at the door, and failed staff PIN attempts.
+ * in at the door, failed staff PIN attempts, and the anonymous visit
+ * statistics behind /dashboard (lib/analytics.ts).
  *
  * Upstash Redis when it is connected (Vercel > Storage > Upstash adds
  * KV_REST_API_URL and KV_REST_API_TOKEN), otherwise a JSON file in .data/
@@ -22,7 +23,20 @@ interface Store {
   del(key: string): Promise<void>;
   /** Adds one and returns the new count; the count expires after ttl. */
   incr(key: string, ttlSeconds: number): Promise<number>;
+  /** Several writes in one round trip: counters in hashes and members in
+      unique counters (HyperLogLog), each key kept for ttl. */
+  batch(ops: StoreOp[], ttlSeconds: number): Promise<void>;
+  /** Many hashes in one round trip, in the order asked. */
+  hashes(keys: string[]): Promise<Record<string, string>[]>;
+  /** How many distinct members across all the given unique counters. */
+  uniques(keys: string[]): Promise<number>;
+  /** The same, for each key on its own, in one round trip. */
+  uniquesEach(keys: string[]): Promise<number[]>;
 }
+
+export type StoreOp =
+  | { hincr: [key: string, field: string, by: number] }
+  | { unique: [key: string, member: string] };
 
 function redisStore(url: string, token: string): Store {
   /* Values stay strings: left on, the client would turn "1731..." into a
@@ -39,6 +53,46 @@ function redisStore(url: string, token: string): Store {
       const count = await redis.incr(key);
       if (count === 1) await redis.expire(key, ttl);
       return count;
+    },
+    batch: async (ops, ttl) => {
+      if (!ops.length) return;
+      const pipe = redis.pipeline();
+      const keys = new Set<string>();
+      for (const op of ops) {
+        if ("hincr" in op) {
+          pipe.hincrby(op.hincr[0], op.hincr[1], op.hincr[2]);
+          keys.add(op.hincr[0]);
+        } else {
+          pipe.pfadd(op.unique[0], op.unique[1]);
+          keys.add(op.unique[0]);
+        }
+      }
+      for (const key of keys) pipe.expire(key, ttl);
+      await pipe.exec();
+    },
+    hashes: async (keys) => {
+      if (!keys.length) return [];
+      const pipe = redis.pipeline();
+      for (const key of keys) pipe.hgetall(key);
+      const rows = (await pipe.exec()) as (Record<string, string> | string[] | null)[];
+      /* Without deserialisation a hash may come back as a flat
+         [field, value, ...] list. */
+      return rows.map((row) => {
+        if (!row) return {};
+        if (Array.isArray(row)) {
+          const out: Record<string, string> = {};
+          for (let i = 0; i < row.length; i += 2) out[row[i]] = row[i + 1];
+          return out;
+        }
+        return row;
+      });
+    },
+    uniques: async (keys) => (keys.length ? Number(await redis.pfcount(keys[0], ...keys.slice(1))) : 0),
+    uniquesEach: async (keys) => {
+      if (!keys.length) return [];
+      const pipe = redis.pipeline();
+      for (const key of keys) pipe.pfcount(key);
+      return ((await pipe.exec()) as unknown[]).map(Number);
     },
   };
 }
@@ -87,6 +141,36 @@ function fileStore(): Store {
         all[key] = { v: String(count), exp: entry?.exp ?? Date.now() + ttl * 1000 };
         return count;
       }),
+    /* Locally a hash is a JSON object and a unique counter an exact list of
+       members: the same answers Redis gives, near enough for development. */
+    batch: (ops, ttl) =>
+      change((all) => {
+        const exp = Date.now() + ttl * 1000;
+        for (const op of ops) {
+          const key = "hincr" in op ? op.hincr[0] : op.unique[0];
+          const value = JSON.parse(alive(all[key])?.v ?? ("hincr" in op ? "{}" : "[]"));
+          if ("hincr" in op) value[op.hincr[1]] = (value[op.hincr[1]] ?? 0) + op.hincr[2];
+          else if (!value.includes(op.unique[1])) value.push(op.unique[1]);
+          all[key] = { v: JSON.stringify(value), exp };
+        }
+      }),
+    hashes: async (keys) => {
+      const all = await read();
+      return keys.map((key) => {
+        const value = JSON.parse(alive(all[key])?.v ?? "{}") as Record<string, number>;
+        return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, String(v)]));
+      });
+    },
+    uniques: async (keys) => {
+      const all = await read();
+      const members = new Set<string>();
+      for (const key of keys) for (const m of JSON.parse(alive(all[key])?.v ?? "[]")) members.add(m);
+      return members.size;
+    },
+    uniquesEach: async (keys) => {
+      const all = await read();
+      return keys.map((key) => (JSON.parse(alive(all[key])?.v ?? "[]") as string[]).length);
+    },
   };
 }
 

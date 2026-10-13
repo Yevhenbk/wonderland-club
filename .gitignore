@@ -10,3 +10,6 @@ media-originals
 
 # Local data: the imitated email outbox
 .data
+
+# Ad videos made from the site, kept locally only
+promo

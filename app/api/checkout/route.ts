@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { dayOf, record, visitorOf } from "@/lib/analytics";
 import { availability, invalidateStock } from "@/lib/inventory";
 import { createSession, validateCart } from "@/lib/orders";
 import { SoldOut } from "@/lib/sold-out";
@@ -31,6 +32,7 @@ export async function POST(request: Request) {
       ).replace(/\/$/, "");
       const url = await createStripeCheckout(result.cart, price, origin);
       invalidateStock();
+      await startedPaying(request, result.cart.item);
       return NextResponse.json({ url });
     }
 
@@ -39,6 +41,7 @@ export async function POST(request: Request) {
       throw new SoldOut(result.cart.item);
 
     const session = createSession(result.cart);
+    await startedPaying(request, result.cart.item);
     return NextResponse.json({
       url: `/checkout/pay?s=${encodeURIComponent(session)}`,
     });
@@ -50,5 +53,18 @@ export async function POST(request: Request) {
       { error: "Оплата тимчасово недоступна. Спробуй трохи пізніше." },
       { status: 500 }
     );
+  }
+}
+
+/* For /dashboard: this visitor reached the payment page. Never allowed to
+   get in the way of the purchase itself. */
+async function startedPaying(request: Request, item: string) {
+  try {
+    const day = dayOf();
+    const visitor = visitorOf(request, day);
+    if (visitor)
+      await record(day, visitor, { count: [[`pay:${item}`, 1]], reached: ["pay_start"] });
+  } catch (error) {
+    console.error("[analytics] could not record a payment start", error);
   }
 }

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { EVENT } from "@/lib/catalog";
+import { count } from "@/lib/analytics";
 import { checkIn, undoCheckIn } from "@/lib/checkins";
 import { readPass } from "@/lib/orders";
 import { isStaff } from "@/lib/staff";
@@ -31,9 +32,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Квиток недійсний." }, { status: 400 });
 
   try {
-    if (typeof body.undo === "number")
-      return NextResponse.json({ undone: await undoCheckIn(claim.p, body.undo) });
-    return NextResponse.json(await checkIn(claim.p));
+    if (typeof body.undo === "number") {
+      const undone = await undoCheckIn(claim.p, body.undo);
+      if (undone) await count("door", -1).catch(() => {});
+      return NextResponse.json({ undone });
+    }
+    const result = await checkIn(claim.p);
+    /* The night's entries for /dashboard: one per pass let in. */
+    if (result.first) await count("door").catch(() => {});
+    return NextResponse.json(result);
   } catch (error) {
     console.error("[checkin] store failed", error);
     return NextResponse.json(
