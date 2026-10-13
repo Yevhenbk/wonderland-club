@@ -40,6 +40,7 @@ const SECTIONS: [string, string][] = [
 ];
 
 const CLICKS: Record<string, string> = {
+  ticket_open: "Відкрили квиток (вибір)",
   buy_standard: "«Купити» стандарт",
   buy_vip: "«Купити» VIP",
   to_tickets: "Перехід до цін",

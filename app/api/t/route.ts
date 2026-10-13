@@ -26,7 +26,7 @@ const SECTIONS = new Set([
 
 const CLICKS = new Set([
   "buy_standard", "buy_vip", "to_tickets", "header_tickets", "map",
-  "instagram", "tiktok", "telegram", "sound", "faq", "terms", "privacy",
+  "instagram", "tiktok", "telegram", "sound", "faq", "terms", "privacy", "ticket_open",
   ...Array.from({ length: 12 }, (_, i) => `faq_${i + 1}`),
 ]);
 

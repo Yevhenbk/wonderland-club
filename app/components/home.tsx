@@ -22,8 +22,8 @@ import logo from "@/public/media/wonderland-wordmark.png";
 import FaqItem from "./faq-item";
 import MediaSlot from "./media-slot";
 import NightField from "./night-field";
+import HeroTicket from "./hero-ticket";
 import NightsRail from "./nights-rail";
-import SoldCount from "./sold-count";
 import QuoteWidth from "./quote-width";
 import SiteHeader from "./site-header";
 import { organizer } from "@/app/legal/organizer";
@@ -61,56 +61,15 @@ export default function Home() {
       <section className={styles.hero} data-section="hero">
         <span className={styles.heroAura} aria-hidden="true" />
 
-        <div className={styles.heroCenter}>
-          <p className={styles.label}>{hero.eyebrow}</p>
-          <h1 className={`${styles.h1} ${styles.grad}`}>{hero.title}</h1>
-          <p className={styles.heroSub}>{hero.sub}</p>
-
-          {/* The calculator card's place: the one object on the first
-              screen that does any work. */}
-          <div className={styles.ticketCard}>
-            <div className={styles.ticketHead}>
-              <span className={styles.ticketKicker}>
-                {nextNight.label} {nextNight.number}
-              </span>
-              <span className={styles.ticketLive} aria-hidden="true" />
-            </div>
-            <p className={styles.ticketTheme}>{nextNight.theme}</p>
-            <dl className={styles.ticketRows}>
-              {nextNight.rows.map((row) => (
-                <div key={row.k}>
-                  <dt>{row.k}</dt>
-                  <dd>
-                    {row.href ? (
-                      <a href={row.href} {...external(row.href)}>
-                        {row.v}
-                        <Wide>{row.wide}</Wide>
-                      </a>
-                    ) : (
-                      <>
-                        {row.v}
-                        <Wide>{row.wide}</Wide>
-                      </>
-                    )}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-            <a
-              href={ticketHref}
-              className={styles.ticketBtn}
-              {...external(ticketHref)}
-            >
-              {nextNight.cta}
-            </a>
+        <div className={`${styles.heroCenter} ${styles.heroFill}`}>
+          <div className={styles.heroIntro}>
+            <p className={styles.label}>{hero.eyebrow}</p>
+            <h1 className={`${styles.h1} ${styles.grad}`}>{hero.title}</h1>
+            <p className={styles.heroSub}>{hero.sub}</p>
           </div>
 
-          <p className={styles.heroGet}>
-            <strong className={styles.heroSold}>
-              <SoldCount />.
-            </strong>{" "}
-            {nextNight.note}
-          </p>
+          {/* The ticket itself: a preview of the pass, and the way to buy it. */}
+          <HeroTicket />
         </div>
 
         <div className={styles.tickerWrap} aria-hidden="true">

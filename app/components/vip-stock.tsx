@@ -12,7 +12,7 @@ import styles from "./tickets.module.scss";
    the browser. One request, shared by every badge and button. */
 let request: Promise<StockMap> | null = null;
 
-function useStock(): StockMap | null {
+export function useStock(): StockMap | null {
   const [stock, setStock] = useState<StockMap | null>(null);
   useEffect(() => {
     request ??= fetch("/api/availability")

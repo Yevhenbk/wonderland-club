@@ -1605,3 +1605,49 @@
   font-weight: 700;
   color: var(--wl-rose);
 }
+
+/* The hero with the ticket: the content takes the whole height between the
+   header and the word strip, and the ticket grows into what is left after
+   the headline. */
+.heroFill {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  margin-block: 0;
+}
+
+.heroIntro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Wide screens: the headline on the left, the ticket on the right, side by
+   side like a poster, so neither has to shrink to share the height. */
+@media (min-width: 900px) {
+  .heroFill {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(40px, 6vw, 96px);
+    max-width: var(--wl-max);
+    margin-inline: auto;
+    text-align: left;
+  }
+
+  .heroFill .heroIntro {
+    align-items: flex-start;
+  }
+
+  .heroFill .h1 {
+    max-width: 11ch;
+  }
+}
+
+/* Phones: the eyebrow over the headline goes, so the ticket has the room
+   (the ticket itself names the night). */
+@media (max-width: 767px) {
+  .heroIntro .label {
+    display: none;
+  }
+}
