@@ -23,6 +23,7 @@ import FaqItem from "./faq-item";
 import MediaSlot from "./media-slot";
 import NightField from "./night-field";
 import NightsRail from "./nights-rail";
+import SoldCount from "./sold-count";
 import QuoteWidth from "./quote-width";
 import SiteHeader from "./site-header";
 import { organizer } from "@/app/legal/organizer";
@@ -105,7 +106,10 @@ export default function Home() {
           </div>
 
           <p className={styles.heroGet}>
-            <strong className={styles.heroSold}>{nextNight.sold}.</strong> {nextNight.note}
+            <strong className={styles.heroSold}>
+              <SoldCount />.
+            </strong>{" "}
+            {nextNight.note}
           </p>
         </div>
 

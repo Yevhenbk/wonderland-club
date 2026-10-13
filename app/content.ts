@@ -70,6 +70,13 @@ export const venue = {
 
 /* The first night: 14.11.2026, a Saturday, 22:00 to 04:00. Its world is
    "The End of the World", set here in Ukrainian as the rest of the page. */
+/**
+ * Tickets sold directly (to friends, by hand), before or outside the site.
+ * UPDATE BY HAND when tickets are sold directly. The site shows this plus
+ * every ticket paid online (from Stripe): "Вже продано 21 квиток".
+ */
+export const soldOffline = 21;
+
 export const nextNight = {
   /** Used on the passes and in the ticket email. */
   eventId: "wl-2026-11-14",
@@ -88,9 +95,7 @@ export const nextNight = {
   /* One tap to Stripe's payment page for a standard ticket (app/buy). */
   cta: "Купити квиток, 40 zł",
   ctaHref: "/buy?item=standard",
-  /* Proof and the deadline, under the card. Sold offline to friends before
-     the site took payments, so the figure is set here, not counted. */
-  sold: "Вже продано 20+ квитків",
+  /* The deadline, under the card, after the sold count (soldOffline). */
   note: "Онлайн 40 zł до 31.10, потім дорожче. На вході 50 zł.",
 };
 
@@ -127,7 +132,8 @@ export const tickets = {
       { k: "Онлайн з 1.11", price: 45 },
       { k: "На вході", price: 50 },
     ] as (SellableTier | DoorTier)[],
-    note: "Вже продано 20+ квитків. З 1 листопада онлайн-квиток дорожчає.",
+    /* Follows the sold count (components/sold-count.tsx). */
+    note: "З 1 листопада онлайн-квиток дорожчає.",
     buyItem: "standard" as SellableTier["id"],
   },
   vip: {

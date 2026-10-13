@@ -4,6 +4,7 @@ import { tickets, type SellableTier } from "@/app/content";
 
 import styles from "./tickets.module.scss";
 import Price from "./price";
+import SoldCount from "./sold-count";
 import { StockBadge, VipBuy } from "./vip-stock";
 
 type Plan = (typeof tickets)["standard"] | (typeof tickets)["vip"];
@@ -54,7 +55,14 @@ export default function Tickets() {
             ))}
           </dl>
 
-          <p className={styles.note}>{plan.note}</p>
+          <p className={styles.note}>
+            {plan === tickets.standard && (
+              <>
+                <SoldCount />.{" "}
+              </>
+            )}
+            {plan.note}
+          </p>
 
           {plan === tickets.vip ? (
             <VipBuy
