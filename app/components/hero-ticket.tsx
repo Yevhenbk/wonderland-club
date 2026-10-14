@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, type PointerEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { nextNight, tickets as ticketPlans, venue, type SellableTier } from "@/app/content";
 import logo from "@/public/media/wonderland-wordmark.png";
@@ -21,13 +21,11 @@ const vipTiers = ticketPlans.vip.tiers.filter((tier): tier is SellableTier => "i
  * purchase sheet (a native <dialog>, so focus, Escape and the backdrop come
  * for free): standard straight to Stripe, or a VIP zone through the form.
  *
- * On a computer the ticket leans a little towards the mouse and a foil
- * shine runs across it; both are transforms, so they cost no repaint, and
- * both stop for reduced motion.
+ * A foil shine runs across it now and then (a transform, so no repaint);
+ * it stops for reduced motion. The ticket itself holds still.
  */
 export default function HeroTicket() {
   const sheet = useRef<HTMLDialogElement>(null);
-  const card = useRef<HTMLDivElement>(null);
   const stock = useStock();
   const [open, setOpen] = useState(false);
 
@@ -69,27 +67,10 @@ export default function HeroTicket() {
     };
   }, []);
 
-  /* The lean: a few degrees towards the pointer, mouse only. */
-  const lean = (event: PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType !== "mouse" || !card.current) return;
-    const box = card.current.getBoundingClientRect();
-    const x = (event.clientX - box.left) / box.width - 0.5;
-    const y = (event.clientY - box.top) / box.height - 0.5;
-    card.current.style.setProperty("--ry", `${(x * 7).toFixed(2)}deg`);
-    card.current.style.setProperty("--rx", `${(-y * 5).toFixed(2)}deg`);
-  };
-  const rest = () => {
-    card.current?.style.setProperty("--ry", "0deg");
-    card.current?.style.setProperty("--rx", "0deg");
-  };
-
   return (
     <>
       <div
-        ref={card}
         className={styles.ticket}
-        onPointerMove={lean}
-        onPointerLeave={rest}
         onClick={(event) => {
           /* The map link keeps its own job; anywhere else opens the sheet. */
           if (!(event.target as Element).closest("a")) show();

@@ -64,7 +64,12 @@ export default function Home() {
         <div className={`${styles.heroCenter} ${styles.heroFill}`}>
           <div className={styles.heroIntro}>
             <p className={styles.label}>{hero.eyebrow}</p>
-            <h1 className={`${styles.h1} ${styles.grad}`}>{hero.title}</h1>
+            {/* Phones: the logo in the headline's place (the words stay for
+                search engines and screen readers). */}
+            <h1 className={`${styles.h1} ${styles.grad}`}>
+              <span className={styles.h1Words}>{hero.title}</span>
+              <Image src={logo} alt="" className={styles.h1Logo} priority sizes="(max-width: 860px) 300px, 1px" />
+            </h1>
             <p className={styles.heroSub}>{hero.sub}</p>
           </div>
 

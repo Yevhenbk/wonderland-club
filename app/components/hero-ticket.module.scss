@@ -8,8 +8,6 @@
    components/pass). It grows to fill the hero's free height. */
 .ticket {
   --notch: 15px;
-  --rx: 0deg;
-  --ry: 0deg;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -19,13 +17,7 @@
   max-height: 680px;
   cursor: pointer;
   filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.6));
-  transform: perspective(1100px) rotateX(var(--rx)) rotateY(var(--ry));
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   -webkit-tap-highlight-color: transparent;
-}
-
-.ticket:active {
-  transform: perspective(1100px) rotateX(var(--rx)) rotateY(var(--ry)) scale(0.99);
 }
 
 .top,
@@ -516,23 +508,22 @@
   }
 }
 
-/* Phones: no lean (nothing to follow), the foil stays as a slow shine. */
-@media (hover: none) and (pointer: coarse) {
-  .ticket {
-    transform: none;
-    transition: none;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .ticket {
-    transform: none;
-    transition: none;
-  }
-
   .foil,
   .sheetBody,
   .top::before {
     animation: none;
+  }
+}
+
+/* Phones: the big logo already sits right above the ticket, so the
+   ticket's own small one steps aside; the badge stays, on the right. */
+@media (max-width: 860px) {
+  .head {
+    justify-content: flex-end;
+  }
+
+  .logo {
+    display: none;
   }
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { nav, site } from "@/app/content";
 import logo from "@/public/media/wonderland-wordmark.png";
@@ -11,40 +11,54 @@ import styles from "./site-header.module.scss";
 /**
  * The header on every page, in two forms.
  *
- * Desktop (wider than 860px): a fixed bar, the logo on the left, the
- * links centred and the gold ticket call on the right, transparent over the
- * hero and solid once the page has moved.
+ * Desktop (wider than 860px): the logo on the left, the links centred and
+ * the gold ticket call on the right.
  *
- * Phones and tablets: the logo alone, centred and larger, in a static row
- * that scrolls away with the page. A fixed bar is what let the page show
- * through above it in iPhone Safari, where the address bar floats over the
- * top of the page; with nothing fixed there, that is simply the page
- * scrolling, as on most sites.
+ * Phones and tablets: the gold «Квитки» on the left and a menu button on
+ * the right; the logo itself sits in the hero, under the bar. The menu
+ * opens a full-screen panel with the sections.
+ *
+ * Both are fixed: transparent over the top of the page, then a dark,
+ * slightly see-through bar once the page has moved.
  */
 export default function SiteHeader() {
   const [solid, setSolid] = useState(false);
+  const [open, setOpen] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
 
-  /* Only the fixed desktop bar changes on scroll, so phones skip the
-     listener altogether. */
   useEffect(() => {
-    const desktop = window.matchMedia("(min-width: 861px)");
-    const onScroll = () => setSolid(desktop.matches && window.scrollY > 12);
-    const watch = () => {
-      onScroll();
-      if (desktop.matches)
-        window.addEventListener("scroll", onScroll, { passive: true });
-      else window.removeEventListener("scroll", onScroll);
-    };
-    watch();
-    desktop.addEventListener("change", watch);
-    return () => {
-      desktop.removeEventListener("change", watch);
-      window.removeEventListener("scroll", onScroll);
-    };
+    const onScroll = () => setSolid(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  /* While the menu is open: the page behind holds still, Escape closes it,
+     and it closes by itself if the screen grows to the desktop bar. */
+  useEffect(() => {
+    if (!open) return;
+    const root = document.documentElement;
+    const previous = root.style.overflow;
+    root.style.overflow = "hidden";
+    const onKey = (event: KeyboardEvent) => event.key === "Escape" && close();
+    const desktop = window.matchMedia("(min-width: 861px)");
+    const onWide = () => desktop.matches && setOpen(false);
+    document.addEventListener("keydown", onKey);
+    desktop.addEventListener("change", onWide);
+    return () => {
+      root.style.overflow = previous;
+      document.removeEventListener("keydown", onKey);
+      desktop.removeEventListener("change", onWide);
+    };
+  }, [open]);
+
+  const close = () => {
+    setOpen(false);
+    menuButton.current?.focus();
+  };
+
   return (
-    <header className={styles.header} data-solid={solid}>
+    <header className={styles.header} data-solid={solid || undefined} data-open={open || undefined}>
       <div className={styles.inner}>
         <a href="/" className={styles.brand} aria-label={`${site.name}, на головну`}>
           <Image
@@ -52,8 +66,13 @@ export default function SiteHeader() {
             alt=""
             className={styles.logo}
             priority
-            sizes="(max-width: 767px) 211px, (max-width: 860px) 235px, 195px"
+            sizes="195px"
           />
+        </a>
+
+        {/* Phones: the ticket call in the left corner. */}
+        <a href="/#tickets" className={`${styles.cta} ${styles.ctaPhone}`}>
+          Квитки
         </a>
 
         <nav className={styles.nav} aria-label="Розділи">
@@ -71,6 +90,40 @@ export default function SiteHeader() {
             Квитки
           </a>
         </div>
+
+        <button
+          ref={menuButton}
+          type="button"
+          className={styles.burger}
+          aria-label={open ? "Закрити меню" : "Меню"}
+          aria-expanded={open}
+          aria-controls="site-menu"
+          onClick={() => setOpen((value) => !value)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+      </div>
+
+      <div id="site-menu" className={styles.menu} hidden={!open}>
+        <Image src={logo} alt="" className={styles.menuLogo} sizes="220px" />
+        <nav aria-label="Розділи">
+          {nav.map((link, index) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className={styles.menuLink}
+              style={{ animationDelay: `${0.05 + index * 0.05}s` }}
+              onClick={() => setOpen(false)}
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+        <a href="/buy?item=standard" className={styles.menuBuy} onClick={() => setOpen(false)}>
+          Купити квиток, 40 zł
+        </a>
       </div>
     </header>
   );

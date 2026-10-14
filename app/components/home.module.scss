@@ -450,6 +450,12 @@
   background: var(--wl-wash);
 }
 
+/* The band right under the hero fades in from the hero's open ground
+   instead of starting on a straight edge, so the two read as one. */
+.videoBand {
+  background: linear-gradient(to bottom, transparent 0, var(--wl-wash) 180px);
+}
+
 .quoteBand {
   background: transparent;
   text-align: center;
@@ -721,6 +727,13 @@
     aspect-ratio: auto;
     border-radius: 0;
     pointer-events: auto;
+  }
+
+  /* Phones: the clip fades in at its top edge, where it meets the hero,
+     instead of starting on a hard line. */
+  .videoMedia {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 120px);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 120px);
   }
 
   .videoMedia::after {
@@ -1251,7 +1264,7 @@
      strip's 28px gap, which keeps the content centred between the header
      and the strip. */
   .hero {
-    padding-top: 28px;
+    padding-top: calc(var(--wl-header-overlay, 0px) + 12px);
   }
 
   .h1 {
@@ -1407,7 +1420,7 @@
    what keeps the content centred between the header and the strip. */
 @media (max-width: 767px) and (max-height: 860px) {
   .hero {
-    padding-top: 18px;
+    padding-top: calc(var(--wl-header-overlay, 0px) + 6px);
     padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
   }
 
@@ -1472,7 +1485,7 @@
    tighter rows. The S25's 690 stays on the step above, which fits it. */
 @media (max-width: 767px) and (max-height: 660px) {
   .hero {
-    padding-top: 12px;
+    padding-top: calc(var(--wl-header-overlay, 0px) + 2px);
     padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
   }
 
@@ -1649,5 +1662,33 @@
 @media (max-width: 767px) {
   .heroIntro .label {
     display: none;
+  }
+}
+
+/* The hero's headline: words on wide screens, the logo on phones. */
+.h1Logo {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .h1Words {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .h1Logo {
+    display: block;
+    width: min(78vw, 300px);
+    height: auto;
+    margin: 0 auto;
+    filter: brightness(1.18) contrast(1.05);
+  }
+
+  .h1 {
+    max-width: none;
   }
 }

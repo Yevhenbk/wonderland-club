@@ -86,9 +86,12 @@ body {
     Roboto, sans-serif;
 }
 
-@media (max-width: 767px) {
+/* Phones and tablets: the bar is fixed over the page too (60px plus the
+   notch), so nothing below it takes a row for it. */
+@media (max-width: 860px) {
   :root {
-    --wl-header-h: 84px;
+    --wl-header-h: 0px;
+    --wl-header-overlay: calc(60px + env(safe-area-inset-top, 0px));
   }
 }
 

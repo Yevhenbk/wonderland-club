@@ -1,75 +1,213 @@
 @use "../styles/button";
 
-/* ------------------------------------------------------ phones, tablets */
-
-/* A row of its own at the top of the page, the logo centred in it. Its
-   height is --wl-header-h (globals.scss), which the hero subtracts so the
-   first screen still holds the headline, the card and the word strip. */
+/* The bar, fixed over the page on every screen: transparent over the top of
+   the page, then dark and slightly see-through once it has moved. Its
+   height is --wl-header-overlay (globals.scss), which the page pads by. */
 .header {
-  position: relative;
+  position: fixed;
+  inset: 0 0 auto;
   z-index: 60;
+  padding-top: env(safe-area-inset-top, 0px);
+  background: transparent;
+  transition:
+    background 0.25s ease,
+    box-shadow 0.25s ease,
+    backdrop-filter 0.25s ease;
 }
 
+.header[data-solid] {
+  background: rgba(15, 11, 25, 0.72);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: 0 1px 0 var(--wl-line);
+}
+
+/* ------------------------------------------------------ phones, tablets */
+
 .inner {
-  height: var(--wl-header-h);
+  height: 60px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   padding: 0 var(--wl-gut);
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-}
-
-.brand:focus-visible {
-  outline: 2px solid var(--wl-steel);
-  outline-offset: 6px;
-  border-radius: 8px;
-}
-
-/* The letters are thin chrome: a little extra light keeps them reading on
-   the dark ground. */
-.logo {
-  display: block;
-  width: auto;
-  height: 58px;
-  filter: brightness(1.18) contrast(1.05);
-}
-
+/* The logo lives in the hero on phones; the bar holds the two buttons. */
+.brand,
 .nav,
 .right {
   display: none;
 }
 
-@media (max-width: 767px) {
-  .logo {
-    height: 52px;
+.cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 20px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-decoration: none;
+  color: var(--wl-gold-ink);
+  background: var(--wl-gold);
+  @include button.hover-lift;
+}
+
+.cta:focus-visible,
+.burger:focus-visible {
+  outline: 2px solid var(--wl-steel);
+  outline-offset: 3px;
+}
+
+/* Three lines that fold into a cross when the menu is open. */
+.burger {
+  position: relative;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  margin-right: -8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.burger span {
+  position: absolute;
+  left: 11px;
+  right: 11px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--wl-ink);
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease;
+}
+
+.burger span:nth-child(1) {
+  top: 15px;
+}
+
+.burger span:nth-child(2) {
+  top: 21px;
+}
+
+.burger span:nth-child(3) {
+  top: 27px;
+}
+
+.header[data-open] .burger span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.header[data-open] .burger span:nth-child(2) {
+  opacity: 0;
+}
+
+.header[data-open] .burger span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* The menu: the whole screen, the sections in the wide face, the gold
+   call at the foot. */
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: calc(80px + env(safe-area-inset-top, 0px)) var(--wl-gut)
+    calc(40px + env(safe-area-inset-bottom, 0px));
+  background: rgba(8, 5, 14, 0.94);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  animation: menuIn 0.3s ease;
+}
+
+.menu[hidden] {
+  display: none;
+}
+
+/* The bar's buttons stay above the panel. */
+.header[data-open] .inner {
+  position: relative;
+  z-index: 2;
+}
+
+.header[data-open] {
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.menuLogo {
+  width: 200px;
+  height: auto;
+  margin-bottom: 24px;
+  filter: brightness(1.18) contrast(1.05);
+}
+
+.menu nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.menuLink {
+  padding: 12px 20px;
+  font-family: var(--wl-font-wide);
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--wl-ink);
+  text-decoration: none;
+  opacity: 0;
+  animation: linkIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.menuLink:active {
+  color: var(--wl-rose);
+}
+
+.menuBuy {
+  margin-top: 28px;
+  padding: 16px 34px;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--wl-gold-ink);
+  background: var(--wl-gold);
+  text-decoration: none;
+  @include button.hover-lift;
+}
+
+@keyframes menuIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes linkIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
 /* --------------------------------------------------------------- desktop */
 
-/* The bar as it always was on desktop: fixed, transparent over the hero and
-   solid once the page has moved (opaque, not frosted, so type never runs
-   through it), the logo on the left and the links at the true centre. */
+/* The logo on the left, the links at the true centre, the gold call on
+   the right. No menu button. */
 @media (min-width: 861px) {
-  .header {
-    position: fixed;
-    inset: 0 0 auto;
-    background: transparent;
-    transition:
-      background 0.25s ease,
-      box-shadow 0.25s ease;
-  }
-
-  .header[data-solid="true"] {
-    background: var(--wl-paper);
-    box-shadow: 0 1px 0 var(--wl-line);
-  }
-
   .inner {
     max-width: var(--wl-max);
     margin: 0 auto;
@@ -80,11 +218,23 @@
   }
 
   .brand {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
     justify-self: start;
   }
 
+  .brand:focus-visible {
+    outline: 2px solid var(--wl-steel);
+    outline-offset: 6px;
+    border-radius: 8px;
+  }
+
   .logo {
+    display: block;
+    width: auto;
     height: 48px;
+    filter: brightness(1.18) contrast(1.05);
   }
 
   .nav {
@@ -99,25 +249,20 @@
     align-items: center;
   }
 
-  /* The one gold thing in the bar, like every call on the page. */
   .cta {
-    display: inline-flex;
-    align-items: center;
     min-height: 40px;
-    padding: 0 20px;
-    border-radius: 999px;
-    font-size: 15px;
-    font-weight: 700;
-    white-space: nowrap;
-    text-decoration: none;
-    color: var(--wl-gold-ink);
-    background: var(--wl-gold);
-    @include button.hover-lift;
   }
 
-  .cta:focus-visible {
-    outline: 2px solid var(--wl-steel);
-    outline-offset: 3px;
+  .ctaPhone,
+  .burger,
+  .menu {
+    display: none;
+  }
+
+  .header[data-solid] {
+    background: var(--wl-paper);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   .link {
@@ -149,8 +294,15 @@
 
 @media (prefers-reduced-motion: reduce) {
   .header,
-  .link {
+  .link,
+  .burger span {
     transition: none;
+  }
+
+  .menu,
+  .menuLink {
+    animation: none;
+    opacity: 1;
   }
 }
 
