@@ -22,6 +22,7 @@ import logo from "@/public/media/wonderland-wordmark.png";
 import FaqItem from "./faq-item";
 import MediaSlot from "./media-slot";
 import NightField from "./night-field";
+import { Bats, Cobweb, Eyes, Fog, Halloween, Layer, Pumpkin, Skeleton, Spider } from "./halloween/halloween";
 import HeroTicket from "./hero-ticket";
 import NightsRail from "./nights-rail";
 import QuoteWidth from "./quote-width";
@@ -60,6 +61,14 @@ export default function Home() {
       {/* --------------------------------------------------------- hero */}
       <section className={styles.hero} data-section="hero">
         <span className={styles.heroAura} aria-hidden="true" />
+        <Halloween>
+          <Bats />
+          {/* Wide screens: under the headline, a skeleton rising out of the
+              fog and sinking back. Drawn before the fog, so the fog covers
+              its feet. */}
+          <Skeleton className={styles.hwHeroSkeleton} rise />
+          <Fog className={styles.hwFogHero} />
+        </Halloween>
 
         <div className={`${styles.heroCenter} ${styles.heroFill}`}>
           <div className={styles.heroIntro}>
@@ -74,7 +83,16 @@ export default function Home() {
           </div>
 
           {/* The ticket itself: a preview of the pass, and the way to buy it. */}
-          <HeroTicket />
+          <HeroTicket
+            extra={
+              <Halloween>
+                {/* Phones only: on wide screens the skeleton has the hero. */}
+                <span className={styles.hwTicketPumpkin}>
+                  <Pumpkin delay={0.4} />
+                </span>
+              </Halloween>
+            }
+          />
         </div>
 
         <div className={styles.tickerWrap} aria-hidden="true">
@@ -121,6 +139,11 @@ export default function Home() {
 
       {/* ------------------------------------------------------- nights */}
       <section className={styles.nightsBand} id="nights" data-section="nights">
+        <Halloween>
+          <Layer>
+            <Eyes className={styles.hwEyesNights} delay={3} colour="#ffb020" />
+          </Layer>
+        </Halloween>
         <div className={styles.inner}>
           <div className={styles.nightsHead}>
             <p className={styles.label}>{nights.label}</p>
@@ -190,6 +213,12 @@ export default function Home() {
 
       {/* ------------------------------------------------------ tickets */}
       <section className={styles.sectionLeft} id="tickets" data-section="tickets">
+        <Halloween>
+          <Layer>
+            <Spider className={styles.hwSpider} />
+            <Cobweb className={styles.hwWebLeft} />
+          </Layer>
+        </Halloween>
         <div className={styles.nightsHead}>
           <p className={styles.label}>{tickets.label}</p>
           <h2 className={styles.h2}>{tickets.title}</h2>
@@ -308,6 +337,11 @@ export default function Home() {
         <a href="#tickets" className={styles.btn}>
           {final.button}
         </a>
+        <Halloween>
+          <Layer>
+            <Fog />
+          </Layer>
+        </Halloween>
       </section>
 
       <footer className={styles.footer}>
@@ -330,7 +364,7 @@ export default function Home() {
         <nav className={styles.footerLegal} aria-label="Правова інформація">
           <a href="/terms">Регламент</a>
           <a href="/privacy">Політика конфіденційності</a>
-          {organizer.name && <span>Організатор: {organizer.name}</span>}
+          {/* {organizer.name && <span>Організатор: {organizer.name}</span>} */}
         </nav>
       </footer>
 

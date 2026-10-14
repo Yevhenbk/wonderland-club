@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import { nextNight, tickets as ticketPlans, venue, type SellableTier } from "@/app/content";
 import logo from "@/public/media/wonderland-wordmark.png";
@@ -24,7 +24,7 @@ const vipTiers = ticketPlans.vip.tiers.filter((tier): tier is SellableTier => "i
  * A foil shine runs across it now and then (a transform, so no repaint);
  * it stops for reduced motion. The ticket itself holds still.
  */
-export default function HeroTicket() {
+export default function HeroTicket({ extra }: { extra?: ReactNode }) {
   const sheet = useRef<HTMLDialogElement>(null);
   const stock = useStock();
   const [open, setOpen] = useState(false);
@@ -76,6 +76,9 @@ export default function HeroTicket() {
           if (!(event.target as Element).closest("a")) show();
         }}
       >
+        {/* Seasonal decoration sitting on the ticket (a Halloween pumpkin). */}
+        {extra && <span className={styles.extra}>{extra}</span>}
+
         <div className={styles.top}>
           <span className={styles.foil} aria-hidden="true" />
           <div className={styles.head}>

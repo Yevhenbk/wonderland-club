@@ -1,0 +1,730 @@
+/* Halloween decorations: real images given life in CSS. Absolutely placed
+   by the section that holds them, never clickable, moved only with
+   transform and opacity, which the GPU does without repainting. */
+
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.pumpkin,
+.bats,
+.garland,
+.spider,
+.skeleton,
+.cobweb,
+.eyes,
+.fog {
+  pointer-events: none;
+  user-select: none;
+}
+
+.pumpkin img,
+.bats img,
+.spider img,
+.skeleton img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ------------------------------------------------------------- pumpkin */
+
+.pumpkin {
+  position: relative;
+  display: block;
+  width: 64px;
+  aspect-ratio: 360 / 326;
+}
+
+.pumpkin img {
+  position: relative;
+}
+
+/* The flame inside: a warm light over the carved face, flickering like a
+   real candle, never twice the same. */
+.pumpkinFlame {
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  top: 30%;
+  bottom: 12%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 55%, rgba(255, 236, 160, 0.7) 0%, rgba(255, 170, 40, 0.3) 45%, transparent 72%);
+  mix-blend-mode: screen;
+  animation: candle 3.1s linear var(--d, 0s) infinite;
+}
+
+@keyframes candle {
+  0% {
+    opacity: 1;
+  }
+  9% {
+    opacity: 0.7;
+  }
+  14% {
+    opacity: 0.95;
+  }
+  27% {
+    opacity: 0.55;
+  }
+  31% {
+    opacity: 0.85;
+  }
+  46% {
+    opacity: 0.45;
+  }
+  52% {
+    opacity: 1;
+  }
+  66% {
+    opacity: 0.75;
+  }
+  73% {
+    opacity: 0.92;
+  }
+  88% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ---------------------------------------------------------------- bats */
+
+.bats {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.flight {
+  position: absolute;
+  left: 0;
+  top: var(--y, 15%);
+  width: var(--w, 64px);
+  opacity: 0;
+  animation: var(--t, 20s) linear var(--d, 0s) infinite;
+  will-change: transform, opacity;
+}
+
+.flyA {
+  animation-name: flyA;
+}
+
+.flyB {
+  animation-name: flyB;
+}
+
+@keyframes flyA {
+  0% {
+    transform: translate(-120px, 0) rotate(8deg) scale(0.8);
+    opacity: 0;
+  }
+  3% {
+    opacity: var(--o, 1);
+  }
+  13% {
+    transform: translate(24vw, 34px) rotate(-6deg) scale(1);
+  }
+  22% {
+    transform: translate(44vw, -6px) rotate(10deg) scale(1.12);
+  }
+  31% {
+    transform: translate(64vw, 24px) rotate(-10deg) scale(0.95);
+  }
+  40% {
+    transform: translate(86vw, -18px) rotate(6deg) scale(0.75);
+    opacity: var(--o, 1);
+  }
+  46% {
+    transform: translate(108vw, -30px) rotate(0deg) scale(0.6);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(108vw, -30px);
+    opacity: 0;
+  }
+}
+
+@keyframes flyB {
+  0% {
+    transform: translate(108vw, 10px) rotate(-8deg) scale(0.7);
+    opacity: 0;
+  }
+  3% {
+    opacity: var(--o, 1);
+  }
+  14% {
+    transform: translate(78vw, -20px) rotate(6deg) scale(0.85);
+  }
+  24% {
+    transform: translate(54vw, 22px) rotate(-8deg) scale(1);
+  }
+  34% {
+    transform: translate(30vw, -4px) rotate(8deg) scale(0.9);
+  }
+  44% {
+    transform: translate(6vw, 16px) rotate(-4deg) scale(0.75);
+    opacity: var(--o, 1);
+  }
+  50% {
+    transform: translate(-120px, 0) scale(0.6);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-120px, 0);
+    opacity: 0;
+  }
+}
+
+/* The rig: three layers of the same picture. Shoulders sit at 42.7% and
+   58.1% across, 38% down (measured on bat.webp). The wings overlap the body
+   strip, which is drawn last, so the joins never show. */
+.rig {
+  position: relative;
+  display: block;
+  aspect-ratio: 520 / 196;
+  perspective: 260px;
+}
+
+.rigBody {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  animation: bobBody 0.32s ease-in-out infinite alternate;
+}
+
+.rig img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.wingL {
+  /* The wing up to the body, leaving the tail membrane to the body layer. */
+  clip-path: polygon(0 0, 41% 0, 42% 36%, 46% 46%, 46% 53%, 40% 66%, 41% 100%, 0 100%);
+  transform-origin: 42.7% 38%;
+  animation: beatL 0.32s ease-in-out infinite alternate;
+}
+
+.wingR {
+  clip-path: polygon(59% 0, 100% 0, 100% 100%, 59% 100%, 60% 66%, 54% 53%, 54% 46%, 58% 36%);
+  transform-origin: 58.1% 38%;
+  animation: beatR 0.32s ease-in-out infinite alternate;
+}
+
+.torso {
+  /* Ears, furred body and the tail membrane between the legs, cut along the
+     body's own edges (41% to 59% across) so no straight seam shows. */
+  clip-path: polygon(41.5% 0, 58.5% 0, 58.5% 50%, 62% 66%, 60.5% 100%, 39.5% 100%, 38% 66%, 41.5% 50%);
+}
+
+/* Up: wings raised and spread. Down: swept below, turned away in depth. */
+@keyframes beatL {
+  from {
+    transform: rotate(16deg) rotateY(-8deg);
+  }
+  to {
+    transform: rotate(-22deg) rotateY(-52deg);
+  }
+}
+
+@keyframes beatR {
+  from {
+    transform: rotate(-16deg) rotateY(8deg);
+  }
+  to {
+    transform: rotate(22deg) rotateY(52deg);
+  }
+}
+
+/* The body sinks as the wings rise and lifts on the downstroke. */
+@keyframes bobBody {
+  from {
+    transform: translateY(4%);
+  }
+  to {
+    transform: translateY(-6%);
+  }
+}
+
+/* ------------------------------------------------------------- garland */
+
+.garland {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 90px;
+  z-index: 2;
+}
+
+.wire {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 80px;
+  overflow: visible;
+}
+
+.wire path {
+  fill: none;
+}
+
+.wire .strandA {
+  stroke: #142016;
+  stroke-width: 3;
+}
+
+/* The second strand wound round the first, and a faint sheen of light from
+   the bulbs on the insulation. */
+.wire .strandB {
+  stroke: #2b3d2c;
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+
+.wire .strandGlint {
+  stroke: rgba(255, 190, 120, 0.18);
+  stroke-width: 1;
+  transform: translateY(-1px);
+}
+
+/* The bulb: a socket hanging from the wire, the glass under it. The whole
+   assembly swings from the clip. */
+.bulb {
+  position: absolute;
+  width: 12px;
+  height: 30px;
+  margin-left: -6px;
+  margin-top: -2px;
+  transform-origin: 50% 0;
+  transform: rotate(var(--tilt, 0deg));
+  animation: swing 3.8s ease-in-out var(--d, 0s) infinite alternate;
+}
+
+@keyframes swing {
+  from {
+    transform: rotate(calc(var(--tilt, 0deg) - 3deg));
+  }
+  to {
+    transform: rotate(calc(var(--tilt, 0deg) + 3deg));
+  }
+}
+
+/* Ribbed dark green plastic, with a clip lip at the top. */
+.socket {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 0;
+  height: 10px;
+  border-radius: 3px 3px 2px 2px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.12), transparent 40%, rgba(0, 0, 0, 0.45)),
+    repeating-linear-gradient(180deg, #1f3122 0 2px, #0f1a11 2px 3px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* The C7 glass: rounded at the shoulder, narrowing to a point. Unlit, it
+   is dark tinted glass; the light is a separate layer above it. */
+.glass {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 9px;
+  height: 20px;
+  border-radius: 50% 50% 50% 50% / 38% 38% 62% 62%;
+  clip-path: polygon(0 32%, 12% 10%, 50% 0, 88% 10%, 100% 32%, 82% 74%, 50% 100%, 18% 74%);
+  background: radial-gradient(
+    ellipse at 40% 35%,
+    color-mix(in srgb, var(--c) 45%, #000) 0%,
+    color-mix(in srgb, var(--c) 22%, #000) 70%
+  );
+}
+
+/* Lit: a white-hot filament near the top, the colour of the glass around
+   it, a reflection down one side. */
+.lit {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(100deg, transparent 18%, rgba(255, 255, 255, 0.45) 26%, transparent 34%),
+    radial-gradient(ellipse 30% 22% at 50% 34%, #fff 0%, #fff6d8 35%, transparent 100%),
+    radial-gradient(ellipse at 50% 40%, color-mix(in srgb, var(--c) 55%, #fff) 0%, var(--c) 45%, color-mix(in srgb, var(--c) 60%, #000) 100%);
+  animation: breathe 2.4s ease-in-out var(--d, 0s) infinite;
+}
+
+/* The bloom: light thrown around the bulb onto the night. */
+.halo {
+  position: absolute;
+  left: 50%;
+  top: 19px;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--c) 70%, transparent) 0%, color-mix(in srgb, var(--c) 18%, transparent) 38%, transparent 68%);
+  opacity: 0.5;
+  animation: breathe 2.4s ease-in-out var(--d, 0s) infinite;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.95;
+  }
+  45% {
+    opacity: 0.72;
+  }
+  60% {
+    opacity: 1;
+  }
+}
+
+/* A dying bulb: its light (filament and bloom) cuts out and stutters back,
+   while the dark glass stays where it is. */
+.bulb[data-faulty] .lit,
+.bulb[data-faulty] .halo {
+  animation: faulty 7s steps(1) var(--d, 0s) infinite;
+}
+
+@keyframes faulty {
+  0%,
+  70%,
+  76%,
+  80%,
+  100% {
+    opacity: 0.95;
+  }
+  72%,
+  78%,
+  82%,
+  92% {
+    opacity: 0;
+  }
+}
+
+/* Rising out of the fog: it climbs up from below, stands a while, and sinks
+   back into it. */
+.skeleton.rise {
+  animation: riseFromFog 18s ease-in-out infinite;
+}
+
+@keyframes riseFromFog {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: translateY(34%);
+  }
+  35%,
+  72% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* -------------------------------------------------------------- spider */
+
+.spider {
+  position: absolute;
+  z-index: 2;
+  width: 46px;
+  animation: drop 11s cubic-bezier(0.45, 0, 0.3, 1) infinite;
+}
+
+/* The thread, from the ceiling to the spinnerets at the top: it hangs head
+   down. */
+.thread {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% - 4px);
+  width: 1px;
+  height: 600px;
+  background: linear-gradient(to bottom, rgba(232, 222, 230, 0.06), rgba(232, 222, 230, 0.38));
+}
+
+.spiderBody {
+  transform-origin: 50% 0;
+  animation: dangle 4s ease-in-out infinite alternate;
+}
+
+@keyframes drop {
+  0%,
+  8% {
+    transform: translateY(-14px);
+  }
+  20% {
+    transform: translateY(62px);
+  }
+  24% {
+    transform: translateY(54px);
+  }
+  28%,
+  60% {
+    transform: translateY(58px);
+  }
+  95%,
+  100% {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes dangle {
+  from {
+    transform: rotate(-6deg);
+  }
+  to {
+    transform: rotate(6deg);
+  }
+}
+
+/* ------------------------------------------------------------ skeleton */
+
+.skeleton {
+  position: absolute;
+  z-index: 0;
+  width: 250px;
+  filter: brightness(1.35) drop-shadow(0 0 18px rgba(236, 228, 212, 0.12));
+  animation: apparition 14s ease-in-out infinite;
+}
+
+/* It comes and goes: rises out of the dark, lingers, sinks back. */
+@keyframes apparition {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(14px) scale(0.97);
+  }
+  30%,
+  70% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Red glints in the sockets, now and then. */
+.glint {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: #ff2a1f;
+  box-shadow:
+    0 0 6px 2px rgba(255, 42, 31, 0.8),
+    0 0 16px 6px rgba(255, 42, 31, 0.35);
+  opacity: 0;
+  animation: glint 14s ease-in-out infinite;
+}
+
+@keyframes glint {
+  0%,
+  38%,
+  62%,
+  100% {
+    opacity: 0;
+  }
+  44%,
+  56% {
+    opacity: 1;
+  }
+}
+
+/* ---------------------------------------------------------------- eyes */
+
+/* A pair of eyes in a dark corner: closed most of the time; they open,
+   blink twice, and close again. */
+.eyes {
+  position: absolute;
+  display: flex;
+  gap: 14px;
+  opacity: 0;
+  animation: watch 12s ease-in-out var(--d, 0s) infinite;
+}
+
+.eyes span {
+  width: 11px;
+  height: 6px;
+  border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
+  background: var(--c);
+  box-shadow:
+    0 0 8px 2px color-mix(in srgb, var(--c) 70%, transparent),
+    0 0 22px 6px color-mix(in srgb, var(--c) 30%, transparent);
+  animation: blinkEyes 12s ease-in-out var(--d, 0s) infinite;
+}
+
+.eyes span:first-child {
+  rotate: 12deg;
+}
+
+.eyes span:last-child {
+  rotate: -12deg;
+}
+
+@keyframes watch {
+  0%,
+  55%,
+  100% {
+    opacity: 0;
+  }
+  62%,
+  88% {
+    opacity: 1;
+  }
+}
+
+@keyframes blinkEyes {
+  0%,
+  70%,
+  74%,
+  80%,
+  84%,
+  100% {
+    transform: scaleY(1);
+  }
+  72%,
+  82% {
+    transform: scaleY(0.1);
+  }
+}
+
+/* ----------------------------------------------------------------- fog */
+
+.fog {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 220px;
+  overflow: hidden;
+  z-index: 1;
+  /* Fades in from above and out at the floor, so it has no edges. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 38%, #000 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 38%, #000 70%, transparent 100%);
+}
+
+.fogBack,
+.fogFront {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 200%;
+  height: 100%;
+  background: url("/halloween/fog.webp") repeat-x left bottom / 50% 100%;
+}
+
+.fogBack {
+  opacity: 0.45;
+  animation: creep 90s linear infinite;
+}
+
+.fogFront {
+  height: 75%;
+  opacity: 0.6;
+  animation: creep 55s linear infinite reverse;
+}
+
+@keyframes creep {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* -------------------------------------------------------------- cobweb */
+
+.cobweb {
+  position: absolute;
+  width: 96px;
+  height: 96px;
+  overflow: visible;
+}
+
+.webSway {
+  transform-origin: 0 0;
+  animation: webSway 7s ease-in-out infinite alternate;
+}
+
+@keyframes webSway {
+  from {
+    transform: rotate(-1.5deg);
+  }
+  to {
+    transform: rotate(1.5deg);
+  }
+}
+
+.dew {
+  fill: #fff;
+  opacity: 0.25;
+  animation: dew 3.6s ease-in-out var(--d, 0s) infinite;
+}
+
+@keyframes dew {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+/* ---------------------------------------------------------------- phones */
+
+/* Phones: bulbs hang still (they still breathe and flicker), and the far,
+   smallest bat stays home; the near ones keep their full wingbeat. */
+@media (hover: none) and (pointer: coarse), (max-width: 767px) {
+  .bulb {
+    animation: none;
+  }
+
+  .flight:nth-child(3) {
+    display: none;
+  }
+}
+
+
+/* ---------------------------------------------------------- calm modes */
+
+@media (prefers-reduced-motion: reduce) {
+  .pumpkinFlame,
+  .flight,
+  .rigBody,
+  .wingL,
+  .wingR,
+  .bulb,
+  .lit,
+  .halo,
+  .spider,
+  .spiderBody,
+  .skeleton,
+  .glint,
+  .eyes,
+  .eyes span,
+  .fogBack,
+  .fogFront,
+  .webSway,
+  .dew {
+    animation: none;
+  }
+
+  .flight,
+  .eyes {
+    display: none;
+  }
+
+  .skeleton {
+    opacity: 0.8;
+  }
+}

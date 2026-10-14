@@ -508,6 +508,29 @@
   }
 }
 
+/* A decoration perched on the ticket's top right corner. */
+.extra {
+  position: absolute;
+  z-index: 3;
+  right: 14px;
+  bottom: calc(100% - 14px);
+  width: 58px;
+  pointer-events: none;
+}
+
+.extra > * {
+  width: 100%;
+}
+
+/* Phones: smaller and tucked into the corner, clear of the headline. */
+@media (max-width: 767px) {
+  .extra {
+    right: 2px;
+    width: 52px;
+    bottom: calc(100% - 10px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .foil,
   .sheetBody,
