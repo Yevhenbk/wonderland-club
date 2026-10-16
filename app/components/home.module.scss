@@ -1778,3 +1778,13 @@
     max-width: none;
   }
 }
+
+/* The final section's skeleton: centred at the foot, under the call. */
+.hwFinalSkeleton {
+  left: 50%;
+  bottom: -40px;
+  /* Capped by the screen's height too, so on short phones it stays under
+     the button. */
+  width: min(52vw, 210px, 22svh);
+  margin-left: calc(min(52vw, 210px, 22svh) / -2);
+}

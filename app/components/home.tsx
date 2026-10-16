@@ -339,6 +339,9 @@ export default function Home() {
         </a>
         <Halloween>
           <Layer>
+            {/* Standing at the foot of the section, its legs lost in the
+                fog drawn over it. */}
+            <Skeleton className={styles.hwFinalSkeleton} still />
             <Fog />
           </Layer>
         </Halloween>
@@ -364,7 +367,6 @@ export default function Home() {
         <nav className={styles.footerLegal} aria-label="Правова інформація">
           <a href="/terms">Регламент</a>
           <a href="/privacy">Політика конфіденційності</a>
-          {/* {organizer.name && <span>Організатор: {organizer.name}</span>} */}
         </nav>
       </footer>
 

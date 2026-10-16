@@ -95,17 +95,22 @@ export function Pumpkin({
  * the left wing, the body and the right wing. Each wing beats from its own
  * shoulder, turning in depth (it foreshortens on the downstroke, as a real
  * wing seen from below does) while the body rises and falls with the beat.
+ *
+ * The cut-out (clip-path) is on the image and the 3D turn on a wrapper
+ * around it, each wing with its own perspective: mobile Safari and some
+ * Android Chromes sometimes failed to draw an element that is both clipped
+ * and turned in 3D inside a preserve-3d group, and a wing went missing.
  */
 function BatRig() {
   const img = (cls: string) => (
     // eslint-disable-next-line @next/next/no-img-element
-    <img className={cls} src="/halloween/bat.webp" alt="" width={520} height={196} loading="lazy" decoding="async" />
+    <img className={cls} src="/halloween/bat.webp" alt="" width={520} height={196} decoding="async" />
   );
   return (
     <span className={styles.rig}>
       <span className={styles.rigBody}>
-        {img(styles.wingL)}
-        {img(styles.wingR)}
+        <span className={`${styles.wing} ${styles.wingL}`}>{img(styles.cutL)}</span>
+        <span className={`${styles.wing} ${styles.wingR}`}>{img(styles.cutR)}</span>
         {img(styles.torso)}
       </span>
     </span>
@@ -242,13 +247,28 @@ export function Spider({ className }: { className?: string }) {
  * Vesalius's skeleton, pale bone in the dark: it comes and goes like an
  * apparition, and now and then two red glints light up in its eyes.
  */
-export function Skeleton({ className, rise }: { className?: string; rise?: boolean }) {
+export function Skeleton({
+  className,
+  rise,
+  still,
+}: {
+  className?: string;
+  /** Rises out of the fog and sinks back. */
+  rise?: boolean;
+  /** Holds still: no fading, no glints. */
+  still?: boolean;
+}) {
+  const mode = still ? styles.still : rise ? styles.rise : "";
   return (
-    <div className={`${styles.skeleton} ${rise ? styles.rise : ""} ${className ?? ""}`} aria-hidden="true">
+    <div className={`${styles.skeleton} ${mode} ${className ?? ""}`} aria-hidden="true">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/halloween/skeleton.webp" alt="" width={415} height={620} loading="lazy" decoding="async" />
-      <span className={styles.glint} style={vars({ left: "46.5%", top: "8.4%" })} />
-      <span className={styles.glint} style={vars({ left: "55%", top: "8.4%" })} />
+      {!still && (
+        <>
+          <span className={styles.glint} style={vars({ left: "46.5%", top: "8.4%" })} />
+          <span className={styles.glint} style={vars({ left: "55%", top: "8.4%" })} />
+        </>
+      )}
     </div>
   );
 }

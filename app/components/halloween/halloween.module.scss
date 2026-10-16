@@ -190,34 +190,42 @@
   position: relative;
   display: block;
   aspect-ratio: 520 / 196;
-  perspective: 260px;
 }
 
+/* Flat: each wing carries its own perspective (in its keyframes), so
+   nothing depends on a preserve-3d group. */
 .rigBody {
   position: absolute;
   inset: 0;
-  transform-style: preserve-3d;
   animation: bobBody 0.32s ease-in-out infinite alternate;
 }
 
-.rig img {
+.rig img,
+.wing {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
 
+/* The wrapper turns in 3D; the image inside it is only cut out. */
 .wingL {
-  /* The wing up to the body, leaving the tail membrane to the body layer. */
-  clip-path: polygon(0 0, 41% 0, 42% 36%, 46% 46%, 46% 53%, 40% 66%, 41% 100%, 0 100%);
   transform-origin: 42.7% 38%;
   animation: beatL 0.32s ease-in-out infinite alternate;
 }
 
 .wingR {
-  clip-path: polygon(59% 0, 100% 0, 100% 100%, 59% 100%, 60% 66%, 54% 53%, 54% 46%, 58% 36%);
   transform-origin: 58.1% 38%;
   animation: beatR 0.32s ease-in-out infinite alternate;
+}
+
+/* The wing up to the body, leaving the tail membrane to the body layer. */
+.cutL {
+  clip-path: polygon(0 0, 41% 0, 42% 36%, 46% 46%, 46% 53%, 40% 66%, 41% 100%, 0 100%);
+}
+
+.cutR {
+  clip-path: polygon(59% 0, 100% 0, 100% 100%, 59% 100%, 60% 66%, 54% 53%, 54% 46%, 58% 36%);
 }
 
 .torso {
@@ -229,19 +237,19 @@
 /* Up: wings raised and spread. Down: swept below, turned away in depth. */
 @keyframes beatL {
   from {
-    transform: rotate(16deg) rotateY(-8deg);
+    transform: perspective(260px) rotate(16deg) rotateY(-8deg);
   }
   to {
-    transform: rotate(-22deg) rotateY(-52deg);
+    transform: perspective(260px) rotate(-22deg) rotateY(-52deg);
   }
 }
 
 @keyframes beatR {
   from {
-    transform: rotate(-16deg) rotateY(8deg);
+    transform: perspective(260px) rotate(-16deg) rotateY(8deg);
   }
   to {
-    transform: rotate(22deg) rotateY(52deg);
+    transform: perspective(260px) rotate(22deg) rotateY(52deg);
   }
 }
 
@@ -410,6 +418,12 @@
   92% {
     opacity: 0;
   }
+}
+
+/* Standing still in the fog. */
+.skeleton.still {
+  animation: none;
+  opacity: 0.95;
 }
 
 /* Rising out of the fog: it climbs up from below, stands a while, and sinks

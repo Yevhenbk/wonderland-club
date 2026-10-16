@@ -73,9 +73,9 @@ export const venue = {
 /**
  * Tickets sold directly (to friends, by hand), before or outside the site.
  * UPDATE BY HAND when tickets are sold directly. The site shows this plus
- * every ticket paid online (from Stripe): "Вже продано 21 квиток".
+ * every ticket paid online (from Stripe): "Вже продано 28 квитків".
  */
-export const soldOffline = 21;
+export const soldOffline = 28;
 
 export const nextNight = {
   /** Used on the passes and in the ticket email. */
