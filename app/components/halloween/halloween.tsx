@@ -96,22 +96,24 @@ export function Pumpkin({
  * shoulder, turning in depth (it foreshortens on the downstroke, as a real
  * wing seen from below does) while the body rises and falls with the beat.
  *
- * The cut-out (clip-path) is on the image and the 3D turn on a wrapper
- * around it, each wing with its own perspective: mobile Safari and some
- * Android Chromes sometimes failed to draw an element that is both clipped
- * and turned in 3D inside a preserve-3d group, and a wing went missing.
+ * Each part is a pre-cut image and each wing turns in 3D with its own
+ * perspective: mobile Safari and some Android Chromes sometimes failed to
+ * draw a clipped element turned in 3D, and a wing went missing.
  */
 function BatRig() {
-  const img = (cls: string) => (
+  /* Each part is its own pre-cut picture (public/halloween/bat-*.webp, the
+     same canvas as bat.webp): no clip-path, which mobile browsers can drop
+     on a 3D-turned layer, leaving a bat without a wing. */
+  const img = (src: string, cls?: string) => (
     // eslint-disable-next-line @next/next/no-img-element
-    <img className={cls} src="/halloween/bat.webp" alt="" width={520} height={196} decoding="async" />
+    <img className={cls} src={src} alt="" width={520} height={196} decoding="async" />
   );
   return (
     <span className={styles.rig}>
       <span className={styles.rigBody}>
-        <span className={`${styles.wing} ${styles.wingL}`}>{img(styles.cutL)}</span>
-        <span className={`${styles.wing} ${styles.wingR}`}>{img(styles.cutR)}</span>
-        {img(styles.torso)}
+        <span className={`${styles.wing} ${styles.wingL}`}>{img("/halloween/bat-wing-l.webp")}</span>
+        <span className={`${styles.wing} ${styles.wingR}`}>{img("/halloween/bat-wing-r.webp")}</span>
+        {img("/halloween/bat-body.webp", styles.torso)}
       </span>
     </span>
   );

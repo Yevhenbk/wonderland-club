@@ -219,21 +219,6 @@
   animation: beatR 0.32s ease-in-out infinite alternate;
 }
 
-/* The wing up to the body, leaving the tail membrane to the body layer. */
-.cutL {
-  clip-path: polygon(0 0, 41% 0, 42% 36%, 46% 46%, 46% 53%, 40% 66%, 41% 100%, 0 100%);
-}
-
-.cutR {
-  clip-path: polygon(59% 0, 100% 0, 100% 100%, 59% 100%, 60% 66%, 54% 53%, 54% 46%, 58% 36%);
-}
-
-.torso {
-  /* Ears, furred body and the tail membrane between the legs, cut along the
-     body's own edges (41% to 59% across) so no straight seam shows. */
-  clip-path: polygon(41.5% 0, 58.5% 0, 58.5% 50%, 62% 66%, 60.5% 100%, 39.5% 100%, 38% 66%, 41.5% 50%);
-}
-
 /* Up: wings raised and spread. Down: swept below, turned away in depth. */
 @keyframes beatL {
   from {
