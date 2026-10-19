@@ -1675,29 +1675,6 @@
   width: 100%;
 }
 
-@media (min-width: 900px) {
-  .hwTicketPumpkin {
-    display: none;
-  }
-}
-
-/* The hero's skeleton: in the left column under the headline, standing in
-   the fog at the foot of the screen. Only where there is room for it. */
-.hwHeroSkeleton {
-  display: none;
-}
-
-@media (min-width: 900px) and (min-height: 760px) {
-  .hwHeroSkeleton {
-    display: block;
-    left: max(var(--wl-gut), calc(50% - 540px + var(--wl-gut)));
-    bottom: 26px;
-    /* Sized from the height, so its skull stays under the headline. */
-    width: min(240px, 25vh);
-    filter: brightness(1.7) drop-shadow(0 0 22px rgba(236, 228, 212, 0.16));
-  }
-}
-
 /* The spider drops from the top of the prices, right of the heading. */
 .hwSpider {
   top: 0;

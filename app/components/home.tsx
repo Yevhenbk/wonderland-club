@@ -63,10 +63,6 @@ export default function Home() {
         <span className={styles.heroAura} aria-hidden="true" />
         <Halloween>
           <Bats />
-          {/* Wide screens: under the headline, a skeleton rising out of the
-              fog and sinking back. Drawn before the fog, so the fog covers
-              its feet. */}
-          <Skeleton className={styles.hwHeroSkeleton} rise />
           <Fog className={styles.hwFogHero} />
         </Halloween>
 
@@ -86,7 +82,6 @@ export default function Home() {
           <HeroTicket
             extra={
               <Halloween>
-                {/* Phones only: on wide screens the skeleton has the hero. */}
                 <span className={styles.hwTicketPumpkin}>
                   <Pumpkin delay={0.4} />
                 </span>

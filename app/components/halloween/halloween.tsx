@@ -20,8 +20,8 @@ import styles from "./halloween.module.scss";
  * eyes blinking in dark corners, fog creeping along the floor. Movement is
  * transform and opacity only, so the GPU does it without repainting.
  *
- * They appear only on phones and tablets, only in the season (SEASON below,
- * Kraków time), and switch themselves off afterwards: the first night (14.11, "Кінець світу") is
+ * They appear only in the season (SEASON below, Kraków time) and switch
+ * themselves off afterwards: the first night (14.11, "Кінець світу") is
  * after Halloween. For a preview outside the season, add ?halloween=1 to the
  * address. Decorations never take clicks and hold still for visitors who
  * ask for reduced motion.
@@ -35,22 +35,11 @@ function inSeason(): boolean {
   return today >= SEASON.from && today <= SEASON.to;
 }
 
-/* Phones and tablets only: on a desktop the decorations are not drawn at
-   all (nothing is downloaded for them either). */
-const PHONE = "(max-width: 860px)";
-
-/** Renders its decorations only in the season and only on phones and
-    tablets (decided in the browser, so a page built before Halloween still
-    switches on and off by itself, and a resized window follows along). */
+/** Renders its decorations only in the season (decided in the browser, so
+    a page built before Halloween still switches on and off by itself). */
 export function Halloween({ children }: { children: ReactNode }) {
   const [on, setOn] = useState(false);
-  useEffect(() => {
-    const phone = window.matchMedia(PHONE);
-    const update = () => setOn(inSeason() && phone.matches);
-    update();
-    phone.addEventListener("change", update);
-    return () => phone.removeEventListener("change", update);
-  }, []);
+  useEffect(() => setOn(inSeason()), []);
   return on ? <>{children}</> : null;
 }
 
