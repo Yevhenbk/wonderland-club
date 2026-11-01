@@ -68,26 +68,26 @@ export const venue = {
     "https://www.google.com/maps/search/?api=1&query=Stefana+Batorego+1%2C+Krak%C3%B3w",
 };
 
-/* The first night: 14.11.2026, a Saturday, 22:00 to 04:00. Its world is
+/* The first night: 14.11.2026, a Saturday, 23:00 to 04:00. Its world is
    "The End of the World", set here in Ukrainian as the rest of the page. */
 /**
  * Tickets sold directly (to friends, by hand), before or outside the site.
  * UPDATE BY HAND when tickets are sold directly. The site shows this plus
  * every ticket paid online (from Stripe): "Вже продано 28 квитків".
  */
-export const soldOffline = 28;
+export const soldOffline = 37;
 
 export const nextNight = {
   /** Used on the passes and in the ticket email. */
   eventId: "wl-2026-11-14",
   dateLong: "14.11.2026, субота",
-  time: "22:00-04:00",
+  time: "23:00-04:00",
   label: "Перша ніч",
   number: "№ 01",
   theme: "Кінець світу",
   rows: [
     { k: "Дата", v: "14.11, субота" },
-    { k: "Час", v: "22:00-04:00" },
+    { k: "Час", v: "23:00-04:00" },
     /* The city is shown on wider screens only; on a phone the street says it. */
     { k: "Локація", v: venue.address, wide: `, ${venue.city}`, href: venue.mapsHref },
     { k: "Саунд", v: "Реп, хіп-хоп, треп, рейдж" },
@@ -193,7 +193,7 @@ export interface Night {
 
 /* The night's own story: the "Ночі" section tells it around the night card. */
 export const nights = {
-  label: "14.11. Краків. 22:00-04:00",
+  label: "14.11. Краків. 23:00-04:00",
   title: "Світ не закінчиться сам. Ми влаштуємо йому фінал.",
   lead: "14 листопада Краків зануриться в ніч, де не існує правил, завтра не гарантоване, а кожен трек звучить так, ніби це останній раз.",
   lead2: "Темна атмосфера. Важкі баси. Дим, стробоскопи та музика, яка не дає стояти на місці.",
@@ -380,7 +380,7 @@ export const faq = {
     },
     {
       q: "Коли і де перша ніч?",
-      a: "14 листопада, субота, з 22:00 до 04:00. Клуб SNY, Stefana Batorego 1, Краків.",
+      a: "14 листопада, субота, з 23:00 до 04:00. Клуб SNY, Stefana Batorego 1, Краків.",
     },
     {
       q: "Де купити квиток?",
