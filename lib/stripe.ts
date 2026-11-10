@@ -41,24 +41,32 @@ export function stripePriceFor(item: ItemId): string | null {
 }
 
 /* The price on Stripe must be the price on the page, or buyers would be
-   charged something other than what they were shown. Checked once per
-   server, and again after a failure. */
-const checkedPrices = new Map<string, Promise<void>>();
-function assertPriceMatches(priceId: string, item: ItemId): Promise<void> {
-  let check = checkedPrices.get(priceId);
+   charged something other than what they were shown. If the configured
+   price id no longer matches (the page's price changed, say after an early
+   bird), the active PLN price on the same Stripe product with the page's
+   amount is used instead, so a price change needs no new env value. With
+   none matching, buying fails rather than charging the wrong amount.
+   Checked once per server, and again after a failure. */
+const checkedPrices = new Map<string, Promise<string>>();
+function resolvePrice(priceId: string, item: ItemId): Promise<string> {
+  const expected = CATALOG[item].price * 100;
+  const key = `${priceId}:${expected}`;
+  let check = checkedPrices.get(key);
   if (!check) {
     check = stripe()
       .prices.retrieve(priceId)
-      .then((price) => {
-        const expected = CATALOG[item].price * 100;
-        if (!price.active || price.currency !== "pln" || price.unit_amount !== expected)
-          throw new Error(
-            `Stripe price ${priceId} is ${price.unit_amount} ${price.currency}` +
-              `${price.active ? "" : " (archived)"}, the page says ${expected} pln`
-          );
+      .then(async (price) => {
+        if (price.active && price.currency === "pln" && price.unit_amount === expected) return price.id;
+        const product = typeof price.product === "string" ? price.product : price.product.id;
+        const others = await stripe().prices.list({ product, active: true, currency: "pln", limit: 100 });
+        const match = others.data.find((other) => other.unit_amount === expected && other.type === "one_time");
+        if (match) return match.id;
+        throw new Error(
+          `No active ${expected / 100} pln price on ${product} (configured ${priceId} is ${price.unit_amount} ${price.currency})`
+        );
       });
-    check.catch(() => checkedPrices.delete(priceId));
-    checkedPrices.set(priceId, check);
+    check.catch(() => checkedPrices.delete(key));
+    checkedPrices.set(key, check);
   }
   return check;
 }
@@ -105,14 +113,18 @@ export async function stripeSales(sinceMs?: number): Promise<Sales | null> {
   if (!process.env.STRIPE_SECRET_KEY) return null;
   const sales: Sales = { byItem: {}, orders: 0, tickets: 0, revenue: 0 };
   const created = sinceMs ? { gte: Math.floor(sinceMs / 1000) } : undefined;
-  for await (const session of stripe().checkout.sessions.list({ status: "complete", limit: 100, created })) {
+  for await (const session of stripe().checkout.sessions.list({
+    status: "complete",
+    limit: 100,
+    created,
+    expand: ["data.line_items"],
+  })) {
     const item = session.metadata?.item;
     if (session.metadata?.event !== EVENT.id || !isItemId(item) || session.payment_status !== "paid") continue;
-    /* The amount says how many: a quick checkout's quantity is chosen on
-       Stripe's page and is not in our metadata. */
-    const unit = CATALOG[item].price;
+    /* The paid line says how many: a quick checkout's quantity is chosen on
+       Stripe's page, and the price per ticket may have changed since. */
     const revenue = (session.amount_total ?? 0) / 100;
-    const tickets = unit > 0 ? Math.max(1, Math.round(revenue / unit)) : Number(session.metadata?.qty) || 1;
+    const tickets = session.line_items?.data.reduce((sum, line) => sum + (line.quantity ?? 0), 0) || Number(session.metadata?.qty) || 1;
     const row = (sales.byItem[item] ??= { orders: 0, tickets: 0, revenue: 0 });
     row.orders++;
     row.tickets += tickets;
@@ -136,7 +148,7 @@ export async function createQuickCheckout(
   origin: string
 ): Promise<string> {
   if (CATALOG[item].stock !== undefined) throw new Error(`${item} is limited`);
-  await assertPriceMatches(priceId, item);
+  priceId = await resolvePrice(priceId, item);
 
   const metadata = { item, qty: "1", name: "", event: EVENT.id, origin };
   const session = await stripe().checkout.sessions.create({
@@ -167,7 +179,7 @@ export async function createStripeCheckout(
   priceId: string,
   origin: string
 ): Promise<string> {
-  await assertPriceMatches(priceId, cart.item);
+  priceId = await resolvePrice(priceId, cart.item);
 
   const stock = CATALOG[cart.item].stock;
   const sameZone = async () =>

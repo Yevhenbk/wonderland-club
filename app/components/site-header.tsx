@@ -122,7 +122,7 @@ export default function SiteHeader() {
           ))}
         </nav>
         <a href="/buy?item=standard" className={styles.menuBuy} onClick={() => setOpen(false)}>
-          Купити квиток, 40 zł
+          Купити квиток, 45 zł
         </a>
       </div>
     </header>

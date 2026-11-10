@@ -93,10 +93,10 @@ export const nextNight = {
     { k: "Саунд", v: "Реп, хіп-хоп, треп, рейдж" },
   ] as { k: string; v: string; wide?: string; href?: string }[],
   /* One tap to Stripe's payment page for a standard ticket (app/buy). */
-  cta: "Купити квиток, 40 zł",
+  cta: "Купити квиток, 45 zł",
   ctaHref: "/buy?item=standard",
   /* The deadline, under the card, after the sold count (soldOffline). */
-  note: "Онлайн 40 zł до 31.10, потім дорожче. На вході 50 zł.",
+  note: "Онлайн 45 zł, на вході 50 zł.",
 };
 
 /** A ticket that can be bought online. `id` is what checkout and the passes
@@ -125,15 +125,13 @@ export const tickets = {
     eyebrow: "Стандарт",
     name: "Вхідний квиток",
     tiers: [
-      /* EARLY BIRD: 40 zł until 31.10. On 1.11 the online price must
-         really rise (a new Stripe price of 45 zł in STRIPE_PRICE_STANDARD,
-         and this tier's price), or the deadline is not true. */
-      { id: "standard", k: "Онлайн до 31.10", price: 40, best: true },
-      { k: "Онлайн з 1.11", price: 45 },
+      /* From 1.11 (the early bird of 40 zł ended 31.10). The site finds
+         the matching Stripe price on the product itself (lib/stripe.ts). */
+      { id: "standard", k: "Онлайн", price: 45, best: true },
       { k: "На вході", price: 50 },
     ] as (SellableTier | DoorTier)[],
     /* Follows the sold count (components/sold-count.tsx). */
-    note: "З 1 листопада онлайн-квиток дорожчає.",
+    note: "Онлайн дешевше, ніж на вході.",
     buyItem: "standard" as SellableTier["id"],
   },
   vip: {
@@ -384,7 +382,7 @@ export const faq = {
     },
     {
       q: "Де купити квиток?",
-      a: "Тут, на сайті: 40 zł до 31.10, з 1 листопада 45 zł. Оплата карткою, BLIK, Apple Pay або Google Pay, квиток з QR-кодом одразу приходить на пошту.",
+      a: "Тут, на сайті, за 45 zł. Оплата карткою, BLIK, Apple Pay або Google Pay, квиток з QR-кодом одразу приходить на пошту.",
     },
     {
       q: "Чи можна купити квиток на вході?",
@@ -415,6 +413,6 @@ export const faq = {
 
 export const final = {
   title: "Вітаємо у Wonderland.",
-  line: "Кінець це лише початок. Перша ніч 14.11 на Stefana Batorego 1, квитки онлайн від 40 zł.",
+  line: "Кінець це лише початок. Перша ніч 14.11 на Stefana Batorego 1, квитки онлайн від 45 zł.",
   button: "Обрати квиток",
 };
